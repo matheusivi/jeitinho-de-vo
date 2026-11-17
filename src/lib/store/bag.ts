@@ -49,3 +49,29 @@ export function parseBag(raw: string | null): BagLine[] {
     return [];
   }
 }
+
+export type FreshProduct = {
+  id: string; name: string; priceCents: number; unitLabel: string; imageKey: string | null; available: number;
+};
+
+const brl = (c: number) =>
+  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(c / 100).replace(/ /g, " ");
+
+/** Atualiza a sacola com o que o servidor diz agora e explica em português o que mudou. */
+export function reconcileBag(bag: BagLine[], fresh: FreshProduct[]): { lines: BagLine[]; changes: string[] } {
+  const byId = new Map(fresh.map((p) => [p.id, p]));
+  const changes: string[] = [];
+  const lines: BagLine[] = [];
+  for (const l of bag) {
+    const p = byId.get(l.productId);
+    if (!p || p.available <= 0) {
+      changes.push(`${l.name} esgotou e saiu da sacola.`);
+      continue;
+    }
+    if (p.priceCents !== l.priceCents) changes.push(`O preço de ${p.name} mudou para ${brl(p.priceCents)}.`);
+    const quantity = Math.min(l.quantity, p.available, MAX_PER_ITEM);
+    if (quantity < l.quantity) changes.push(`Só restam ${p.available} de ${p.name}. Ajustamos a quantidade.`);
+    lines.push({ productId: p.id, name: p.name, priceCents: p.priceCents, unitLabel: p.unitLabel, imageKey: p.imageKey, max: p.available, quantity });
+  }
+  return { lines, changes };
+}

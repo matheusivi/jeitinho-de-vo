@@ -36,3 +36,31 @@ describe("sacola", () => {
     expect(parseBag(ok)).toEqual([{ ...fatia, quantity: 2 }]);
   });
 });
+
+import { reconcileBag } from "@/lib/store/bag";
+
+describe("conferir sacola com o servidor", () => {
+  const linha = (id: string, quantity: number, priceCents = 1000) =>
+    ({ productId: id, name: id, priceCents, unitLabel: "un", imageKey: null, max: 10, quantity });
+
+  it("atualiza preço, corta pelo disponível e tira o que esgotou", () => {
+    const { lines, changes } = reconcileBag(
+      [linha("a", 2, 1000), linha("b", 5), linha("c", 1)],
+      [
+        { id: "a", name: "a", priceCents: 1200, unitLabel: "un", imageKey: null, available: 9 },
+        { id: "b", name: "b", priceCents: 1000, unitLabel: "un", imageKey: null, available: 3 },
+      ],
+    );
+    expect(lines.map((l) => [l.productId, l.quantity, l.priceCents, l.max])).toEqual([["a", 2, 1200, 9], ["b", 3, 1000, 3]]);
+    expect(changes).toEqual([
+      "O preço de a mudou para R$ 12,00.",
+      "Só restam 3 de b. Ajustamos a quantidade.",
+      "c esgotou e saiu da sacola.",
+    ]);
+  });
+
+  it("sem mudança não avisa nada", () => {
+    const { changes } = reconcileBag([linha("a", 1)], [{ id: "a", name: "a", priceCents: 1000, unitLabel: "un", imageKey: null, available: 4 }]);
+    expect(changes).toEqual([]);
+  });
+});

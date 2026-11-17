@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, sql } from "drizzle-orm";
+import { and, asc, eq, gt, inArray, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 
 const { products, categories } = schema;
@@ -43,4 +43,22 @@ export async function getMenu(): Promise<MenuCategory[]> {
     cat.items.push(item);
   }
   return menu;
+}
+
+/** Preço e disponível atuais dos produtos da sacola (só os que seguem à venda). */
+export async function getFreshProducts(ids: string[]) {
+  const unique = [...new Set(ids)].slice(0, 30);
+  if (unique.length === 0) return [];
+  return db
+    .select({
+      id: products.id,
+      name: products.name,
+      priceCents: products.priceCents,
+      unitLabel: products.unitLabel,
+      imageKey: products.imageKey,
+      available: availableSql,
+    })
+    .from(products)
+    .innerJoin(categories, eq(categories.id, products.categoryId))
+    .where(and(inArray(products.id, unique), eq(products.active, true), eq(categories.active, true)));
 }

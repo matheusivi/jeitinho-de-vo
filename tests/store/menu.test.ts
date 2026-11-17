@@ -38,3 +38,18 @@ describe("cardápio", () => {
     );
   });
 });
+
+import { getFreshProducts } from "@/lib/store/menu";
+
+describe("conferência da sacola", () => {
+  it("devolve preço e disponível atuais só de produtos à venda", async () => {
+    const a = await makeProduct({ priceCents: 1200, stockOnHand: 4, stockReserved: 1 });
+    const off = await makeProduct({ stockOnHand: 4, active: false });
+    const fresh = await getFreshProducts([a.id, off.id, "nao-existe"]);
+    expect(fresh).toEqual([{ id: a.id, name: a.name, priceCents: 1200, unitLabel: a.unitLabel, imageKey: null, available: 3 }]);
+  });
+
+  it("lista vazia não consulta nada", async () => {
+    expect(await getFreshProducts([])).toEqual([]);
+  });
+});

@@ -113,3 +113,50 @@
   .lj-btn, .lj-add, .lj-nav a, .lj-entrar, .lj-sacola, .lj-canal, .lj-item { transition: none; }
   .lj-btn:hover { transform: none; }
 }
+
+.lj-h1p { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: clamp(34px, 5vw, 52px); line-height: 1.02; }
+.lj-sub { margin: 0 0 28px; color: var(--ink-muted); font-size: 17px; }
+.lj-grid2 { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+.lj-grid2 > .main { flex: 999 1 480px; min-width: 0; }
+.lj-grid2 > .side { flex: 1 1 300px; min-width: 0; position: sticky; top: 16px; }
+.lj-linha { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.lj-linha:last-child { border-bottom: 0; }
+.lj-linha .thumb { width: 64px; height: 64px; border-radius: 14px; object-fit: cover; border: 2px solid var(--ink); background: var(--surface); flex: none; }
+.lj-linha .nome { flex: 1 1 160px; min-width: 0; }
+.lj-linha .nome strong { display: block; }
+.lj-linha .nome span { font-size: 14px; color: var(--ink-muted); }
+.lj-qtd { display: inline-flex; align-items: center; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; background: #fff; }
+.lj-qtd button { width: 44px; height: 44px; border: 0; background: transparent; font-size: 20px; font-weight: 700; cursor: pointer; }
+.lj-qtd button:hover:not([disabled]) { background: var(--surface); }
+.lj-qtd button[disabled] { opacity: .35; cursor: not-allowed; }
+.lj-qtd output { min-width: 32px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.lj-linha .valor { min-width: 88px; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.lj-remover { background: none; border: 0; color: var(--goiaba-escuro); font-weight: 600; font-size: 14px; text-decoration: underline; cursor: pointer; padding: 8px 4px; }
+.lj-resumo { display: grid; gap: 10px; }
+.lj-resumo div { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums; }
+.lj-resumo .total { border-top: 1.5px solid var(--line); padding-top: 12px; font-size: 20px; font-weight: 700; }
+.lj-aviso-box { padding: 14px 16px; border-radius: 12px; background: #fbe9eb; color: var(--goiaba-escuro); font-weight: 600; margin: 0 0 20px; }
+.lj-aviso-box ul { margin: 6px 0 0; padding-left: 18px; font-weight: 500; }
+.lj-ok-box { padding: 14px 16px; border-radius: 12px; background: #e0f6f9; color: var(--cyan-deep); font-weight: 600; }
+.lj-form { display: grid; gap: 20px; }
+.lj-campo { display: flex; flex-direction: column; gap: 8px; }
+.lj-campo label, .lj-campo legend { font-size: 14px; font-weight: 700; padding: 0; }
+.lj-input { width: 100%; height: 48px; border-radius: 8px; border: 1.5px solid #8fa0a2; background: #fff; padding: 0 14px; font-size: 16px; }
+textarea.lj-input { height: auto; min-height: 88px; padding: 12px 14px; }
+.lj-input[aria-invalid="true"] { border-color: var(--goiaba-escuro); }
+.lj-erro { color: var(--goiaba-escuro); font-size: 14px; font-weight: 600; margin: 0; }
+.lj-opcoes { display: flex; flex-wrap: wrap; gap: 12px; border: 0; margin: 0; padding: 0; }
+.lj-opcao { flex: 1 1 200px; display: flex; gap: 12px; align-items: flex-start; padding: 16px; border: 2px solid var(--line); border-radius: 16px; background: #fff; cursor: pointer; }
+.lj-opcao:has(input:checked) { border-color: var(--ink); background: var(--surface-raised); box-shadow: inset 0 0 0 1px var(--ink); }
+.lj-opcao input { margin-top: 4px; accent-color: var(--ink); width: 18px; height: 18px; }
+.lj-opcao strong { display: block; }
+.lj-opcao span { font-size: 14px; color: var(--ink-muted); }
+.lj-estados { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.lj-estados li { display: flex; gap: 12px; align-items: center; color: var(--ink-muted); }
+.lj-estados li b { width: 28px; height: 28px; border-radius: 999px; border: 2px solid var(--line); flex: none; display: grid; place-items: center; font-size: 13px; }
+.lj-estados li.feito { color: var(--ink); }
+.lj-estados li.feito b { background: var(--cyan); border-color: var(--ink); }
+.lj-estados li.agora { color: var(--ink); font-weight: 700; }
+.lj-estados li.agora b { background: var(--ink); border-color: var(--ink); color: var(--surface); }
+.lj-resumo div > span:last-child { white-space: nowrap; }
+.lj-resumo div > span:first-child { min-width: 0; }
