@@ -1,5 +1,6 @@
 import { and, eq, gte, sql } from "drizzle-orm";
 import { db, schema, type DbOrTx } from "@/lib/db";
+import { consumeForProduction, type ConsumeResult } from "@/lib/ingredients/recipes";
 
 const { products, stockMovements, orderItems } = schema;
 const MAX_QTY = 100_000;
@@ -25,16 +26,26 @@ function assertQuantity(q: number): void {
   }
 }
 
-/** Lança a produção: soma no estoque do produto pronto. */
-export async function produce(productId: string, quantity: number, userId: string, tx: DbOrTx = db): Promise<void> {
+/**
+ * Lança a produção: soma no estoque do produto pronto e baixa os insumos pela receita,
+ * tudo na mesma transação. Devolve se havia receita e quais insumos ficaram negativos.
+ */
+export async function produce(productId: string, quantity: number, userId: string, tx?: DbOrTx): Promise<ConsumeResult> {
   assertQuantity(quantity);
-  const updated = await tx
-    .update(products)
-    .set({ stockOnHand: sql`${products.stockOnHand} + ${quantity}` })
-    .where(eq(products.id, productId))
-    .returning({ id: products.id });
-  if (updated.length === 0) throw new StockError("INVALIDO", productId, "Produto não encontrado.");
-  await tx.insert(stockMovements).values({ productId, type: "PRODUCTION", quantity, userId });
+  const run = async (t: DbOrTx): Promise<ConsumeResult> => {
+    const updated = await t
+      .update(products)
+      .set({ stockOnHand: sql`${products.stockOnHand} + ${quantity}` })
+      .where(eq(products.id, productId))
+      .returning({ id: products.id });
+    if (updated.length === 0) throw new StockError("INVALIDO", productId, "Produto não encontrado.");
+    const [move] = await t
+      .insert(stockMovements)
+      .values({ productId, type: "PRODUCTION", quantity, userId })
+      .returning({ id: stockMovements.id });
+    return consumeForProduction(productId, quantity, move.id, userId, t);
+  };
+  return tx ? run(tx) : db.transaction(run);
 }
 
 /** Ajuste manual (perda, consumo, correção). Nunca deixa o estoque abaixo do que já está reservado. */
