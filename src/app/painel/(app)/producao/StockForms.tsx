@@ -25,6 +25,9 @@ export function ProduceRow({ id, name, unitLabel, available }: { id: string; nam
         {state.error && <span style={{ color: "var(--goiaba-escuro)" }}>{state.error}</span>}
         {state.ok && <span style={{ color: "var(--cyan-deep)" }}>{state.ok}</span>}
       </span>
+      {state.warn && (
+        <p className="pn-msg err" role="alert" style={{ flex: "1 1 100%" }}>{state.warn}</p>
+      )}
     </form>
   );
 }

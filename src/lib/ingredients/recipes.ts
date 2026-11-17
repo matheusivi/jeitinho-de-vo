@@ -76,7 +76,12 @@ export async function getRecipes(productIds: string[], tx: DbOrTx = db): Promise
   for (const rec of recs) {
     out.set(rec.productId, {
       id: rec.id, productId: rec.productId, yieldQty: rec.yieldQty, notes: rec.notes,
-      items: items.filter((i) => i.recipeId === rec.id).map(({ recipeId: _r, ...i }) => i),
+      items: items
+        .filter((i) => i.recipeId === rec.id)
+        .map((i) => ({
+          ingredientId: i.ingredientId, name: i.name, baseUnit: i.baseUnit, packageName: i.packageName,
+          packageSizeMilli: i.packageSizeMilli, qtyMilli: i.qtyMilli, avgCostCentsPerBase: i.avgCostCentsPerBase, active: i.active,
+        })),
     });
   }
   return out;
