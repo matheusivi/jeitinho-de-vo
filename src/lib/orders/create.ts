@@ -2,7 +2,7 @@ import { randomInt } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { db, schema } from "@/lib/db";
-import { checkRateLimit, recordAttempt } from "@/lib/auth/rate-limit";
+import { checkRateLimit, lockKeys, recordAttempt } from "@/lib/auth/rate-limit";
 import { isOpen, openingLabel } from "@/lib/store/hours";
 import { commitSale, reserve, StockError } from "@/lib/stock/stock";
 import { activeNeighborhood } from "./fees";
@@ -24,13 +24,15 @@ const inputSchema = z
     addressLine: z.string().trim().max(200).optional(),
     neighborhoodId: z.string().max(64).optional(),
     notes: z.string().trim().max(300, "A observação passa de 300 caracteres.").optional(),
+    /** Total que a cliente viu na tela. Se o servidor calcular outro, o pedido não é criado. */
+    expectedTotalCents: z.number().int().min(0).optional(),
   })
   .strip();
 
 export type CreateOrderInput = z.input<typeof inputSchema>;
 export type CreateOrderResult =
   | { ok: true; code: string }
-  | { ok: false; error: "FECHADO" | "ESGOTADO" | "INVALIDO" | "LIMITE"; productId?: string; message: string };
+  | { ok: false; error: "FECHADO" | "ESGOTADO" | "INVALIDO" | "LIMITE" | "PRECO_MUDOU"; productId?: string; message: string };
 
 const invalid = (message: string): CreateOrderResult => ({ ok: false, error: "INVALIDO", message });
 
@@ -53,9 +55,6 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
   if (data.fulfillment === "DELIVERY" && !data.addressLine) return invalid("Informe o endereço de entrega.");
 
   const rateKey = `order:${ctx.ip}`;
-  if (!(await checkRateLimit(rateKey, ORDERS_PER_IP, ORDER_WINDOW_MINUTES))) {
-    return { ok: false, error: "LIMITE", message: "Muitos pedidos em sequência. Espere alguns minutos e tente de novo." };
-  }
 
   // junta linhas repetidas do mesmo produto
   const qty = new Map<string, number>();
@@ -64,10 +63,24 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
 
   try {
     const code = await db.transaction(async (tx) => {
-      const products = await tx
-        .select()
-        .from(schema.products)
-        .where(and(inArray(schema.products.id, [...qty.keys()]), eq(schema.products.active, true)));
+      // O limite por IP é conferido e registrado dentro desta transação, com a chave travada:
+      // pedidos simultâneos do mesmo IP passam um de cada vez, e pedido recusado não conta.
+      await lockKeys(tx, [rateKey]);
+      if (!(await checkRateLimit(rateKey, ORDERS_PER_IP, ORDER_WINDOW_MINUTES, tx))) throw new OrderLimitError();
+
+      const products = (
+        await tx
+          .select({ product: schema.products })
+          .from(schema.products)
+          .innerJoin(schema.categories, eq(schema.categories.id, schema.products.categoryId))
+          .where(
+            and(
+              inArray(schema.products.id, [...qty.keys()]),
+              eq(schema.products.active, true),
+              eq(schema.categories.active, true),
+            ),
+          )
+      ).map((r) => r.product);
       if (products.length !== qty.size) throw new OrderInputError("Um dos produtos não está mais à venda.");
 
       let deliveryFeeCents = 0;
@@ -82,6 +95,9 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
       await reserve([...qty].map(([productId, quantity]) => ({ productId, quantity })), tx);
 
       const subtotalCents = products.reduce((n, p) => n + p.priceCents * (qty.get(p.id) ?? 0), 0);
+      if (data.expectedTotalCents !== undefined && data.expectedTotalCents !== subtotalCents + deliveryFeeCents) {
+        throw new PriceChangedError();
+      }
       let order: { id: string; code: string } | undefined;
       for (let attempt = 0; attempt < 5 && !order; attempt++) {
         const candidate = newCode();
@@ -112,12 +128,18 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
         })),
       );
       await commitSale(order.id, tx);
+      await recordAttempt(rateKey, tx);
       return order.code;
     });
-    await recordAttempt(rateKey);
     return { ok: true, code };
   } catch (e) {
     if (e instanceof OrderInputError) return invalid(e.message);
+    if (e instanceof OrderLimitError) {
+      return { ok: false, error: "LIMITE", message: "Muitos pedidos em sequência. Espere alguns minutos e tente de novo." };
+    }
+    if (e instanceof PriceChangedError) {
+      return { ok: false, error: "PRECO_MUDOU", message: "Um preço ou a taxa de entrega mudou. Confira o novo total antes de pedir." };
+    }
     if (e instanceof StockError && e.code === "ESGOTADO") {
       return { ok: false, error: "ESGOTADO", productId: e.productId, message: "Um produto acabou de esgotar. Ajuste a sacola." };
     }
@@ -127,3 +149,5 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
 }
 
 class OrderInputError extends Error {}
+class OrderLimitError extends Error {}
+class PriceChangedError extends Error {}

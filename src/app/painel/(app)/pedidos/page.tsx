@@ -25,19 +25,19 @@ export default async function PedidosPage() {
       <AutoRefresh />
       <div className="pn-row" style={{ justifyContent: "space-between", alignItems: "flex-end" }}>
         <div>
-          <h1 className="pn-h1">Pedidos de hoje</h1>
-          <p className="pn-sub" style={{ margin: 0 }}>A lista se atualiza sozinha. Toque no botão principal para levar o pedido ao próximo passo.</p>
+          <h1 className="pn-h1">Pedidos</h1>
+          <p className="pn-sub" style={{ margin: 0 }}>Os de hoje e os que ficaram em aberto. A lista se atualiza sozinha.</p>
         </div>
         {user.role === "ADMIN" && (
           <div className="pn-card" style={{ padding: "12px 18px" }}>
-            <span className="pn-muted">A receber hoje</span>
+            <span className="pn-muted">A receber</span>
             <div style={{ fontSize: 22, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>{formatBRL(aReceber)}</div>
           </div>
         )}
       </div>
 
       {orders.length === 0 && (
-        <div className="pn-card"><p className="pn-muted" style={{ margin: 0 }}>Nenhum pedido hoje ainda. Assim que chegar, aparece aqui.</p></div>
+        <div className="pn-card"><p className="pn-muted" style={{ margin: 0 }}>Nenhum pedido em aberto. Assim que chegar, aparece aqui.</p></div>
       )}
 
       {GROUPS.map(([title, statuses]) => {

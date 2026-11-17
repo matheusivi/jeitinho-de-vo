@@ -111,3 +111,17 @@ describe("papéis", () => {
     expect(() => assertRole({ id: "1", name: "A", role: "ADMIN" }, "ADMIN")).not.toThrow();
   });
 });
+
+describe("limite por e-mail", () => {
+  it("bloqueia o e-mail depois de 20 falhas mesmo trocando de IP a cada tentativa", async () => {
+    await makeUser();
+    for (let i = 0; i < 20; i++) await login("dona@teste.com", "errada", `9.9.9.${i}`);
+    expect(await login("dona@teste.com", "senha-forte-1", "8.8.8.8")).toEqual({ ok: false, error: "BLOCKED" });
+  });
+
+  it("tentativas simultâneas também respeitam o limite", async () => {
+    await makeUser();
+    const r = await Promise.all(Array.from({ length: 30 }, () => login("dona@teste.com", "errada", "7.7.7.7")));
+    expect(r.filter((x) => !x.ok && x.error === "INVALID")).toHaveLength(5);
+  });
+});

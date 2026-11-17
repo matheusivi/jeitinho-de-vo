@@ -143,3 +143,42 @@ describe("criar pedido", () => {
     expect(await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, c)).toMatchObject({ error: "LIMITE" });
   });
 });
+
+describe("correções da revisão", () => {
+  it("20 pedidos simultâneos do mesmo IP: só 5 passam", async () => {
+    const p = await makeProduct({ stockOnHand: 1000 });
+    const c = { now: ABERTO, ip: "5.5.5.5" };
+    const r = await Promise.all(
+      Array.from({ length: 20 }, () => createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, c)),
+    );
+    expect(r.filter((x) => x.ok)).toHaveLength(5);
+    expect(r.filter((x) => !x.ok && x.error === "LIMITE")).toHaveLength(15);
+    expect((await getProductRow(p.id)).stockOnHand).toBe(995);
+  });
+
+  it("pedido recusado não gasta a cota do IP", async () => {
+    const p = await makeProduct({ stockOnHand: 50 });
+    const c = { now: ABERTO, ip: "4.4.4.4" };
+    for (let i = 0; i < 5; i++) await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: "nao-existe", quantity: 1 }] }, c);
+    expect((await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, c)).ok).toBe(true);
+  });
+
+  it("produto de categoria desativada não é vendido", async () => {
+    const p = await makeProduct({ stockOnHand: 5 });
+    await db.update(schema.categories).set({ active: false }).where(eq(schema.categories.id, p.categoryId));
+    const r = await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, ctx());
+    expect(r).toMatchObject({ ok: false, error: "INVALIDO" });
+    expect((await getProductRow(p.id)).stockOnHand).toBe(5);
+  });
+
+  it("se o total mudou desde a sacola, recusa em vez de cobrar diferente", async () => {
+    const p = await makeProduct({ priceCents: 1200, stockOnHand: 5 });
+    const nb = await bairro("Centro", 500);
+    const base = { ...cliente, fulfillment: "DELIVERY" as const, addressLine: "Rua A, 1", neighborhoodId: nb.id, items: [{ productId: p.id, quantity: 2 }] };
+    const r = await createOrder({ ...base, expectedTotalCents: 2000 + 500 }, ctx());
+    expect(r).toMatchObject({ ok: false, error: "PRECO_MUDOU" });
+    expect(await db.select().from(schema.orders)).toHaveLength(0);
+    expect((await getProductRow(p.id)).stockOnHand).toBe(5);
+    expect((await createOrder({ ...base, expectedTotalCents: 2400 + 500 }, ctx())).ok).toBe(true);
+  });
+});

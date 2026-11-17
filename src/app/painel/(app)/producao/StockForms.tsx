@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { useFormAction } from "@/components/useFormAction";
 import { adjustAction, produceAction, type StockState } from "./actions";
 
 export function ProduceRow({ id, name, unitLabel, available }: { id: string; name: string; unitLabel: string; available: number }) {
@@ -29,9 +30,9 @@ export function ProduceRow({ id, name, unitLabel, available }: { id: string; nam
 }
 
 export function AdjustForm({ products }: { products: { id: string; name: string }[] }) {
-  const [state, action, pending] = useActionState<StockState, FormData>(adjustAction, {});
+  const [state, onSubmit, pending] = useFormAction<StockState>(adjustAction, {});
   return (
-    <form action={action} className="pn-grid" key={state.ok}>
+    <form onSubmit={onSubmit} className="pn-grid" key={state.ok}>
       <div className="pn-row" style={{ alignItems: "flex-end" }}>
         <div className="pn-field" style={{ flex: "2 1 220px" }}>
           <label htmlFor="adj-product">Produto</label>

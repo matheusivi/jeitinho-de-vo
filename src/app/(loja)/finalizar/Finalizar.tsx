@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useBag } from "@/components/loja/BagProvider";
 import { formatBRL } from "@/lib/money";
 import type { Neighborhood } from "@/lib/orders/fees";
-import { placeOrderAction } from "../actions";
+import { reconcileBag } from "@/lib/store/bag";
+import { placeOrderAction, refreshBagAction } from "../actions";
 
 function maskPhone(v: string): string {
   const d = v.replace(/\D/g, "").slice(0, 11);
@@ -24,6 +25,24 @@ export function Finalizar({ bairros, open, opening }: { bairros: Neighborhood[];
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
+  const [changes, setChanges] = useState<string[]>([]);
+  const checked = useRef(false);
+
+  async function refreshBag(): Promise<string[]> {
+    const snapshot = bag.lines;
+    if (snapshot.length === 0) return [];
+    const fresh = await refreshBagAction(snapshot.map((l) => l.productId));
+    const r = reconcileBag(snapshot, fresh);
+    if (r.changes.length) bag.replace(r.lines);
+    return r.changes;
+  }
+
+  useEffect(() => {
+    if (!bag.ready || checked.current) return;
+    checked.current = true;
+    refreshBag().then(setChanges).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bag.ready]);
 
   if (!bag.ready) return <p className="lj-sub">Carregando…</p>;
   if (bag.lines.length === 0) {
@@ -50,10 +69,18 @@ export function Finalizar({ bairros, open, opening }: { bairros: Neighborhood[];
         addressLine: fulfillment === "DELIVERY" ? String(form.get("address") ?? "") : undefined,
         neighborhoodId: fulfillment === "DELIVERY" ? bairroId : undefined,
         notes: String(form.get("notes") ?? "") || undefined,
+        expectedTotalCents: fee === null ? undefined : total,
       });
       if (r.ok) {
         bag.clear();
         router.push(`/pedido/${r.code}`);
+        return;
+      }
+      if (r.error === "PRECO_MUDOU") {
+        router.refresh();
+        const c = await refreshBag().catch(() => []);
+        setChanges(c);
+        setError(`${r.message}${c.length ? "" : " A taxa de entrega foi atualizada."}`);
         return;
       }
       if (r.error === "ESGOTADO") {
@@ -65,8 +92,22 @@ export function Finalizar({ bairros, open, opening }: { bairros: Neighborhood[];
   }
 
   return (
-    <form action={submit} className="lj-grid2" noValidate={false}>
+    <form
+      className="lj-grid2"
+      onSubmit={(e) => {
+        // onSubmit em vez de action: o React 19 limpa os campos depois de uma action,
+        // e a cliente perderia nome e endereço quando o pedido é recusado (preço mudou, esgotou).
+        e.preventDefault();
+        submit(new FormData(e.currentTarget));
+      }}
+    >
       <div className="main lj-form">
+        {changes.length > 0 && (
+          <div className="lj-aviso-box" role="status">
+            Atualizamos sua sacola:
+            <ul>{changes.map((c) => <li key={c}>{c}</li>)}</ul>
+          </div>
+        )}
         <fieldset className="lj-opcoes" aria-label="Como você quer receber">
           <label className="lj-opcao">
             <input type="radio" name="fulfillment" checked={fulfillment === "DELIVERY"} onChange={() => setFulfillment("DELIVERY")} />

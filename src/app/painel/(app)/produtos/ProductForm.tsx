@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useFormAction } from "@/components/useFormAction";
 import { saveProductAction, type ProductFormState } from "./actions";
 
 type Props = {
@@ -13,10 +14,10 @@ type Props = {
 };
 
 export function ProductForm({ categories, product }: Props) {
-  const [state, action, pending] = useActionState<ProductFormState, FormData>(saveProductAction, {});
+  const [state, onSubmit, pending] = useFormAction<ProductFormState>(saveProductAction, {});
   const [preview, setPreview] = useState<string | null>(product?.imageUrl ?? null);
   return (
-    <form action={action} className="pn-card pn-grid" style={{ maxWidth: 720 }}>
+    <form onSubmit={onSubmit} className="pn-card pn-grid" style={{ maxWidth: 720 }}>
       {product && <input type="hidden" name="id" value={product.id} />}
       <div className="pn-row" style={{ alignItems: "flex-start" }}>
         <div style={{ flex: "0 0 160px" }}>

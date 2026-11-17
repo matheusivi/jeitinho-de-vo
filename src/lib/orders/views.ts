@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, inArray, lt } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lt, notInArray, or } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import type { SessionUser } from "@/lib/auth/types";
 import { localDayRange } from "@/lib/store/hours";
@@ -28,8 +28,9 @@ export type AdminOrder = Base & {
 export type PanelOrder = StaffOrder | AdminOrder;
 
 /**
- * Pedidos do dia para o painel. Para funcionário, os campos de dinheiro nem saem do banco:
- * o objeto devolvido não tem valores, então não há como vazarem para a tela.
+ * Pedidos do dia para o painel, mais os de dias anteriores que ainda pedem ação: em andamento
+ * (todos veem) ou, para a dona, concluídos sem o recebimento registrado.
+ * Para funcionário, o objeto devolvido não tem nenhum campo de dinheiro, então nada disso chega à tela.
  */
 export async function listOrdersForPanel(user: SessionUser, filter: { day: Date }): Promise<PanelOrder[]> {
   const { start, end } = localDayRange(filter.day);
@@ -37,7 +38,15 @@ export async function listOrdersForPanel(user: SessionUser, filter: { day: Date 
     .select({ order: schema.orders, neighborhoodName: schema.neighborhoods.name })
     .from(schema.orders)
     .leftJoin(schema.neighborhoods, eq(schema.neighborhoods.id, schema.orders.neighborhoodId))
-    .where(and(gte(schema.orders.createdAt, start), lt(schema.orders.createdAt, end)))
+    .where(
+      or(
+        and(gte(schema.orders.createdAt, start), lt(schema.orders.createdAt, end)),
+        and(lt(schema.orders.createdAt, start), notInArray(schema.orders.status, ["DONE", "CANCELED"])),
+        user.role === "ADMIN"
+          ? and(lt(schema.orders.createdAt, start), eq(schema.orders.status, "DONE"), eq(schema.orders.paymentStatus, "PENDING"))
+          : undefined,
+      ),
+    )
     .orderBy(desc(schema.orders.createdAt));
   if (rows.length === 0) return [];
 

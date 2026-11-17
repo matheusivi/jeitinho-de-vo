@@ -56,7 +56,9 @@ proxy_set_header X-Real-IP $remote_addr;
 client_max_body_size 12m;
 ```
 
-O IP real é usado no limite de tentativas de login e de pedidos, então não deixe de repassar.
+O site lê o IP de quem acessou primeiro do `X-Real-IP` e, na falta dele, do **último** valor do `X-Forwarded-For` (o que o seu proxy acrescentou). Esse IP é usado no limite de tentativas de login e de pedidos, então mantenha o `X-Real-IP $remote_addr` acima. Caddy já faz isso por padrão.
+
+Deixe um proxy só na frente do site. Com dois proxies em cadeia (por exemplo Cloudflare na frente do Nginx), o IP visto passa a ser o do primeiro proxy e o limite fica por conta dele.
 
 ## 5. Primeiro acesso
 

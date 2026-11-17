@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormAction } from "@/components/useFormAction";
 import { createStaffAction, type TeamState } from "./actions";
 
 export function StaffForm() {
-  const [state, action, pending] = useActionState<TeamState, FormData>(createStaffAction, {});
+  const [state, onSubmit, pending] = useFormAction<TeamState>(createStaffAction, {});
   return (
-    <form action={action} className="pn-card pn-grid" key={state.ok}>
+    <form onSubmit={onSubmit} className="pn-card pn-grid" key={state.ok}>
       <strong>Nova conta de funcionário</strong>
       <div className="pn-row">
         <div className="pn-field" style={{ flex: "1 1 180px" }}>

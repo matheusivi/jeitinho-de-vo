@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
+import { useFormAction } from "@/components/useFormAction";
 import { createCategoryAction, updateCategoryAction, type FormState } from "./actions";
 
 export function NewCategoryForm() {
-  const [state, action, pending] = useActionState<FormState, FormData>(createCategoryAction, {});
+  const [state, onSubmit, pending] = useFormAction<FormState>(createCategoryAction, {});
   return (
-    <form action={action} className="pn-card pn-grid" key={state.ok}>
+    <form onSubmit={onSubmit} className="pn-card pn-grid" key={state.ok}>
       <div className="pn-row" style={{ alignItems: "flex-end" }}>
         <div className="pn-field" style={{ flex: "1 1 240px" }}>
           <label htmlFor="cat-name">Nova categoria</label>

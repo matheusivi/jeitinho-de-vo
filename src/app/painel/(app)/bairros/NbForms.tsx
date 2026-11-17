@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormAction } from "@/components/useFormAction";
 import { saveNeighborhoodAction, type NbState } from "./actions";
 
 export function NbRow({ id, name, fee, active }: { id?: string; name?: string; fee?: string; active?: boolean }) {
-  const [state, action, pending] = useActionState<NbState, FormData>(saveNeighborhoodAction, {});
+  const [state, onSubmit, pending] = useFormAction<NbState>(saveNeighborhoodAction, {});
   const isNew = !id;
   return (
-    <form action={action} className="pn-row" style={{ padding: "12px 0", borderBottom: "1px solid var(--line)" }} key={isNew ? state.ok : id}>
+    <form onSubmit={onSubmit} className="pn-row" style={{ padding: "12px 0", borderBottom: "1px solid var(--line)" }} key={isNew ? state.ok : id}>
       {id && <input type="hidden" name="id" value={id} />}
       <input className="pn-input" name="name" defaultValue={name} placeholder={isNew ? "Nome do bairro" : undefined} aria-label="Nome do bairro" required style={{ flex: "2 1 200px" }} />
       <span className="pn-row" style={{ gap: 6, flex: "0 1 140px" }}>

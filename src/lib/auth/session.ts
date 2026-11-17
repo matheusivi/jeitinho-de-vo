@@ -2,12 +2,14 @@ import { createHash, randomBytes } from "node:crypto";
 import { and, eq, gt, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { hashPassword, verifyPassword } from "./password";
-import { checkRateLimit, recordAttempt } from "./rate-limit";
+import { checkRateLimit, lockKeys, recordAttempt } from "./rate-limit";
 import type { SessionUser } from "./types";
 
 export const SESSION_COOKIE = "jdv_session";
 const SESSION_DAYS = 7;
 const MAX_FAILS = 5;
+/** Limite por conta, independente do IP: segura quem troca de IP a cada tentativa. */
+const MAX_FAILS_PER_EMAIL = 20;
 const WINDOW_MINUTES = 15;
 
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
@@ -48,21 +50,30 @@ export async function login(
   ip: string,
 ): Promise<{ ok: true; token: string; expiresAt: Date } | { ok: false; error: "INVALID" | "BLOCKED" }> {
   const normalized = email.trim().toLowerCase();
-  const key = `login:${normalized}:${ip}`;
-  if (!(await checkRateLimit(key, MAX_FAILS, WINDOW_MINUTES))) return { ok: false, error: "BLOCKED" };
-
-  const [user] = await db
-    .select()
-    .from(schema.users)
-    .where(eq(sql`lower(${schema.users.email})`, normalized));
-
+  const ipKey = `login:${normalized}:${ip}`;
+  const emailKey = `login-email:${normalized}`;
   dummyHash ??= hashPassword("senha-que-nao-existe");
-  const passwordOk = await verifyPassword(user?.passwordHash ?? (await dummyHash), password);
+  const fallbackHash = await dummyHash;
 
-  if (!user || !user.active || !passwordOk) {
-    await recordAttempt(key);
-    return { ok: false, error: "INVALID" };
-  }
-  const session = await createSession(user.id);
+  const outcome = await db.transaction(async (tx) => {
+    await lockKeys(tx, [ipKey, emailKey]);
+    if (
+      !(await checkRateLimit(ipKey, MAX_FAILS, WINDOW_MINUTES, tx)) ||
+      !(await checkRateLimit(emailKey, MAX_FAILS_PER_EMAIL, WINDOW_MINUTES, tx))
+    ) {
+      return { ok: false as const, error: "BLOCKED" as const };
+    }
+    const [user] = await tx.select().from(schema.users).where(eq(sql`lower(${schema.users.email})`, normalized));
+    const passwordOk = await verifyPassword(user?.passwordHash ?? fallbackHash, password);
+    if (!user || !user.active || !passwordOk) {
+      await recordAttempt(ipKey, tx);
+      await recordAttempt(emailKey, tx);
+      return { ok: false as const, error: "INVALID" as const };
+    }
+    return { ok: true as const, userId: user.id };
+  });
+
+  if (!outcome.ok) return outcome;
+  const session = await createSession(outcome.userId);
   return { ok: true, ...session };
 }

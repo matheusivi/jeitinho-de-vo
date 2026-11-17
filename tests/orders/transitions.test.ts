@@ -121,8 +121,11 @@ describe("listagem do painel", () => {
     expect(o).toMatchObject({ totalCents: 2000, paymentStatus: "PENDING" });
   });
 
-  it("filtra pelo dia no fuso da loja", async () => {
-    await novoPedido("PICKUP");
+  it("filtra pelo dia no fuso da loja (pedido já concluído e recebido)", async () => {
+    const { order } = await novoPedido("PICKUP");
+    const u = await staff();
+    for (const s of ["PREPARING", "READY_FOR_PICKUP", "DONE"] as const) await advanceOrder(order.id, s, u);
+    await markReceived(order.id, 2000, await admin());
     expect(await listOrdersForPanel(await admin(), { day: new Date("2026-11-18T12:00:00-04:00") })).toHaveLength(0);
   });
 });
@@ -135,5 +138,40 @@ describe("link do WhatsApp", () => {
     expect(msg).toContain("Maria");
     expect(msg).toContain("ABC234");
     expect(msg).toContain("saiu para entrega");
+  });
+});
+
+describe("pedidos de dias anteriores", () => {
+  const ontem = new Date("2026-11-16T17:00:00-04:00");
+  async function deOntem(fulfillment: "DELIVERY" | "PICKUP" = "PICKUP") {
+    const { order } = await novoPedido(fulfillment);
+    await db.update(schema.orders).set({ createdAt: ontem }).where(eq(schema.orders.id, order.id));
+    return order;
+  }
+
+  it("pedido de ontem ainda em andamento continua aparecendo hoje", async () => {
+    const o = await deOntem();
+    expect((await listOrdersForPanel(await staff(), { day: NOW })).map((x) => x.id)).toContain(o.id);
+    expect((await listOrdersForPanel(await admin(), { day: NOW })).map((x) => x.id)).toContain(o.id);
+  });
+
+  it("pedido de ontem concluído sem recebimento continua para a dona, não para a funcionária", async () => {
+    const o = await deOntem();
+    const u = await staff();
+    for (const s of ["PREPARING", "READY_FOR_PICKUP", "DONE"] as const) await advanceOrder(o.id, s, u);
+    expect((await listOrdersForPanel(await admin(), { day: NOW })).map((x) => x.id)).toContain(o.id);
+    expect((await listOrdersForPanel(u, { day: NOW })).map((x) => x.id)).not.toContain(o.id);
+  });
+
+  it("pedido de ontem concluído e recebido, ou cancelado, sai da lista", async () => {
+    const a = await deOntem();
+    const b = await deOntem();
+    const u = await staff();
+    for (const s of ["PREPARING", "READY_FOR_PICKUP", "DONE"] as const) await advanceOrder(a.id, s, u);
+    await markReceived(a.id, 2000, await admin());
+    await cancelOrder(b.id, u);
+    const ids = (await listOrdersForPanel(await admin(), { day: NOW })).map((x) => x.id);
+    expect(ids).not.toContain(a.id);
+    expect(ids).not.toContain(b.id);
   });
 });

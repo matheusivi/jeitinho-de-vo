@@ -10,7 +10,11 @@ const NEXT_LABEL: Record<string, Record<string, [string, string] | undefined>> =
   PICKUP: { CONFIRMED: ["PREPARING", "Começar preparo"], PREPARING: ["READY_FOR_PICKUP", "Pronto para retirada"], READY_FOR_PICKUP: ["DONE", "Retirado"] },
 };
 
-const hora = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Campo_Grande" });
+const TZ = "America/Campo_Grande";
+const hora = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: TZ });
+const diaHora = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit", timeZone: TZ });
+const dia = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: TZ });
+const quando = (d: Date) => (dia.format(d) === dia.format(new Date()) ? hora.format(d) : `de ${diaHora.format(d)}`);
 
 export function OrderCard({ order, waLink }: { order: PanelOrder; waLink: string }) {
   const [pending, start] = useTransition();
@@ -35,7 +39,7 @@ export function OrderCard({ order, waLink }: { order: PanelOrder; waLink: string
       <div className="pn-row" style={{ justifyContent: "space-between" }}>
         <div>
           <strong style={{ fontSize: 20, letterSpacing: ".06em" }}>{order.code}</strong>
-          <span className="pn-muted"> · {hora.format(new Date(order.createdAt))}</span>
+          <span className="pn-muted"> · {quando(new Date(order.createdAt))}</span>
         </div>
         <span className="pn-tag" style={{ background: order.fulfillment === "DELIVERY" ? "#e0f6f9" : "var(--surface)" }}>
           {order.fulfillment === "DELIVERY" ? `Entrega · ${order.neighborhoodName ?? ""}` : "Retirada na loja"}

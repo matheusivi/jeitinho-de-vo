@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useFormAction } from "@/components/useFormAction";
 import { loginAction, type LoginState } from "./actions";
 
 export function LoginForm() {
-  const [state, action, pending] = useActionState<LoginState, FormData>(loginAction, {});
+  const [state, onSubmit, pending] = useFormAction<LoginState>(loginAction, {});
   return (
-    <form action={action}>
+    <form onSubmit={onSubmit}>
       <div>
         <h1 className="pn-h1">Painel da loja</h1>
         <p className="pn-muted">Entre com a conta que a doceria criou para você.</p>
