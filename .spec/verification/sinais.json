@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "sinais": {
+    "STATUS_INVALIDO::fase-1-loja-painel::.spec/features/fase-1-loja-painel/spec.md": {
+      "codigo": "STATUS_INVALIDO",
+      "feature": "fase-1-loja-painel",
+      "ref": ".spec/features/fase-1-loja-painel/spec.md",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:39.971Z",
+      "ultimaVez": "2026-11-17T18:39:39.971Z",
+      "gitRev": "a0b3ce3"
+    },
+    "GLOB_SEM_ARQUIVOS::—::P-002": {
+      "codigo": "GLOB_SEM_ARQUIVOS",
+      "feature": "—",
+      "ref": "P-002",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:39.971Z",
+      "ultimaVez": "2026-11-17T18:39:39.971Z",
+      "gitRev": "a0b3ce3"
+    },
+    "ASM_ABERTA::fase-1-loja-painel::ASM-001": {
+      "codigo": "ASM_ABERTA",
+      "feature": "fase-1-loja-painel",
+      "ref": "ASM-001",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:44.088Z",
+      "ultimaVez": "2026-11-17T18:39:44.089Z",
+      "gitRev": "a0b3ce3"
+    },
+    "ASM_ABERTA::fase-1-loja-painel::ASM-002": {
+      "codigo": "ASM_ABERTA",
+      "feature": "fase-1-loja-painel",
+      "ref": "ASM-002",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:44.089Z",
+      "ultimaVez": "2026-11-17T18:39:44.089Z",
+      "gitRev": "a0b3ce3"
+    },
+    "Q_ABERTA::fase-1-loja-painel::Q-001": {
+      "codigo": "Q_ABERTA",
+      "feature": "fase-1-loja-painel",
+      "ref": "Q-001",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:44.089Z",
+      "ultimaVez": "2026-11-17T18:39:44.089Z",
+      "gitRev": "a0b3ce3"
+    },
+    "Q_ABERTA::fase-1-loja-painel::Q-002": {
+      "codigo": "Q_ABERTA",
+      "feature": "fase-1-loja-painel",
+      "ref": "Q-002",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:44.089Z",
+      "ultimaVez": "2026-11-17T18:39:44.089Z",
+      "gitRev": "a0b3ce3"
+    },
+    "Q_ABERTA::fase-1-loja-painel::Q-003": {
+      "codigo": "Q_ABERTA",
+      "feature": "fase-1-loja-painel",
+      "ref": "Q-003",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-17T18:39:44.089Z",
+      "ultimaVez": "2026-11-17T18:39:44.089Z",
+      "gitRev": "a0b3ce3"
+    }
+  }
+}

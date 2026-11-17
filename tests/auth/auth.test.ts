@@ -74,7 +74,7 @@ describe("login", () => {
     expect(r.ok).toBe(true);
   });
 
-  it("devolve INVALID igual para senha errada e para e-mail que não existe", async () => {
+  it("devolve INVALID igual para senha errada e para e-mail que não existe @spec:AC-013", async () => {
     await makeUser();
     expect(await login("dona@teste.com", "errada", "1.1.1.1")).toEqual({ ok: false, error: "INVALID" });
     expect(await login("ninguem@teste.com", "errada", "1.1.1.1")).toEqual({ ok: false, error: "INVALID" });
@@ -85,7 +85,7 @@ describe("login", () => {
     expect(await login("dona@teste.com", "senha-forte-1", "1.1.1.1")).toEqual({ ok: false, error: "INVALID" });
   });
 
-  it("bloqueia depois de 5 falhas, mesmo com a senha certa", async () => {
+  it("bloqueia depois de 5 falhas, mesmo com a senha certa @spec:AC-014", async () => {
     await makeUser();
     for (let i = 0; i < 5; i++) await login("dona@teste.com", "errada", "1.1.1.1");
     expect(await login("dona@teste.com", "senha-forte-1", "1.1.1.1")).toEqual({ ok: false, error: "BLOCKED" });
@@ -113,7 +113,7 @@ describe("papéis", () => {
 });
 
 describe("limite por e-mail", () => {
-  it("bloqueia o e-mail depois de 20 falhas mesmo trocando de IP a cada tentativa", async () => {
+  it("bloqueia o e-mail depois de 20 falhas mesmo trocando de IP a cada tentativa @spec:AC-015", async () => {
     await makeUser();
     for (let i = 0; i < 20; i++) await login("dona@teste.com", "errada", `9.9.9.${i}`);
     expect(await login("dona@teste.com", "senha-forte-1", "8.8.8.8")).toEqual({ ok: false, error: "BLOCKED" });

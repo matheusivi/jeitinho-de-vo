@@ -27,7 +27,7 @@ async function fotoDeCelular(): Promise<Buffer> {
 }
 
 describe("processProductImage", () => {
-  it("gera WebP quadrado em 480 e 960, leve e com a orientação aplicada", async () => {
+  it("gera WebP quadrado em 480 e 960, leve e com a orientação aplicada @spec:AC-024", async () => {
     const { key } = await processProductImage(await fotoDeCelular());
     for (const size of [480, 960] as const) {
       const file = path.join(dir, `${key}-${size}.webp`);
@@ -46,7 +46,7 @@ describe("processProductImage", () => {
     expect(bottom[2]).toBeGreaterThan(200); // azul embaixo
   });
 
-  it("recusa arquivo que não é imagem, mesmo com cara de JPEG", async () => {
+  it("recusa arquivo que não é imagem, mesmo com cara de JPEG @spec:AC-025", async () => {
     await expect(processProductImage(Buffer.from("isto é um texto, não uma foto"))).rejects.toMatchObject({
       code: "TIPO",
     });

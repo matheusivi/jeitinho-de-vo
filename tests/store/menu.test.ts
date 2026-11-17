@@ -6,7 +6,7 @@ import { makeCategory, makeProduct } from "../helpers";
 beforeEach(resetDb);
 
 describe("cardápio", () => {
-  it("mostra só o que tem disponível", async () => {
+  it("mostra só o que tem disponível @spec:AC-001", async () => {
     const cat = await makeCategory("Fatias");
     const ok = await makeProduct({ categoryId: cat.id, name: "Limão", stockOnHand: 3, stockReserved: 1 });
     await makeProduct({ categoryId: cat.id, name: "Zerado", stockOnHand: 0 });
@@ -20,7 +20,7 @@ describe("cardápio", () => {
     expect(menu[0].items[0]).toMatchObject({ id: ok.id, available: 2, priceCents: 1000 });
   });
 
-  it("esconde categoria vazia e categoria desativada", async () => {
+  it("esconde categoria vazia e categoria desativada @spec:AC-002", async () => {
     await makeCategory("Vazia");
     const off = await makeCategory("Desligada");
     await makeProduct({ categoryId: off.id, stockOnHand: 5 });

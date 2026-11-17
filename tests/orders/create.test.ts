@@ -30,7 +30,7 @@ describe("bairros", () => {
 });
 
 describe("criar pedido", () => {
-  it("retirada: calcula total, baixa estoque e registra a venda", async () => {
+  it("retirada: calcula total, baixa estoque e registra a venda @spec:AC-003", async () => {
     const a = await makeProduct({ priceCents: 1400, stockOnHand: 3 });
     const b = await makeProduct({ priceCents: 900, stockOnHand: 5 });
     const r = await createOrder(
@@ -51,7 +51,7 @@ describe("criar pedido", () => {
     expect((await movementsOf(a.id)).map((m) => [m.type, m.quantity])).toEqual([["SALE", -2]]);
   });
 
-  it("entrega: soma a taxa do bairro", async () => {
+  it("entrega: soma a taxa do bairro @spec:AC-004", async () => {
     const p = await makeProduct({ priceCents: 1000, stockOnHand: 2 });
     const nb = await bairro("Centro", 650);
     const r = await createOrder(
@@ -63,7 +63,7 @@ describe("criar pedido", () => {
     expect(o).toMatchObject({ subtotalCents: 1000, deliveryFeeCents: 650, totalCents: 1650, neighborhoodId: nb.id });
   });
 
-  it("ignora preço e taxa enviados pelo navegador", async () => {
+  it("ignora preço e taxa enviados pelo navegador @spec:AC-006", async () => {
     const p = await makeProduct({ priceCents: 1000, stockOnHand: 2 });
     const nb = await bairro("Centro", 650);
     const adulterado = {
@@ -87,7 +87,7 @@ describe("criar pedido", () => {
     expect(await db.select().from(schema.orders)).toHaveLength(0);
   });
 
-  it("recusa mais de 30 produtos diferentes", async () => {
+  it("recusa mais de 30 produtos diferentes @spec:AC-007", async () => {
     const items = [];
     for (let i = 0; i < 31; i++) items.push({ productId: (await makeProduct({ stockOnHand: 1 })).id, quantity: 1 });
     expect(await createOrder({ ...cliente, fulfillment: "PICKUP", items }, ctx())).toMatchObject({ error: "INVALIDO" });
@@ -100,7 +100,7 @@ describe("criar pedido", () => {
     expect(await createOrder({ ...cliente, customerName: "A", fulfillment: "PICKUP", items }, ctx())).toMatchObject({ error: "INVALIDO" });
   });
 
-  it("fora do horário recusa no servidor", async () => {
+  it("fora do horário recusa no servidor @spec:AC-008", async () => {
     const p = await makeProduct({ stockOnHand: 5 });
     const r = await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, ctx(DOMINGO));
     expect(r).toMatchObject({ ok: false, error: "FECHADO" });
@@ -145,7 +145,7 @@ describe("criar pedido", () => {
 });
 
 describe("correções da revisão", () => {
-  it("20 pedidos simultâneos do mesmo IP: só 5 passam", async () => {
+  it("20 pedidos simultâneos do mesmo IP: só 5 passam @spec:AC-011", async () => {
     const p = await makeProduct({ stockOnHand: 1000 });
     const c = { now: ABERTO, ip: "5.5.5.5" };
     const r = await Promise.all(
@@ -163,7 +163,7 @@ describe("correções da revisão", () => {
     expect((await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, c)).ok).toBe(true);
   });
 
-  it("produto de categoria desativada não é vendido", async () => {
+  it("produto de categoria desativada não é vendido @spec:AC-010", async () => {
     const p = await makeProduct({ stockOnHand: 5 });
     await db.update(schema.categories).set({ active: false }).where(eq(schema.categories.id, p.categoryId));
     const r = await createOrder({ ...cliente, fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] }, ctx());
@@ -171,7 +171,7 @@ describe("correções da revisão", () => {
     expect((await getProductRow(p.id)).stockOnHand).toBe(5);
   });
 
-  it("se o total mudou desde a sacola, recusa em vez de cobrar diferente", async () => {
+  it("se o total mudou desde a sacola, recusa em vez de cobrar diferente @spec:AC-009", async () => {
     const p = await makeProduct({ priceCents: 1200, stockOnHand: 5 });
     const nb = await bairro("Centro", 500);
     const base = { ...cliente, fulfillment: "DELIVERY" as const, addressLine: "Rua A, 1", neighborhoodId: nb.id, items: [{ productId: p.id, quantity: 2 }] };

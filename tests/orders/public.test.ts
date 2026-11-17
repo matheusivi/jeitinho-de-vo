@@ -8,7 +8,7 @@ import { makeProduct } from "../helpers";
 beforeEach(resetDb);
 
 describe("pedido visto pela cliente", () => {
-  it("mostra itens, totais e estado, sem telefone nem endereço", async () => {
+  it("mostra itens, totais e estado, sem telefone nem endereço @spec:AC-012", async () => {
     const p = await makeProduct({ name: "Fatia de limão", priceCents: 1400, stockOnHand: 3 });
     const [nb] = await db.insert(schema.neighborhoods).values({ name: "Centro", feeCents: 500 }).returning();
     const r = await createOrder(

@@ -7,7 +7,7 @@ import { getProductRow, makeProduct, makeUser, movementsOf } from "../helpers";
 beforeEach(resetDb);
 
 describe("produzir", () => {
-  it("soma no estoque e registra o movimento com quem lançou", async () => {
+  it("soma no estoque e registra o movimento com quem lançou @spec:AC-019", async () => {
     const p = await makeProduct();
     const u = await makeUser("STAFF");
     await produce(p.id, 5, u.id);
@@ -40,7 +40,7 @@ describe("ajustar", () => {
     expect((await movementsOf(p.id))[0]).toMatchObject({ type: "ADJUSTMENT", quantity: -2, reason: "perda" });
   });
 
-  it("exige motivo e delta diferente de zero", async () => {
+  it("exige motivo e delta diferente de zero @spec:AC-020", async () => {
     const p = await makeProduct({ stockOnHand: 5 });
     const u = await makeUser();
     await expect(adjust(p.id, -1, "  ", u.id)).rejects.toBeInstanceOf(StockError);
@@ -87,7 +87,7 @@ describe("reservar", () => {
     ).rejects.toMatchObject({ code: "ESGOTADO" });
   });
 
-  it("duas pessoas disputando a última unidade: só uma leva", async () => {
+  it("duas pessoas disputando a última unidade: só uma leva @spec:AC-005", async () => {
     const p = await makeProduct({ stockOnHand: 1 });
     const tentar = () => db.transaction((tx) => reserve([{ productId: p.id, quantity: 1 }], tx));
     const results = await Promise.allSettled([tentar(), tentar(), tentar(), tentar()]);

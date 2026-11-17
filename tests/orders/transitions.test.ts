@@ -33,14 +33,14 @@ const statusOf = async (id: string) => (await db.select().from(schema.orders).wh
 beforeEach(resetDb);
 
 describe("andamento do pedido", () => {
-  it("segue a sequência de entrega", async () => {
+  it("segue a sequência de entrega @spec:AC-021", async () => {
     const u = await staff();
     const { order } = await novoPedido("DELIVERY");
     for (const s of ["PREPARING", "OUT_FOR_DELIVERY", "DONE"] as const) await advanceOrder(order.id, s, u);
     expect((await statusOf(order.id)).status).toBe("DONE");
   });
 
-  it("segue a sequência de retirada", async () => {
+  it("segue a sequência de retirada @spec:AC-021", async () => {
     const u = await staff();
     const { order } = await novoPedido("PICKUP");
     for (const s of ["PREPARING", "READY_FOR_PICKUP", "DONE"] as const) await advanceOrder(order.id, s, u);
@@ -64,7 +64,7 @@ describe("andamento do pedido", () => {
 });
 
 describe("cancelamento", () => {
-  it("devolve o estoque uma vez só", async () => {
+  it("devolve o estoque uma vez só @spec:AC-022", async () => {
     const u = await staff();
     const { order, product } = await novoPedido("PICKUP", 2);
     expect((await getProductRow(product.id)).stockOnHand).toBe(3);
@@ -83,7 +83,7 @@ describe("cancelamento", () => {
     await expect(cancelOrder(order.id, u)).rejects.toBeInstanceOf(TransitionError);
   });
 
-  it("dois cancelamentos ao mesmo tempo devolvem uma vez só", async () => {
+  it("dois cancelamentos ao mesmo tempo devolvem uma vez só @spec:AC-022", async () => {
     const u = await staff();
     const { order, product } = await novoPedido("PICKUP", 2);
     await Promise.allSettled([cancelOrder(order.id, u), cancelOrder(order.id, u)]);
@@ -92,7 +92,7 @@ describe("cancelamento", () => {
 });
 
 describe("recebimento", () => {
-  it("só a administradora registra, com valor válido", async () => {
+  it("só a administradora registra, com valor válido @spec:AC-018", async () => {
     const { order } = await novoPedido("PICKUP");
     await expect(markReceived(order.id, 2000, await staff())).rejects.toBeInstanceOf(ForbiddenError);
     await expect(markReceived(order.id, -1, await admin())).rejects.toBeInstanceOf(TransitionError);
@@ -102,7 +102,7 @@ describe("recebimento", () => {
 });
 
 describe("listagem do painel", () => {
-  it("funcionário não recebe nenhum campo de dinheiro", async () => {
+  it("funcionário não recebe nenhum campo de dinheiro @spec:AC-017", async () => {
     await novoPedido("DELIVERY");
     const list = await listOrdersForPanel(await staff(), { day: NOW });
     expect(list).toHaveLength(1);
@@ -149,7 +149,7 @@ describe("pedidos de dias anteriores", () => {
     return order;
   }
 
-  it("pedido de ontem ainda em andamento continua aparecendo hoje", async () => {
+  it("pedido de ontem ainda em andamento continua aparecendo hoje @spec:AC-023", async () => {
     const o = await deOntem();
     expect((await listOrdersForPanel(await staff(), { day: NOW })).map((x) => x.id)).toContain(o.id);
     expect((await listOrdersForPanel(await admin(), { day: NOW })).map((x) => x.id)).toContain(o.id);

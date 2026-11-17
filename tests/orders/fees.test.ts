@@ -15,7 +15,7 @@ describe("cadastro de bairros", () => {
     expect(b).toMatchObject({ name: "Centro", feeCents: 600, active: false });
   });
 
-  it("aceita taxa zero mas recusa negativa, fracionada e nome repetido", async () => {
+  it("aceita taxa zero mas recusa negativa, fracionada e nome repetido @spec:AC-026", async () => {
     expect((await saveNeighborhood({ name: "Perto", feeCents: 0, active: true })).ok).toBe(true);
     expect((await saveNeighborhood({ name: "X1", feeCents: -1, active: true })).ok).toBe(false);
     expect((await saveNeighborhood({ name: "X2", feeCents: 1.5, active: true })).ok).toBe(false);
