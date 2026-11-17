@@ -55,3 +55,10 @@ export function openingLabel(now: Date): string {
   const when = dayDiff === 0 ? "hoje" : dayDiff === 1 ? "amanhã" : WEEKDAYS[opening.getUTCDay()];
   return `${when} às ${opening.getUTCHours()}h`;
 }
+
+/** Início e fim (exclusivo) do dia local da loja que contém o instante informado. */
+export function localDayRange(at: Date): { start: Date; end: Date } {
+  const l = toLocal(at);
+  const start = fromLocal(l.getUTCFullYear(), l.getUTCMonth(), l.getUTCDate(), 0);
+  return { start, end: new Date(start.getTime() + 86_400_000) };
+}

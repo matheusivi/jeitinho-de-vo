@@ -18,9 +18,12 @@ export async function requireUser(): Promise<SessionUser> {
   return user;
 }
 
-/** Exige o papel informado; papel insuficiente lança ForbiddenError. */
+/**
+ * Exige o papel informado. Papel insuficiente vai para a página de sem acesso; o redirecionamento
+ * também interrompe Server Actions, então nada do que vem depois roda.
+ */
 export async function requireRole(role: "ADMIN"): Promise<SessionUser> {
   const user = await requireUser();
-  assertRole(user, role);
+  if (user.role !== role) redirect("/painel/sem-acesso");
   return user;
 }
