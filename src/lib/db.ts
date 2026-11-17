@@ -5,8 +5,10 @@ import * as schema from "@/db/schema";
 function connectionString(): string {
   const url =
     process.env.NODE_ENV === "test" ? process.env.DATABASE_URL_TEST : process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL não configurada");
-  return url;
+  if (url) return url;
+  // Durante o build da imagem não há banco; nenhuma página consulta nessa hora (todas são dinâmicas).
+  if (process.env.NEXT_PHASE === "phase-production-build") return "postgresql://build@127.0.0.1:1/build";
+  throw new Error("DATABASE_URL não configurada");
 }
 
 const globalForDb = globalThis as unknown as { jdvPool?: Pool };
