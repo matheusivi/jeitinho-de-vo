@@ -1,0 +1,136 @@
+import { sql } from "drizzle-orm";
+import {
+  boolean, check, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex,
+} from "drizzle-orm/pg-core";
+import { randomUUID } from "node:crypto";
+
+const id = () => text("id").primaryKey().$defaultFn(() => randomUUID());
+const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
+const updatedAt = () =>
+  timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date());
+
+export const roleEnum = pgEnum("role", ["ADMIN", "STAFF"]);
+export const stockMovementTypeEnum = pgEnum("stock_movement_type", [
+  "PRODUCTION", "SALE", "ADJUSTMENT", "CANCEL_RETURN",
+]);
+export const orderStatusEnum = pgEnum("order_status", [
+  "CONFIRMED", "PREPARING", "OUT_FOR_DELIVERY", "READY_FOR_PICKUP", "DONE", "CANCELED",
+]);
+export const fulfillmentEnum = pgEnum("fulfillment", ["DELIVERY", "PICKUP"]);
+export const paymentMethodEnum = pgEnum("payment_method", ["ON_DELIVERY"]);
+export const paymentStatusEnum = pgEnum("payment_status", ["PENDING", "RECEIVED"]);
+
+export const users = pgTable("users", {
+  id: id(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: roleEnum("role").notNull(),
+  active: boolean("active").notNull().default(true),
+  createdAt: createdAt(),
+});
+
+export const sessions = pgTable("sessions", {
+  id: id(),
+  tokenHash: text("token_hash").notNull().unique(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: createdAt(),
+});
+
+export const loginAttempts = pgTable(
+  "login_attempts",
+  { id: id(), key: text("key").notNull(), createdAt: createdAt() },
+  (t) => [index("login_attempts_key_created_idx").on(t.key, t.createdAt)],
+);
+
+export const categories = pgTable("categories", {
+  id: id(),
+  name: text("name").notNull().unique(),
+  slug: text("slug").notNull().unique(),
+  position: integer("position").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+});
+
+export const products = pgTable(
+  "products",
+  {
+    id: id(),
+    name: text("name").notNull(),
+    slug: text("slug").notNull().unique(),
+    description: text("description").notNull().default(""),
+    priceCents: integer("price_cents").notNull(),
+    unitLabel: text("unit_label").notNull().default("unidade"),
+    categoryId: text("category_id").notNull().references(() => categories.id),
+    imageKey: text("image_key"),
+    active: boolean("active").notNull().default(true),
+    stockOnHand: integer("stock_on_hand").notNull().default(0),
+    stockReserved: integer("stock_reserved").notNull().default(0),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    check(
+      "products_stock_check",
+      sql`${t.stockOnHand} >= 0 AND ${t.stockReserved} >= 0 AND ${t.stockReserved} <= ${t.stockOnHand}`,
+    ),
+    check("products_price_check", sql`${t.priceCents} > 0`),
+  ],
+);
+
+export const neighborhoods = pgTable("neighborhoods", {
+  id: id(),
+  name: text("name").notNull().unique(),
+  feeCents: integer("fee_cents").notNull(),
+  active: boolean("active").notNull().default(true),
+});
+
+export const orders = pgTable(
+  "orders",
+  {
+    id: id(),
+    code: text("code").notNull(),
+    status: orderStatusEnum("status").notNull().default("CONFIRMED"),
+    fulfillment: fulfillmentEnum("fulfillment").notNull(),
+    customerName: text("customer_name").notNull(),
+    customerPhone: text("customer_phone").notNull(),
+    addressLine: text("address_line"),
+    neighborhoodId: text("neighborhood_id").references(() => neighborhoods.id),
+    notes: text("notes"),
+    subtotalCents: integer("subtotal_cents").notNull(),
+    deliveryFeeCents: integer("delivery_fee_cents").notNull(),
+    totalCents: integer("total_cents").notNull(),
+    paymentMethod: paymentMethodEnum("payment_method").notNull().default("ON_DELIVERY"),
+    paymentStatus: paymentStatusEnum("payment_status").notNull().default("PENDING"),
+    receivedCents: integer("received_cents"),
+    receivedAt: timestamp("received_at", { withTimezone: true }),
+    createdIp: text("created_ip"),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [uniqueIndex("orders_code_idx").on(t.code), index("orders_created_idx").on(t.createdAt)],
+);
+
+export const orderItems = pgTable("order_items", {
+  id: id(),
+  orderId: text("order_id").notNull().references(() => orders.id, { onDelete: "cascade" }),
+  productId: text("product_id").notNull().references(() => products.id),
+  productName: text("product_name").notNull(),
+  unitPriceCents: integer("unit_price_cents").notNull(),
+  quantity: integer("quantity").notNull(),
+});
+
+export const stockMovements = pgTable(
+  "stock_movements",
+  {
+    id: id(),
+    productId: text("product_id").notNull().references(() => products.id),
+    type: stockMovementTypeEnum("type").notNull(),
+    quantity: integer("quantity").notNull(),
+    reason: text("reason"),
+    orderId: text("order_id").references(() => orders.id),
+    userId: text("user_id").references(() => users.id),
+    createdAt: createdAt(),
+  },
+  (t) => [index("stock_movements_product_idx").on(t.productId, t.createdAt)],
+);

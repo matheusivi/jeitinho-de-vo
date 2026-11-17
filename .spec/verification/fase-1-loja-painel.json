@@ -1,0 +1,152 @@
+{
+  "feature": "fase-1-loja-painel",
+  "timestamp": "2026-11-17T18:42:03.875Z",
+  "gitRev": "60d4344",
+  "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
+  "reporter": "vitest-json",
+  "exitCode": 0,
+  "testsParsed": 125,
+  "results": {
+    "AC-001": {
+      "status": "pass",
+      "testName": "cardápio mostra só o que tem disponível @spec:AC-001 mostra só o que tem disponível @spec:AC-001",
+      "method": "vitest-json"
+    },
+    "AC-002": {
+      "status": "pass",
+      "testName": "cardápio esconde categoria vazia e categoria desativada @spec:AC-002 esconde categoria vazia e categoria desativada @spec:AC-002",
+      "method": "vitest-json"
+    },
+    "AC-003": {
+      "status": "pass",
+      "testName": "criar pedido retirada: calcula total, baixa estoque e registra a venda @spec:AC-003 retirada: calcula total, baixa estoque e registra a venda @spec:AC-003",
+      "method": "vitest-json"
+    },
+    "AC-004": {
+      "status": "pass",
+      "testName": "criar pedido entrega: soma a taxa do bairro @spec:AC-004 entrega: soma a taxa do bairro @spec:AC-004",
+      "method": "vitest-json"
+    },
+    "AC-005": {
+      "status": "pass",
+      "testName": "reservar duas pessoas disputando a última unidade: só uma leva @spec:AC-005 duas pessoas disputando a última unidade: só uma leva @spec:AC-005",
+      "method": "vitest-json"
+    },
+    "AC-006": {
+      "status": "pass",
+      "testName": "criar pedido ignora preço e taxa enviados pelo navegador @spec:AC-006 ignora preço e taxa enviados pelo navegador @spec:AC-006",
+      "method": "vitest-json"
+    },
+    "AC-007": {
+      "status": "pass",
+      "testName": "criar pedido recusa mais de 30 produtos diferentes @spec:AC-007 recusa mais de 30 produtos diferentes @spec:AC-007",
+      "method": "vitest-json"
+    },
+    "AC-008": {
+      "status": "pass",
+      "testName": "criar pedido fora do horário recusa no servidor @spec:AC-008 fora do horário recusa no servidor @spec:AC-008",
+      "method": "vitest-json"
+    },
+    "AC-009": {
+      "status": "pass",
+      "testName": "correções da revisão se o total mudou desde a sacola, recusa em vez de cobrar diferente @spec:AC-009 se o total mudou desde a sacola, recusa em vez de cobrar diferente @spec:AC-009",
+      "method": "vitest-json"
+    },
+    "AC-010": {
+      "status": "pass",
+      "testName": "correções da revisão produto de categoria desativada não é vendido @spec:AC-010 produto de categoria desativada não é vendido @spec:AC-010",
+      "method": "vitest-json"
+    },
+    "AC-011": {
+      "status": "pass",
+      "testName": "correções da revisão 20 pedidos simultâneos do mesmo IP: só 5 passam @spec:AC-011 20 pedidos simultâneos do mesmo IP: só 5 passam @spec:AC-011",
+      "method": "vitest-json"
+    },
+    "AC-012": {
+      "status": "pass",
+      "testName": "pedido visto pela cliente mostra itens, totais e estado, sem telefone nem endereço @spec:AC-012 mostra itens, totais e estado, sem telefone nem endereço @spec:AC-012",
+      "method": "vitest-json"
+    },
+    "AC-013": {
+      "status": "pass",
+      "testName": "login devolve INVALID igual para senha errada e para e-mail que não existe @spec:AC-013 devolve INVALID igual para senha errada e para e-mail que não existe @spec:AC-013",
+      "method": "vitest-json"
+    },
+    "AC-014": {
+      "status": "pass",
+      "testName": "login bloqueia depois de 5 falhas, mesmo com a senha certa @spec:AC-014 bloqueia depois de 5 falhas, mesmo com a senha certa @spec:AC-014",
+      "method": "vitest-json"
+    },
+    "AC-015": {
+      "status": "pass",
+      "testName": "limite por e-mail bloqueia o e-mail depois de 20 falhas mesmo trocando de IP a cada tentativa @spec:AC-015 bloqueia o e-mail depois de 20 falhas mesmo trocando de IP a cada tentativa @spec:AC-015",
+      "method": "vitest-json"
+    },
+    "AC-016": {
+      "status": "pass",
+      "testName": "IP de quem fez a requisição sem X-Real-IP, usa o último X-Forwarded-For (o que o proxy acrescentou), não o primeiro que o cliente inventou @spec:AC-016 sem X-Real-IP, usa o último X-Forwarded-For (o que o proxy acrescentou), não o primeiro que o cliente inventou @spec:AC-016",
+      "method": "vitest-json"
+    },
+    "AC-017": {
+      "status": "pass",
+      "testName": "listagem do painel funcionário não recebe nenhum campo de dinheiro @spec:AC-017 funcionário não recebe nenhum campo de dinheiro @spec:AC-017",
+      "method": "vitest-json"
+    },
+    "AC-018": {
+      "status": "pass",
+      "testName": "recebimento só a administradora registra, com valor válido @spec:AC-018 só a administradora registra, com valor válido @spec:AC-018",
+      "method": "vitest-json"
+    },
+    "AC-027": {
+      "status": "pass",
+      "testName": "recebimento pedido cancelado não recebe pagamento @spec:AC-027 pedido cancelado não recebe pagamento @spec:AC-027",
+      "method": "vitest-json"
+    },
+    "AC-028": {
+      "status": "pass",
+      "testName": "recebimento recebimento já registrado não é regravado @spec:AC-028 recebimento já registrado não é regravado @spec:AC-028",
+      "method": "vitest-json"
+    },
+    "AC-019": {
+      "status": "pass",
+      "testName": "produzir soma no estoque e registra o movimento com quem lançou @spec:AC-019 soma no estoque e registra o movimento com quem lançou @spec:AC-019",
+      "method": "vitest-json"
+    },
+    "AC-020": {
+      "status": "pass",
+      "testName": "ajustar exige motivo e delta diferente de zero @spec:AC-020 exige motivo e delta diferente de zero @spec:AC-020",
+      "method": "vitest-json"
+    },
+    "AC-021": {
+      "status": "pass",
+      "testName": "andamento do pedido segue a sequência de entrega @spec:AC-021 segue a sequência de entrega @spec:AC-021",
+      "method": "vitest-json"
+    },
+    "AC-022": {
+      "status": "pass",
+      "testName": "cancelamento devolve o estoque uma vez só @spec:AC-022 devolve o estoque uma vez só @spec:AC-022",
+      "method": "vitest-json"
+    },
+    "AC-023": {
+      "status": "pass",
+      "testName": "pedidos de dias anteriores pedido de ontem ainda em andamento continua aparecendo hoje @spec:AC-023 pedido de ontem ainda em andamento continua aparecendo hoje @spec:AC-023",
+      "method": "vitest-json"
+    },
+    "AC-024": {
+      "status": "pass",
+      "testName": "processProductImage gera WebP quadrado em 480 e 960, leve e com a orientação aplicada @spec:AC-024 gera WebP quadrado em 480 e 960, leve e com a orientação aplicada @spec:AC-024",
+      "method": "vitest-json"
+    },
+    "AC-025": {
+      "status": "pass",
+      "testName": "processProductImage recusa arquivo que não é imagem, mesmo com cara de JPEG @spec:AC-025 recusa arquivo que não é imagem, mesmo com cara de JPEG @spec:AC-025",
+      "method": "vitest-json"
+    },
+    "AC-026": {
+      "status": "pass",
+      "testName": "cadastro de bairros aceita taxa zero mas recusa negativa, fracionada e nome repetido @spec:AC-026 aceita taxa zero mas recusa negativa, fracionada e nome repetido @spec:AC-026",
+      "method": "vitest-json"
+    }
+  },
+  "principles": {}
+}
