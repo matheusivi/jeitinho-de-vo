@@ -41,6 +41,7 @@ export default async function RelatoriosPage({ searchParams }: { searchParams: P
   const prev = shift(year, month, -1);
   const next = shift(year, month, 1);
   const label = `${MONTH_NAMES[month - 1]} de ${year}`;
+  const title = label.charAt(0).toUpperCase() + label.slice(1);
   const tab = (a: string) => `/painel/relatorios?mes=${mesKey}&aba=${a}`;
 
   const r = await monthlyReport(year, month, user);
@@ -59,7 +60,7 @@ export default async function RelatoriosPage({ searchParams }: { searchParams: P
       <div className="pn-row" style={{ justifyContent: "space-between" }}>
         <div className="pn-row" style={{ gap: 8 }}>
           <Link className="pn-btn ghost small" href={`/painel/relatorios?mes=${key(prev.year, prev.month)}&aba=${aba}`} aria-label="Mês anterior">←</Link>
-          <strong style={{ fontSize: 18, textTransform: "capitalize", minWidth: 170, textAlign: "center" }}>{aba === "ano" ? year : label}</strong>
+          <strong style={{ fontSize: 18, minWidth: 170, textAlign: "center" }}>{aba === "ano" ? year : title}</strong>
           <Link className="pn-btn ghost small" href={`/painel/relatorios?mes=${key(next.year, next.month)}&aba=${aba}`} aria-label="Próximo mês">→</Link>
         </div>
         <nav className="pn-tabs" aria-label="Visão">
@@ -118,14 +119,14 @@ function MonthView({ r, label }: { r: Awaited<ReturnType<typeof monthlyReport>>;
           ({formatBRL(r.cmv.theoreticalCostCents)} sobre {formatBRL(r.cmv.theoreticalRevenueCents)}).
         </p>
         <p style={{ margin: 0 }}>
-          <strong>Real pelas saídas: {pct(r.cmv.realPct)}.</strong> É o que saiu da despensa no mês em produção, perdas, consumo e contagens
-          ({formatBRL(r.cmv.realCostCents)} sobre {formatBRL(r.cmv.productRevenueCents)} vendidos em produtos).
+          <strong>Real: {pct(r.cmv.realPct)}.</strong> É o previsto somado ao que saiu da despensa fora da receita: perdas, consumo avulso e correções de contagem
+          ({formatBRL(r.cmv.realCostCents)} sobre {formatBRL(r.cmv.theoreticalRevenueCents)}). O que foi produzido e ainda está na vitrine não entra.
         </p>
         {r.cmv.diffPts !== null && (
           <p className={`pn-msg ${r.cmv.diffPts > 2 ? "err" : "ok"}`} style={{ margin: 0 }}>
             {r.cmv.diffPts > 2
-              ? `O real está ${r.cmv.diffPts.toLocaleString("pt-BR")} pontos acima do previsto: vale olhar perdas (${formatBRL(r.cmv.lossCents)}) e se as receitas estão sendo seguidas na medida.`
-              : "O real está perto do previsto: as receitas estão batendo com o que sai da despensa."}
+              ? `Perdas e ajustes levaram ${r.cmv.diffPts.toLocaleString("pt-BR")} pontos do preço neste mês (perdas: ${formatBRL(r.cmv.lossCents)}). Vale olhar o que está estragando ou sobrando.`
+              : "Perdas e ajustes estão baixos: o custo real está perto do previsto pelas receitas."}
           </p>
         )}
         {r.cmv.itemsWithoutCost > 0 && (
@@ -147,17 +148,18 @@ function MonthView({ r, label }: { r: Awaited<ReturnType<typeof monthlyReport>>;
           <tbody>
             {d.map((x) => {
               const empty = !x.orders && !x.receivedCents && !x.purchasesCents;
+              const money = (c: number) => (empty ? "—" : formatBRL(c));
               return (
                 <tr key={x.date} style={{ color: empty ? "var(--ink-muted)" : undefined }}>
                   <td>{x.date.slice(8)}/{x.date.slice(5, 7)}</td>
-                  <td className="pn-num">{x.orders}</td>
-                  <td className="pn-num">{x.items}</td>
-                  <td className="pn-num">{formatBRL(x.soldCents)}</td>
-                  <td className="pn-num">{formatBRL(x.feesCents)}</td>
-                  <td className="pn-num">{formatBRL(x.pendingCents)}</td>
-                  <td className="pn-num">{formatBRL(x.receivedCents)}</td>
-                  <td className="pn-num">{formatBRL(x.purchasesCents)}</td>
-                  <td className="pn-num" style={{ color: x.balanceCents < 0 ? "var(--goiaba-escuro)" : undefined }}>{formatBRL(x.balanceCents)}</td>
+                  <td className="pn-num">{empty ? "—" : x.orders}</td>
+                  <td className="pn-num">{empty ? "—" : x.items}</td>
+                  <td className="pn-num">{money(x.soldCents)}</td>
+                  <td className="pn-num">{money(x.feesCents)}</td>
+                  <td className="pn-num">{money(x.pendingCents)}</td>
+                  <td className="pn-num">{money(x.receivedCents)}</td>
+                  <td className="pn-num">{money(x.purchasesCents)}</td>
+                  <td className="pn-num" style={{ color: x.balanceCents < 0 ? "var(--goiaba-escuro)" : undefined }}>{money(x.balanceCents)}</td>
                 </tr>
               );
             })}

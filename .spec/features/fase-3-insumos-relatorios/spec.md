@@ -3,7 +3,7 @@
 # Spec: Fase 3 insumos relatorios
 
 > feature: fase-3-insumos-relatorios
-> status: pronta
+> status: em-implementacao
 
 [PRD](prd.md) · [ADR](adr.md) · [TDD](design.md) · [Tarefas](tasks.md) · [Pesquisa](research.md)
 
@@ -181,9 +181,9 @@ Como dona, quero uma tabela do mês com uma linha por dia, o resultado por produ
 
 #### AC-052 — CMV previsto e CMV real do mês
 
-- **Dado** vendas com custo guardado e saídas de insumos por produção, perda e consumo
+- **Dado** vendas com custo guardado e saídas de insumo fora da receita (perda, consumo, contagem)
 - **Quando** a dona vê o resumo do mês
-- **Então** vê o CMV previsto pela receita e o CMV real pelas saídas de insumo, e a diferença entre eles
+- **Então** vê o CMV previsto pela receita, o CMV real (previsto mais perdas, consumo e contagem) e a diferença entre eles; produção que ainda está na vitrine não conta como custo
 
 #### AC-053 — Exportação para Excel
 
@@ -212,7 +212,7 @@ Como dona, quero uma tabela do mês com uma linha por dia, o resultado por produ
 | ASM-004 | Lata e outras embalagens têm peso ou volume cadastrado; receita pode usar embalagem ou a unidade base | confirmada | Matheus em 2026-11-17: "sim, pode seguir" |
 | ASM-005 | Só a dona lança compras; funcionária lança perda e consumo | confirmada | Matheus em 2026-11-17: "sim, pode seguir" |
 | ASM-006 | Custo e margem por produto entram na fase 3, o mais detalhado possível | confirmada | Matheus em 2026-11-17: "sim, pode seguir o mais detalhado possivel" |
-| ASM-007 | Meta de CMV começa em 35% e a dona pode mudar | aberta | — |
+| ASM-007 | Meta de CMV começa em 35% e a dona pode mudar | confirmada | Matheus em 2026-11-17: "Meta de CMV começa em 35%" |
 | ASM-008 | Sugestão de mínimo = consumo médio diário dos últimos 30 dias × 7 dias | aberta | — |
 | ASM-009 | Custo médio ponderado pelas compras (sem PEPS) | aberta | — |
 

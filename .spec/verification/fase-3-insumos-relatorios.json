@@ -1,0 +1,142 @@
+{
+  "feature": "fase-3-insumos-relatorios",
+  "timestamp": "2026-11-17T21:17:42.848Z",
+  "gitRev": "89ee504",
+  "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
+  "reporter": "vitest-json",
+  "exitCode": 0,
+  "testsParsed": 170,
+  "results": {
+    "AC-029": {
+      "status": "pass",
+      "testName": "conversão de unidades 2 latas, 1,5 kg e 300 g viram gramas @spec:AC-029 2 latas, 1,5 kg e 300 g viram gramas @spec:AC-029",
+      "method": "vitest-json"
+    },
+    "AC-030": {
+      "status": "pass",
+      "testName": "cadastro de insumo recusa nome vazio, nome repetido e embalagem sem tamanho @spec:AC-030 recusa nome vazio, nome repetido e embalagem sem tamanho @spec:AC-030",
+      "method": "vitest-json"
+    },
+    "AC-031": {
+      "status": "pass",
+      "testName": "compras soma ao estoque e guarda valor, data e quem lançou @spec:AC-031 soma ao estoque e guarda valor, data e quem lançou @spec:AC-031",
+      "method": "vitest-json"
+    },
+    "AC-032": {
+      "status": "pass",
+      "testName": "compras custo médio pondera compras com preços diferentes @spec:AC-032 custo médio pondera compras com preços diferentes @spec:AC-032",
+      "method": "vitest-json"
+    },
+    "AC-033": {
+      "status": "pass",
+      "testName": "compras com estoque negativo o custo passa a ser o da compra @spec:AC-033 com estoque negativo o custo passa a ser o da compra @spec:AC-033",
+      "method": "vitest-json"
+    },
+    "AC-034": {
+      "status": "pass",
+      "testName": "compras só a dona lança compras @spec:AC-034 só a dona lança compras @spec:AC-034",
+      "method": "vitest-json"
+    },
+    "AC-035": {
+      "status": "pass",
+      "testName": "perdas, consumo e contagem perda e consumo baixam com motivo, quem lançou e custo @spec:AC-035 perda e consumo baixam com motivo, quem lançou e custo @spec:AC-035",
+      "method": "vitest-json"
+    },
+    "AC-036": {
+      "status": "pass",
+      "testName": "perdas, consumo e contagem contagem corrige o estoque pela diferença @spec:AC-036 contagem corrige o estoque pela diferença @spec:AC-036",
+      "method": "vitest-json"
+    },
+    "AC-037": {
+      "status": "pass",
+      "testName": "receita recusa rendimento zero, insumo repetido e quantidade zero @spec:AC-037 recusa rendimento zero, insumo repetido e quantidade zero @spec:AC-037",
+      "method": "vitest-json"
+    },
+    "AC-038": {
+      "status": "pass",
+      "testName": "baixa na produção baixa na proporção do rendimento, ligada à produção e com custo @spec:AC-038 baixa na proporção do rendimento, ligada à produção e com custo @spec:AC-038",
+      "method": "vitest-json"
+    },
+    "AC-039": {
+      "status": "pass",
+      "testName": "baixa na produção insumo insuficiente fica negativo e o retorno avisa @spec:AC-039 insumo insuficiente fica negativo e o retorno avisa @spec:AC-039",
+      "method": "vitest-json"
+    },
+    "AC-040": {
+      "status": "pass",
+      "testName": "baixa na produção produto sem receita produz e avisa que não baixou insumos @spec:AC-040 produto sem receita produz e avisa que não baixou insumos @spec:AC-040",
+      "method": "vitest-json"
+    },
+    "AC-041": {
+      "status": "pass",
+      "testName": "mínimo e alertas lista os que estão no mínimo ou abaixo, negativos primeiro @spec:AC-041 lista os que estão no mínimo ou abaixo, negativos primeiro @spec:AC-041",
+      "method": "vitest-json"
+    },
+    "AC-042": {
+      "status": "pass",
+      "testName": "mínimo e alertas sugere o consumo de 7 dias a partir dos últimos 30 @spec:AC-042 sugere o consumo de 7 dias a partir dos últimos 30 @spec:AC-042",
+      "method": "vitest-json"
+    },
+    "AC-043": {
+      "status": "pass",
+      "testName": "custo do produto custo por unidade com o peso de cada insumo @spec:AC-043 custo por unidade com o peso de cada insumo @spec:AC-043",
+      "method": "vitest-json"
+    },
+    "AC-044": {
+      "status": "pass",
+      "testName": "margem CMV, margem, markup e sinal acima da meta @spec:AC-044 CMV, margem, markup e sinal acima da meta @spec:AC-044",
+      "method": "vitest-json"
+    },
+    "AC-045": {
+      "status": "pass",
+      "testName": "custo do produto insumo sem preço deixa o custo incompleto, não zero @spec:AC-045 insumo sem preço deixa o custo incompleto, não zero @spec:AC-045",
+      "method": "vitest-json"
+    },
+    "AC-046": {
+      "status": "pass",
+      "testName": "custo guardado na venda o item do pedido mantém o custo da hora da venda @spec:AC-046 o item do pedido mantém o custo da hora da venda @spec:AC-046",
+      "method": "vitest-json"
+    },
+    "AC-047": {
+      "status": "pass",
+      "testName": "lista de insumos funcionária vê estoque e situação, sem nenhum valor @spec:AC-047 funcionária vê estoque e situação, sem nenhum valor @spec:AC-047",
+      "method": "vitest-json"
+    },
+    "AC-048": {
+      "status": "pass",
+      "testName": "relatório do mês uma linha por dia com vendas, caixa e compras, sem cancelados e no fuso da loja @spec:AC-048 uma linha por dia com vendas, caixa e compras, sem cancelados e no fuso da loja @spec:AC-048",
+      "method": "vitest-json"
+    },
+    "AC-049": {
+      "status": "pass",
+      "testName": "relatório do mês recebimento entra no caixa no dia em que foi recebido @spec:AC-049 recebimento entra no caixa no dia em que foi recebido @spec:AC-049",
+      "method": "vitest-json"
+    },
+    "AC-050": {
+      "status": "pass",
+      "testName": "relatório por produto e do ano quantidade, faturamento, custo, margem e CMV por produto @spec:AC-050 quantidade, faturamento, custo, margem e CMV por produto @spec:AC-050",
+      "method": "vitest-json"
+    },
+    "AC-051": {
+      "status": "pass",
+      "testName": "relatório por produto e do ano vendido, recebido, compras e saldo de cada mês @spec:AC-051 vendido, recebido, compras e saldo de cada mês @spec:AC-051",
+      "method": "vitest-json"
+    },
+    "AC-052": {
+      "status": "pass",
+      "testName": "relatório do mês CMV previsto pela receita e real pelas saídas de insumo @spec:AC-052 CMV previsto pela receita e real pelas saídas de insumo @spec:AC-052",
+      "method": "vitest-json"
+    },
+    "AC-053": {
+      "status": "pass",
+      "testName": "exportação e acesso gera .xlsx com as abas e números como número @spec:AC-053 gera .xlsx com as abas e números como número @spec:AC-053",
+      "method": "vitest-json"
+    },
+    "AC-054": {
+      "status": "pass",
+      "testName": "exportação e acesso funcionária não acessa relatórios nem exportação @spec:AC-054 funcionária não acessa relatórios nem exportação @spec:AC-054",
+      "method": "vitest-json"
+    }
+  },
+  "principles": {}
+}

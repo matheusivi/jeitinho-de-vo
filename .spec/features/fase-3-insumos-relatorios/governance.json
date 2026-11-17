@@ -5,7 +5,7 @@
   "domains": [],
   "clientRequest": "insumos: entrada por compra (quantidade e valor pago), saída automática pela receita, ajuste manual para perda e consumo avulso, alerta de estoque mínimo; relatórios: tabela de vendas por dia e por mês com fluxo de caixa, exportável para Excel; custo e margem: pode seguir o mais detalhado possivel, desta forma ela terá uma ajuda melhor para ter o custo",
   "review": {
-    "summary": "Li a spec e as tarefas da fase 1 e a constituição. A fase 3 interfere em dois domínios da fase 1 sem violar regra: (1) produce passa a baixar insumos na mesma transação e a devolver avisos; AC-019 continua valendo. (2) createOrder passa a gravar o custo unitário no item do pedido; preço, total e reserva (AC-003, AC-005, AC-006) não mudam. Regra AC-017 (funcionária sem dinheiro) é estendida para custos.",
+    "summary": "Li a spec e as tarefas da fase 1 e a constituição. A fase 3 interfere em dois domínios da fase 1 sem violar regra: (1) produce passa a baixar insumos na mesma transação e a devolver avisos; AC-019 continua valendo. (2) createOrder passa a gravar o custo unitário no item do pedido; preço, total e reserva (AC-003, AC-005, AC-006) não mudam. Regra AC-017 (funcionária sem dinheiro) é estendida para custos. Revisão refeita após redefinir AC-052 (CMV real = previsto + perdas, consumo e contagem) e concluir as tarefas; conflitos com a fase 1 continuam os mesmos dois.",
     "reviewer": "Claude Opus 5.5, sessão Claude Code session_016mjpWfzHvywrksDHpr585X",
     "conflicts": [
       {
@@ -38,9 +38,9 @@
         "rule": ".spec/features/fase-1-loja-painel/spec.md#ac-003--retirada-calcula-o-total-e-baixa-o-estoque"
       }
     ],
-    "fingerprint": "7f5a3b09fa24ab93842067dabfee8abe62587602eab8c93e28a0857369495775",
-    "ownFingerprint": "6ce165b8c11cf7109f83740c792fdfb5c63836368d88552493f8be4b4c783944",
-    "reviewedAt": "2026-11-17T20:46:23.965Z",
+    "fingerprint": "12ae49d41803cd6fe093ce433d832ba8815efba956105806bc3ed11076d59649",
+    "ownFingerprint": "4c022f80cd56f6b81356032e4ba84045e05423a2ead44540e58865e0dcac13fb",
+    "reviewedAt": "2026-11-17T21:17:11.546Z",
     "documents": [
       ".spec/features/fase-1-loja-painel/spec.md",
       ".spec/features/fase-1-loja-painel/tasks.md",
@@ -104,6 +104,36 @@
       "ownFingerprint": "6ce165b8c11cf7109f83740c792fdfb5c63836368d88552493f8be4b4c783944",
       "conflictFingerprint": "dfd8975c4ee5883dd2f624289158a93f7956f3cb148bd6f3fc7ce9af1b6b9acc",
       "answeredAt": "2026-11-17T20:46:24.288Z"
+    },
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17 (reconfirmação após redefinir AC-052)",
+      "fingerprint": "12ae49d41803cd6fe093ce433d832ba8815efba956105806bc3ed11076d59649",
+      "ownFingerprint": "4c022f80cd56f6b81356032e4ba84045e05423a2ead44540e58865e0dcac13fb",
+      "conflictFingerprint": "c5e0d2926724fbf834f3d4acfa26e50945d7eb3e00acdd298994337c11fea137",
+      "answeredAt": "2026-11-17T21:17:11.687Z"
+    },
+    {
+      "conflictId": "producao-baixa-insumos",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17 (reconfirmação após redefinir AC-052)",
+      "fingerprint": "12ae49d41803cd6fe093ce433d832ba8815efba956105806bc3ed11076d59649",
+      "ownFingerprint": "4c022f80cd56f6b81356032e4ba84045e05423a2ead44540e58865e0dcac13fb",
+      "conflictFingerprint": "c93cbaebb9f1f9b7d6419eda73b9d332e365744f539dbe052f13f1e06cda640b",
+      "answeredAt": "2026-11-17T21:17:11.805Z"
+    },
+    {
+      "conflictId": "pedido-guarda-custo",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17 (reconfirmação após redefinir AC-052)",
+      "fingerprint": "12ae49d41803cd6fe093ce433d832ba8815efba956105806bc3ed11076d59649",
+      "ownFingerprint": "4c022f80cd56f6b81356032e4ba84045e05423a2ead44540e58865e0dcac13fb",
+      "conflictFingerprint": "dfd8975c4ee5883dd2f624289158a93f7956f3cb148bd6f3fc7ce9af1b6b9acc",
+      "answeredAt": "2026-11-17T21:17:11.922Z"
     }
   ]
 }

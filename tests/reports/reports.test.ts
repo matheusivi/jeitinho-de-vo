@@ -88,9 +88,10 @@ describe("relatório do mês", () => {
     const { cmv } = await monthlyReport(2026, 11, await admin());
     // previsto: só itens com custo: 3 bolos × 300 = 900 sobre 3 × 1200 = 3600 → 25%
     expect(cmv).toMatchObject({ theoreticalCostCents: 900, theoreticalRevenueCents: 3600, theoreticalPct: 25 });
-    // real: saídas 800 + 200 = 1000 sobre vendas de produtos (sem taxa) 2400 + 1000 + 1200 = 4600 → 21,7%
-    expect(cmv).toMatchObject({ realCostCents: 1000, lossCents: 200, productRevenueCents: 4600, realPct: 21.7 });
-    expect(cmv.diffPts).toBeCloseTo(-3.3, 1);
+    // real: previsto + perdas, consumo e contagem (900 + 200 = 1100) sobre a mesma base de 3600 → 30,6%.
+    // A produção de 800 não entra: o que ainda está na vitrine não é custo do que foi vendido.
+    expect(cmv).toMatchObject({ realCostCents: 1100, lossCents: 200, productRevenueCents: 4600, realPct: 30.6 });
+    expect(cmv.diffPts).toBeCloseTo(5.6, 1);
     expect(cmv.itemsWithoutCost).toBe(1);
   });
 });

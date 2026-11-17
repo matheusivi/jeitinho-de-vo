@@ -26,7 +26,7 @@ Sem dados da loja ainda. As faixas acima são referências públicas, não medi�
 
 ## Viabilidade matemática e estatística
 
-Custo unitário = Σ(qtd do insumo na receita × custo médio) ÷ rendimento. CMV = custo ÷ preço. Margem bruta = 1 − CMV. Markup = preço ÷ custo. CMV real do mês = custo das saídas de insumo (produção, perda, consumo) ÷ vendido; CMV previsto = Σ(custo guardado nas vendas) ÷ vendido. Sem amostra, não há análise estatística.
+Custo unitário = Σ(qtd do insumo na receita × custo médio) ÷ rendimento. CMV = custo ÷ preço. Margem bruta = 1 − CMV. Markup = preço ÷ custo. CMV real do mês = (custo previsto do que foi vendido + perdas, consumo avulso e correções de contagem) ÷ vendas desses itens; CMV previsto = Σ(custo guardado nas vendas) ÷ vendido. Sem amostra, não há análise estatística.
 
 ## Proposta e alternativas ao pedido
 

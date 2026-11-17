@@ -64,13 +64,16 @@ export type CmvSummary = {
   /** Vendas dos itens que tinham custo, base do CMV previsto. */
   theoreticalRevenueCents: number;
   theoreticalPct: number | null;
-  /** Custo das saídas de insumo do mês: produção, perda, consumo e correções de contagem. */
+  /**
+   * Custo real: o previsto mais o que saiu fora da receita (perda, consumo avulso, correções de contagem).
+   * A produção que ainda está na vitrine não entra, senão um mês de estoque alto pareceria desperdício.
+   */
   realCostCents: number;
   lossCents: number;
   /** Vendas de produtos do mês, sem taxa de entrega. */
   productRevenueCents: number;
   realPct: number | null;
-  /** Real − previsto, em pontos percentuais. Positivo indica desperdício ou receita fora da medida. */
+  /** Real − previsto, em pontos percentuais: quanto do preço foi embora em perdas e ajustes. */
   diffPts: number | null;
   /** Unidades vendidas sem custo (produto sem receita ou com insumo sem preço). */
   itemsWithoutCost: number;
@@ -155,19 +158,21 @@ export async function monthlyReport(year: number, month: number, user: SessionUs
       sum(CASE WHEN i.unit_cost_cents IS NULL THEN i.quantity ELSE 0 END) AS without
     FROM order_items i JOIN orders o ON o.id = i.order_id
     WHERE o.status <> 'CANCELED' AND ${inMonth(sql`o.created_at`)}`);
-  const [real] = await rows<{ cost: string; loss: string }>(sql`
+  // saídas fora da receita: perda, consumo avulso e correções de contagem (contagem a mais devolve custo)
+  const [waste] = await rows<{ cost: string; loss: string }>(sql`
     SELECT coalesce(sum(CASE WHEN qty_milli < 0 THEN cost_cents ELSE -cost_cents END), 0) AS cost,
       coalesce(sum(CASE WHEN type = 'LOSS' OR (type = 'COUNT' AND qty_milli < 0) THEN cost_cents ELSE 0 END), 0) AS loss
     FROM ingredient_movements
-    WHERE type IN ('PRODUCTION', 'LOSS', 'CONSUMPTION', 'COUNT') AND cost_cents IS NOT NULL AND ${inMonth(sql`created_at`)}`);
+    WHERE type IN ('LOSS', 'CONSUMPTION', 'COUNT') AND cost_cents IS NOT NULL AND ${inMonth(sql`created_at`)}`);
   const theoreticalPct = pct(toInt(theo.cost), toInt(theo.revenue));
-  const realPct = pct(toInt(real.cost), totals.productCents);
+  const realCost = toInt(theo.cost) + toInt(waste.cost);
+  const realPct = pct(realCost, toInt(theo.revenue));
   const cmv: CmvSummary = {
     theoreticalCostCents: toInt(theo.cost),
     theoreticalRevenueCents: toInt(theo.revenue),
     theoreticalPct,
-    realCostCents: toInt(real.cost),
-    lossCents: toInt(real.loss),
+    realCostCents: realCost,
+    lossCents: toInt(waste.loss),
     productRevenueCents: totals.productCents,
     realPct,
     diffPts: theoreticalPct !== null && realPct !== null ? Math.round((realPct - theoreticalPct) * 10) / 10 : null,

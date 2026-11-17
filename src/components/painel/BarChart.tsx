@@ -32,8 +32,8 @@ export function BarChart({
   const r = Math.min(4, barW / 2);
 
   return (
-    <figure style={{ margin: 0 }}>
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={title} style={{ display: "block", maxWidth: "100%" }} className="pn-chart">
+    <figure style={{ margin: 0, overflowX: "auto" }}>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={title} style={{ display: "block", minWidth: 560 }} className="pn-chart">
         {ticks.map((t) => (
           <g key={t}>
             <line x1={pad.left} x2={W - pad.right} y1={y(t)} y2={y(t)} stroke="#e7e1d2" strokeWidth={1} />

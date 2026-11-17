@@ -29,6 +29,14 @@ export default async function ReceitaPage({ params }: { params: Promise<{ produc
     ...(recipe?.items.filter((i) => !i.active).map((i) => ({ id: i.ingredientId, name: `${i.name} (inativo)`, baseUnit: i.baseUnit, packageName: i.packageName, packageSizeMilli: i.packageSizeMilli })) ?? []),
   ].map((i) => ({ id: i.id, name: i.name, baseUnit: i.baseUnit, packageName: i.packageName, packageSizeMilli: i.packageSizeMilli }));
   const cost = recipe ? costRecipe(recipe) : null;
+  // "790 g (2 latas)": mostra também em embalagens quando a conta fecha ou passa de uma
+  const pkgOf = new Map(
+    (recipe?.items ?? []).flatMap((i) => {
+      if (!i.packageName || !i.packageSizeMilli || i.qtyMilli < i.packageSizeMilli) return [];
+      const n = Math.round((i.qtyMilli / i.packageSizeMilli) * 10) / 10;
+      return [[i.ingredientId, `${n.toLocaleString("pt-BR")} ${i.packageName}${n === 1 ? "" : "s"}`]];
+    }),
+  );
   const margin = cost ? analyzeMargin(product.priceCents, cost.unitCostCents, target) : null;
 
   return (
@@ -48,7 +56,7 @@ export default async function ReceitaPage({ params }: { params: Promise<{ produc
               Sem ele, o custo conhecido é {formatBRL(cost.knownCostCents)} por receita.
             </p>
           )}
-          <div className="pn-row" style={{ gap: 12 }}>
+          <div className="pn-row" style={{ gap: 12, alignItems: "stretch" }}>
             <Metric label="Custo por unidade" value={cost.unitCostCents === null ? "incompleto" : formatBRL(cost.unitCostCents)} />
             <Metric label={`Custo da receita (rende ${cost.yieldQty})`} value={cost.batchCostCents === null ? "incompleto" : formatBRL(cost.batchCostCents)} />
             {margin && (
@@ -73,7 +81,10 @@ export default async function ReceitaPage({ params }: { params: Promise<{ produc
                 {cost.lines.map((l) => (
                   <tr key={l.ingredientId}>
                     <td>{l.name}</td>
-                    <td style={{ fontVariantNumeric: "tabular-nums" }}>{formatQty(l.qtyMilli, l.baseUnit)}</td>
+                    <td style={{ fontVariantNumeric: "tabular-nums" }}>
+                      {formatQty(l.qtyMilli, l.baseUnit)}
+                      {pkgOf.get(l.ingredientId) && <span className="pn-muted"> ({pkgOf.get(l.ingredientId)})</span>}
+                    </td>
                     <td style={{ fontVariantNumeric: "tabular-nums" }}>{l.lineCostCents === null ? <span className="pn-tag warn">sem preço</span> : formatBRL(l.lineCostCents)}</td>
                     <td style={{ minWidth: 180 }}>
                       {l.lineCostCents !== null && (

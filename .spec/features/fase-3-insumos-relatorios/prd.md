@@ -54,3 +54,5 @@ Risco principal: custo errado se a dona cadastrar a receita ou a compra errado. 
 ## Validação com o cliente
 
 2026-11-17, pergunta pela ferramenta nativa sobre custo, caixa, lata e compras. Resposta literal: "mas como seria essa analise de marge, tem algum calculo como padrão ?" Depois da explicação do CMV e das propostas: "sim, pode seguir o mais detalhado possivel, desta forma ela terá uma ajuda melhor para ter o custo".
+
+2026-11-17, depois do teste nas telas: o CMV real foi redefinido como previsto + perdas, consumo e correções de contagem, porque a produção ainda na vitrine distorcia o número. Resposta literal: "Aprovo a regra nova (Recomendado)". Interferências na fase 1 reconfirmadas: "Sim, continuam valendo". Meta inicial confirmada: "Meta de CMV começa em 35%". Sugestão de mínimo (ASM-008) e custo médio ponderado (ASM-009) seguem em aberto.
