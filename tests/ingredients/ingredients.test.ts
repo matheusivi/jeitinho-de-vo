@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { db, schema } from "@/lib/db";
 import {
   createIngredient, IngredientError, listIngredients, lowStockAlerts, purchase, recordCount, recordOutflow,
-  setMinimum, suggestMinimum, updateIngredient,
+  setMinimum, suggestMinimum, updateIngredient, type AdminIngredient,
 } from "@/lib/ingredients/ingredients";
 import { ForbiddenError } from "@/lib/auth/types";
 import { resetDb } from "../setup";
@@ -181,7 +181,7 @@ describe("lista de insumos", () => {
     expect(row).toMatchObject({ name: ing.name, stockMilli: KG, status: "LOW" });
     const keys = Object.keys(row).join(" ");
     expect(keys).not.toMatch(/cost|value|cents|price/i);
-    const [adminRow] = await listIngredients(a);
+    const [adminRow] = (await listIngredients(a)) as AdminIngredient[];
     expect(adminRow).toMatchObject({ stockValueCents: 1000 });
     expect(adminRow.avgCostCentsPerBase).toBeCloseTo(1, 9); // 1 centavo por grama
   });
