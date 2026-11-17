@@ -99,6 +99,21 @@ describe("recebimento", () => {
     await markReceived(order.id, 2000, await admin());
     expect(await statusOf(order.id)).toMatchObject({ paymentStatus: "RECEIVED", receivedCents: 2000 });
   });
+
+  it("pedido cancelado não recebe pagamento @spec:AC-027", async () => {
+    const { order } = await novoPedido("PICKUP");
+    await cancelOrder(order.id, await staff());
+    await expect(markReceived(order.id, 2000, await admin())).rejects.toBeInstanceOf(TransitionError);
+    expect(await statusOf(order.id)).toMatchObject({ paymentStatus: "PENDING", receivedCents: null });
+  });
+
+  it("recebimento já registrado não é regravado @spec:AC-028", async () => {
+    const { order } = await novoPedido("PICKUP");
+    const a = await admin();
+    await markReceived(order.id, 2000, a);
+    await expect(markReceived(order.id, 500, a)).rejects.toBeInstanceOf(TransitionError);
+    expect(await statusOf(order.id)).toMatchObject({ paymentStatus: "RECEIVED", receivedCents: 2000 });
+  });
 });
 
 describe("listagem do painel", () => {

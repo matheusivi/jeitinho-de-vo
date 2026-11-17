@@ -1,11 +1,11 @@
 {
   "feature": "fase-1-loja-painel",
-  "timestamp": "2026-11-17T18:39:37.477Z",
-  "gitRev": "a0b3ce3",
+  "timestamp": "2026-11-17T18:42:03.875Z",
+  "gitRev": "60d4344",
   "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
   "reporter": "vitest-json",
   "exitCode": 0,
-  "testsParsed": 123,
+  "testsParsed": 125,
   "results": {
     "AC-001": {
       "status": "pass",
@@ -95,6 +95,16 @@
     "AC-018": {
       "status": "pass",
       "testName": "recebimento só a administradora registra, com valor válido @spec:AC-018 só a administradora registra, com valor válido @spec:AC-018",
+      "method": "vitest-json"
+    },
+    "AC-027": {
+      "status": "pass",
+      "testName": "recebimento pedido cancelado não recebe pagamento @spec:AC-027 pedido cancelado não recebe pagamento @spec:AC-027",
+      "method": "vitest-json"
+    },
+    "AC-028": {
+      "status": "pass",
+      "testName": "recebimento recebimento já registrado não é regravado @spec:AC-028 recebimento já registrado não é regravado @spec:AC-028",
       "method": "vitest-json"
     },
     "AC-019": {

@@ -139,6 +139,18 @@ Como funcionária, quero lançar o que produzi e avançar os pedidos, para que o
 - **Quando** alguém tenta registrar o pagamento recebido
 - **Então** só a administradora consegue, e com valor válido
 
+#### AC-027 — Pedido cancelado não recebe pagamento
+
+- **Dado** um pedido cancelado
+- **Quando** a dona tenta registrar o pagamento recebido
+- **Então** o sistema recusa e o pedido continua sem recebimento
+
+#### AC-028 — Recebimento registrado não é regravado
+
+- **Dado** um pedido com recebimento já registrado
+- **Quando** alguém tenta registrar outro valor
+- **Então** o sistema recusa e mantém o valor original
+
 #### AC-019 — "Produzi hoje" soma ao estoque e registra quem lançou
 
 - **Dado** um produto cadastrado
@@ -198,18 +210,17 @@ Como dona, quero cadastrar produtos com foto e definir as taxas por bairro, para
 - Insumos, fichas técnicas e relatórios (fase 3), kit festa (fase 4).
 - Conta de cliente, fidelidade e status automático por WhatsApp (fase 5).
 - Login com Google e autenticação em dois fatores.
+- Perguntas levadas para as próximas fases: se o kit festa dá baixa nos insumos (fase 3/4) e quando a nota fiscal entra no escopo.
 
 ## Suposições
 
 | ID | Suposição | Status | Resolução |
 |---|---|---|---|
-| ASM-001 | Horário de funcionamento fixo: segunda a sábado, 8h às 18h, fuso de Campo Grande | aberta | — |
-| ASM-002 | Limite de 5 pedidos por IP a cada 10 minutos não atrapalha clientes reais (ex.: várias pessoas na mesma rede) | aberta | — |
+| ASM-001 | Horário de funcionamento fixo: segunda a sábado, 8h às 18h, fuso de Campo Grande | confirmada | Matheus confirmou em 2026-11-17: "Sim, está certo" |
+| ASM-002 | Limite de 5 pedidos por IP a cada 10 minutos não atrapalha clientes reais (ex.: várias pessoas na mesma rede) | confirmada | Matheus em 2026-11-17: "Manter 5 a cada 10 min" |
 
 ## Perguntas em aberto
 
 | ID | Pergunta | Status | Resposta |
 |---|---|---|---|
-| Q-001 | Registrar recebimento num pedido cancelado deve ser bloqueado? Hoje o sistema aceita e sobrescreve o valor | aberta | — |
-| Q-002 | Kit festa vai dar baixa nos insumos? (pergunta para a cliente, fase 4) | aberta | — |
-| Q-003 | Quando a nota fiscal entra no escopo? | aberta | — |
+| Q-001 | Registrar recebimento num pedido cancelado deve ser bloqueado? | respondida | Matheus em 2026-11-17: "Bloquear os dois casos" (cancelado não recebe e recebido não é regravado), virou AC-027 e AC-028 |

@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { assertRole, type SessionUser } from "@/lib/auth/types";
 import { releaseForCancel } from "@/lib/stock/stock";
@@ -56,7 +56,20 @@ export async function markReceived(orderId: string, receivedCents: number, user:
   const updated = await db
     .update(schema.orders)
     .set({ paymentStatus: "RECEIVED", receivedCents, receivedAt: new Date() })
-    .where(eq(schema.orders.id, orderId))
+    .where(
+      and(
+        eq(schema.orders.id, orderId),
+        ne(schema.orders.status, "CANCELED"),
+        eq(schema.orders.paymentStatus, "PENDING"),
+      ),
+    )
     .returning({ id: schema.orders.id });
-  if (updated.length === 0) throw new TransitionError("Pedido não encontrado.");
+  if (updated.length > 0) return;
+  const [current] = await db
+    .select({ status: schema.orders.status, paymentStatus: schema.orders.paymentStatus })
+    .from(schema.orders)
+    .where(eq(schema.orders.id, orderId));
+  if (!current) throw new TransitionError("Pedido não encontrado.");
+  if (current.status === "CANCELED") throw new TransitionError("Pedido cancelado não recebe pagamento.");
+  throw new TransitionError("Este pedido já tem recebimento registrado.");
 }

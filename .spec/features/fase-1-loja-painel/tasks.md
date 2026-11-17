@@ -42,7 +42,7 @@
 
 ## T-007 — Painel de pedidos [concluida]
 
-- Refs: US-004, AC-017, AC-018, AC-021, AC-022, AC-023
+- Refs: US-004, AC-017, AC-018, AC-027, AC-028, AC-021, AC-022, AC-023
 - Arquivos: src/lib/orders/transitions.ts, src/lib/orders/views.ts, src/app/painel/(app)/layout.tsx, src/app/painel/(app)/page.tsx, src/app/painel/(app)/error.tsx, src/app/painel/(app)/pedidos/AutoRefresh.tsx, src/app/painel/(app)/pedidos/OrderCard.tsx, src/app/painel/(app)/pedidos/actions.ts, src/app/painel/(app)/pedidos/page.tsx, src/app/painel/painel.css, src/components/painel/NavLink.tsx
 
 ## T-008 — Deploy e endurecimento [concluida]
