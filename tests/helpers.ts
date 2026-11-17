@@ -33,3 +33,20 @@ export async function getProductRow(id: string) {
 export function movementsOf(productId: string) {
   return db.select().from(schema.stockMovements).where(eq(schema.stockMovements.productId, productId));
 }
+
+export async function makeIngredient(over: Partial<typeof schema.ingredients.$inferInsert> = {}) {
+  const [i] = await db
+    .insert(schema.ingredients)
+    .values({ name: `Insumo ${++n}`, baseUnit: "g", ...over })
+    .returning();
+  return i;
+}
+
+export async function getIngredientRow(id: string) {
+  const [i] = await db.select().from(schema.ingredients).where(eq(schema.ingredients.id, id));
+  return i;
+}
+
+export function ingredientMovementsOf(ingredientId: string) {
+  return db.select().from(schema.ingredientMovements).where(eq(schema.ingredientMovements.ingredientId, ingredientId));
+}

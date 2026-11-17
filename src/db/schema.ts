@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
-  boolean, check, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex,
+  bigint, boolean, check, doublePrecision, index, integer, pgEnum, pgTable, text, timestamp, uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { randomUUID } from "node:crypto";
 
@@ -117,6 +117,8 @@ export const orderItems = pgTable("order_items", {
   productId: text("product_id").notNull().references(() => products.id),
   productName: text("product_name").notNull(),
   unitPriceCents: integer("unit_price_cents").notNull(),
+  /** Custo do produto pela receita na hora da venda; nulo quando não havia custo completo. */
+  unitCostCents: integer("unit_cost_cents"),
   quantity: integer("quantity").notNull(),
 });
 
@@ -134,3 +136,90 @@ export const stockMovements = pgTable(
   },
   (t) => [index("stock_movements_product_idx").on(t.productId, t.createdAt)],
 );
+
+export const baseUnitEnum = pgEnum("base_unit", ["g", "ml", "un"]);
+export const ingredientMovementTypeEnum = pgEnum("ingredient_movement_type", [
+  "PURCHASE", "PRODUCTION", "LOSS", "CONSUMPTION", "COUNT",
+]);
+
+const milli = (name: string) => bigint(name, { mode: "number" });
+
+/** Insumo: quantidades em milésimos da unidade base (g, ml ou un). */
+export const ingredients = pgTable(
+  "ingredients",
+  {
+    id: id(),
+    name: text("name").notNull().unique(),
+    baseUnit: baseUnitEnum("base_unit").notNull(),
+    packageName: text("package_name"),
+    packageSizeMilli: milli("package_size_milli"),
+    stockMilli: milli("stock_milli").notNull().default(0),
+    minMilli: milli("min_milli").notNull().default(0),
+    /** Custo médio ponderado em centavos por 1 unidade base (1 g, 1 ml, 1 un). Nulo até a primeira compra. */
+    avgCostCentsPerBase: doublePrecision("avg_cost_cents_per_base"),
+    active: boolean("active").notNull().default(true),
+    createdAt: createdAt(),
+    updatedAt: updatedAt(),
+  },
+  (t) => [
+    check("ingredients_min_check", sql`${t.minMilli} >= 0`),
+    check(
+      "ingredients_package_check",
+      sql`(${t.packageName} IS NULL AND ${t.packageSizeMilli} IS NULL) OR (${t.packageName} IS NOT NULL AND ${t.packageSizeMilli} > 0)`,
+    ),
+  ],
+);
+
+export const ingredientMovements = pgTable(
+  "ingredient_movements",
+  {
+    id: id(),
+    ingredientId: text("ingredient_id").notNull().references(() => ingredients.id),
+    type: ingredientMovementTypeEnum("type").notNull(),
+    /** Com sinal: positivo entra, negativo sai. */
+    qtyMilli: milli("qty_milli").notNull(),
+    /** Na compra, o valor pago; nas saídas, o custo estimado pelo custo médio do momento. */
+    costCents: integer("cost_cents"),
+    reason: text("reason"),
+    stockMovementId: text("stock_movement_id").references(() => stockMovements.id),
+    userId: text("user_id").references(() => users.id),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index("ingredient_movements_ing_idx").on(t.ingredientId, t.createdAt),
+    index("ingredient_movements_created_idx").on(t.createdAt),
+  ],
+);
+
+export const recipes = pgTable(
+  "recipes",
+  {
+    id: id(),
+    productId: text("product_id").notNull().unique().references(() => products.id, { onDelete: "cascade" }),
+    /** Quantas unidades do produto uma receita rende. */
+    yieldQty: integer("yield_qty").notNull(),
+    notes: text("notes").notNull().default(""),
+    updatedAt: updatedAt(),
+  },
+  (t) => [check("recipes_yield_check", sql`${t.yieldQty} > 0`)],
+);
+
+export const recipeItems = pgTable(
+  "recipe_items",
+  {
+    id: id(),
+    recipeId: text("recipe_id").notNull().references(() => recipes.id, { onDelete: "cascade" }),
+    ingredientId: text("ingredient_id").notNull().references(() => ingredients.id),
+    qtyMilli: milli("qty_milli").notNull(),
+  },
+  (t) => [
+    uniqueIndex("recipe_items_unique_idx").on(t.recipeId, t.ingredientId),
+    check("recipe_items_qty_check", sql`${t.qtyMilli} > 0`),
+  ],
+);
+
+export const settings = pgTable("settings", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: updatedAt(),
+});
