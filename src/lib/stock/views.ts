@@ -2,7 +2,8 @@ import { asc, desc, eq, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 
 const { products, categories, stockMovements, users } = schema;
-export const TIMEZONE = "America/Campo_Grande";
+export { TIMEZONE } from "@/lib/store/hours";
+import { TIMEZONE } from "@/lib/store/hours";
 
 /** Produtos ativos com o disponível, para a tela de produção. Sem valores em dinheiro. */
 export function listStock() {
