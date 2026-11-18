@@ -54,11 +54,14 @@ const DEMO: { cat: string; name: string; desc: string; price: number; unit: stri
   { cat: "Copos da Felicidade", name: "Copo da Felicidade de pudim", desc: "Brownie no fundo, creme de Ninho e um pudim em cima.", price: 1500, unit: "copo, 250 ml", foto: "copo-pudim", estoque: 2 },
 ];
 
+/** `--produtos=3`: cria só os 3 primeiros produtos, com foto e estoque, sem insumos, receitas nem pedidos. */
+const ONLY_PRODUCTS = Number(process.argv.find((a) => a.startsWith("--produtos="))?.split("=")[1] ?? 0);
+
 async function main() {
   const [admin] = await db.select().from(schema.users).where(eq(schema.users.role, "ADMIN"));
   if (!admin) throw new Error("Rode npm run db:seed antes.");
   const adminUser = { id: admin.id, name: admin.name, role: "ADMIN" as const };
-  for (const i of INSUMOS) {
+  for (const i of ONLY_PRODUCTS ? [] : INSUMOS) {
     const [exists] = await db.select().from(schema.ingredients).where(eq(schema.ingredients.name, i.name));
     if (exists) continue;
     const ing = await createIngredient(
@@ -69,7 +72,7 @@ async function main() {
   }
   const ingredientRows = await db.select().from(schema.ingredients);
   const ingId = (n: string) => ingredientRows.find((r) => r.name === n)!.id;
-  for (const d of DEMO) {
+  for (const d of ONLY_PRODUCTS ? DEMO.slice(0, ONLY_PRODUCTS) : DEMO) {
     const [exists] = await db.select().from(schema.products).where(eq(schema.products.name, d.name));
     if (exists) continue;
     const [cat] = await db.select().from(schema.categories).where(eq(schema.categories.name, d.cat));
@@ -79,7 +82,7 @@ async function main() {
       : undefined;
     const r = await createProduct({ name: d.name, description: d.desc, priceCents: d.price, unitLabel: d.unit, categoryId: cat.id, active: true, imageKey });
     if (!r.ok) throw new Error(r.message);
-    const rec = RECEITAS[d.name];
+    const rec = ONLY_PRODUCTS ? undefined : RECEITAS[d.name];
     if (rec) {
       await saveRecipe(r.product.id, { yieldQty: rec.rende, items: rec.itens.map(([n, q]) => ({ ingredientId: ingId(n), qtyMilli: q })) }, adminUser);
     }
@@ -87,7 +90,7 @@ async function main() {
   }
   // alguns pedidos de hoje para os relatórios terem o que mostrar
   const [anyOrder] = await db.select({ id: schema.orders.id }).from(schema.orders).limit(1);
-  if (!anyOrder) {
+  if (!anyOrder && !ONLY_PRODUCTS) {
     const prods = await db.select().from(schema.products);
     const byName = (n: string) => prods.find((p) => p.name === n)!;
     const pedidos: [string, number][][] = [
