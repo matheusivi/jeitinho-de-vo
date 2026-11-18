@@ -25,6 +25,9 @@ export function ProduceRow({ id, name, unitLabel, available }: { id: string; nam
         {state.error && <span style={{ color: "var(--goiaba-escuro)" }}>{state.error}</span>}
         {state.ok && <span style={{ color: "var(--cyan-deep)" }}>{state.ok}</span>}
       </span>
+      {state.warn && (
+        <p className="pn-msg err" role="alert" style={{ flex: "1 1 100%" }}>{state.warn}</p>
+      )}
     </form>
   );
 }
@@ -54,7 +57,7 @@ export function AdjustForm({ products }: { products: { id: string; name: string 
         </div>
         <div className="pn-field" style={{ flex: "2 1 220px" }}>
           <label htmlFor="adj-reason">Motivo</label>
-          <input className="pn-input" id="adj-reason" name="reason" placeholder="Ex.: quebrou, consumo, contagem" required maxLength={120} />
+          <input className="pn-input" id="adj-reason" name="reason" placeholder="Ex.: passou da validade, quebrou, contagem" required maxLength={120} />
         </div>
         <button className="pn-btn ghost" type="submit" disabled={pending}>Registrar ajuste</button>
       </div>

@@ -2,6 +2,7 @@ import { randomInt } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
 import { z } from "zod";
 import { db, schema } from "@/lib/db";
+import { unitCostsFor } from "@/lib/ingredients/costing";
 import { checkRateLimit, lockKeys, recordAttempt } from "@/lib/auth/rate-limit";
 import { isOpen, openingLabel } from "@/lib/store/hours";
 import { commitSale, reserve, StockError } from "@/lib/stock/stock";
@@ -122,9 +123,12 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
       }
       if (!order) throw new Error("Não foi possível gerar o código do pedido.");
 
+      // custo pela receita na hora da venda: o relatório do mês não muda quando um insumo encarece
+      const costs = await unitCostsFor(products.map((p) => p.id), tx);
       await tx.insert(schema.orderItems).values(
         products.map((p) => ({
-          orderId: order.id, productId: p.id, productName: p.name, unitPriceCents: p.priceCents, quantity: qty.get(p.id)!,
+          orderId: order.id, productId: p.id, productName: p.name, unitPriceCents: p.priceCents,
+          unitCostCents: costs.get(p.id) ?? null, quantity: qty.get(p.id)!,
         })),
       );
       await commitSale(order.id, tx);

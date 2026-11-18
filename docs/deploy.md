@@ -90,3 +90,5 @@ docker compose up -d --build
 ```
 
 As migrations novas são aplicadas sozinhas quando o site sobe.
+
+Antes de atualizar, rode o backup (seção 6). A atualização da fase 3 só cria tabelas novas e uma coluna vazia nos itens de pedido; pedidos antigos aparecem como "sem custo" no relatório por produto.

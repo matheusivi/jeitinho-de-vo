@@ -8,6 +8,20 @@
       "when": 1794879166000,
       "tag": "0000_inicial",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794948452562,
+      "tag": "0001_insumos",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795032307845,
+      "tag": "0002_custo_ajuste_produto",
+      "breakpoints": true
     }
   ]
 }
