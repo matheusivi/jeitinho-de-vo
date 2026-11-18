@@ -3,7 +3,7 @@
 # Spec: Fase 3 insumos relatorios
 
 > feature: fase-3-insumos-relatorios
-> status: em-implementacao
+> status: implementada
 
 [PRD](prd.md) · [ADR](adr.md) · [TDD](design.md) · [Tarefas](tasks.md) · [Pesquisa](research.md)
 
@@ -220,7 +220,7 @@ Como dona, quero uma tabela do mês com uma linha por dia, o resultado por produ
 | ASM-006 | Custo e margem por produto entram na fase 3, o mais detalhado possível | confirmada | Matheus em 2026-11-17: "sim, pode seguir o mais detalhado possivel" |
 | ASM-007 | Meta de CMV começa em 35% e a dona pode mudar | confirmada | Matheus em 2026-11-17: "Meta de CMV começa em 35%" |
 | ASM-008 | Sugestão de mínimo = consumo médio diário dos últimos 30 dias × 7 dias | confirmada | Matheus em 2026-11-18: "Sugestão de mínimo igual a 7 dias de consumo isso seria interessante também" |
-| ASM-009 | Custo médio ponderado pelas compras (sem PEPS) | aberta | Matheus em 2026-11-18: "o custo médio ponderado não no momento, depois quero entender melhor"; segue o custo médio já implementado até a decisão |
+| ASM-009 | Custo médio ponderado pelas compras (sem PEPS) | confirmada | Matheus em 2026-11-18: "o custo médio ponderado não no momento, depois quero entender melhor" e, em seguida, "pode fechar a fase, depois você me explica como fica bem detalhado". Fase fechada com o custo médio; revisar depois da explicação |
 
 ## Perguntas em aberto
 

@@ -43,9 +43,9 @@
         "rule": ".spec/features/fase-1-loja-painel/spec.md#ac-020--ajuste-de-estoque-exige-motivo"
       }
     ],
-    "fingerprint": "f784343648fe36606f30618acf29ea8b95a7e629a2d8a350e2ff0bd57a0450dd",
-    "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
-    "reviewedAt": "2026-11-18T20:06:57.966Z",
+    "fingerprint": "dfa11a9fcc23f54dfb02f9a77ce54834aaa78298338b7a8c58932d84e49a1858",
+    "ownFingerprint": "238a799fa78c5b13098988adf6ba855d0e14cdf7daab129f27f348cacba68f6f",
+    "reviewedAt": "2026-11-18T20:10:41.095Z",
     "documents": [
       ".spec/features/fase-1-loja-painel/spec.md",
       ".spec/features/fase-1-loja-painel/tasks.md",
@@ -179,6 +179,46 @@
       "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
       "conflictFingerprint": "ea28d5fd07c5307df18107cdcf2c5772f03406d33b753e4edfc2323b6c28ae2b",
       "answeredAt": "2026-11-18T20:06:58.561Z"
+    },
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17",
+      "fingerprint": "dfa11a9fcc23f54dfb02f9a77ce54834aaa78298338b7a8c58932d84e49a1858",
+      "ownFingerprint": "238a799fa78c5b13098988adf6ba855d0e14cdf7daab129f27f348cacba68f6f",
+      "conflictFingerprint": "c5e0d2926724fbf834f3d4acfa26e50945d7eb3e00acdd298994337c11fea137",
+      "answeredAt": "2026-11-18T20:10:41.283Z"
+    },
+    {
+      "conflictId": "producao-baixa-insumos",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17",
+      "fingerprint": "dfa11a9fcc23f54dfb02f9a77ce54834aaa78298338b7a8c58932d84e49a1858",
+      "ownFingerprint": "238a799fa78c5b13098988adf6ba855d0e14cdf7daab129f27f348cacba68f6f",
+      "conflictFingerprint": "c93cbaebb9f1f9b7d6419eda73b9d332e365744f539dbe052f13f1e06cda640b",
+      "answeredAt": "2026-11-18T20:10:41.408Z"
+    },
+    {
+      "conflictId": "pedido-guarda-custo",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17",
+      "fingerprint": "dfa11a9fcc23f54dfb02f9a77ce54834aaa78298338b7a8c58932d84e49a1858",
+      "ownFingerprint": "238a799fa78c5b13098988adf6ba855d0e14cdf7daab129f27f348cacba68f6f",
+      "conflictFingerprint": "dfd8975c4ee5883dd2f624289158a93f7956f3cb148bd6f3fc7ce9af1b6b9acc",
+      "answeredAt": "2026-11-18T20:10:41.533Z"
+    },
+    {
+      "conflictId": "ajuste-guarda-custo",
+      "choice": "prosseguir",
+      "answer": "sim, o bolo descartado entra na contagem",
+      "source": "mensagem do Matheus no chat, 2026-11-18 16:04",
+      "fingerprint": "dfa11a9fcc23f54dfb02f9a77ce54834aaa78298338b7a8c58932d84e49a1858",
+      "ownFingerprint": "238a799fa78c5b13098988adf6ba855d0e14cdf7daab129f27f348cacba68f6f",
+      "conflictFingerprint": "ea28d5fd07c5307df18107cdcf2c5772f03406d33b753e4edfc2323b6c28ae2b",
+      "answeredAt": "2026-11-18T20:10:41.671Z"
     }
   ]
 }
