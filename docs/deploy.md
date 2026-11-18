@@ -4,14 +4,39 @@ Guia para subir a Jeitinho de Vó num servidor Linux com Docker. Leva uns 20 min
 
 ## 1. O que precisa ter no servidor
 
-- Docker com o plugin Compose (`docker compose version` responde).
+- Docker com o plugin Compose (`docker compose version` responde). Para instalar no Ubuntu 24.04, use o repositório oficial do Docker:
+
+```sh
+sudo apt-get update && sudo apt-get install -y ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update && sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
 - Um domínio ou subdomínio apontando para o servidor, por exemplo `jeitinho.seudominio.com.br`.
 - Um proxy com HTTPS na frente (Caddy, Nginx com Certbot, ou o que já atende seus outros sites).
 
 ## 2. Baixar o código e configurar
 
+O repositório é privado. Crie uma chave só de leitura para este repositório (deploy key):
+
 ```sh
-git clone git@github.com:matheusivi/jeitinho-de-vo.git
+ssh-keygen -t ed25519 -N "" -C "servidor jeitinho-de-vo" -f ~/.ssh/jeitinho_deploy
+cat ~/.ssh/jeitinho_deploy.pub
+```
+
+Cole a chave pública no GitHub em Settings do repositório → Deploy keys → Add deploy key, sem marcar "Allow write access". Depois:
+
+```sh
+cat >> ~/.ssh/config <<'CFG'
+Host github-jeitinho
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/jeitinho_deploy
+  IdentitiesOnly yes
+CFG
+git clone git@github-jeitinho:matheusivi/jeitinho-de-vo.git
 cd jeitinho-de-vo
 cp .env.example .env
 ```
@@ -36,7 +61,7 @@ docker compose exec app npx tsx src/db/seed.ts
 
 O primeiro comando constrói a imagem, sobe o banco e o site e aplica as migrations. O segundo cria a conta da dona, as categorias iniciais e três bairros de exemplo (troque os bairros no painel, em Bairros).
 
-O site fica em `127.0.0.1:3000`, só para o proxy.
+O site fica em `127.0.0.1:3010`, só para o proxy (a 3000 já é usada por outro site; dá para trocar com `APP_PORT` no `.env`).
 
 ## 4. HTTPS
 
@@ -44,11 +69,11 @@ Exemplo com Caddy (`/etc/caddy/Caddyfile`):
 
 ```
 jeitinho.seudominio.com.br {
-  reverse_proxy 127.0.0.1:3000
+  reverse_proxy 127.0.0.1:3010
 }
 ```
 
-Com Nginx, use `proxy_pass http://127.0.0.1:3000;` e repasse o IP real:
+Com Nginx, use `proxy_pass http://127.0.0.1:3010;` e repasse o IP real:
 
 ```
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
