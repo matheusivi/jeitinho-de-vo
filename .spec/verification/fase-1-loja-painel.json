@@ -1,7 +1,7 @@
 {
   "feature": "fase-1-loja-painel",
-  "timestamp": "2026-11-18T20:11:16.893Z",
-  "gitRev": "0eda8e2",
+  "timestamp": "2026-11-18T20:12:58.648Z",
+  "gitRev": "9698410",
   "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
   "reporter": "vitest-json",
   "exitCode": 0,
