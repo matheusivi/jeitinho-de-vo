@@ -1,6 +1,7 @@
 import { and, eq, gte, sql } from "drizzle-orm";
 import { db, schema, type DbOrTx } from "@/lib/db";
 import { consumeForProduction, type ConsumeResult } from "@/lib/ingredients/recipes";
+import { unitCostsFor } from "@/lib/ingredients/costing";
 
 const { products, stockMovements, orderItems } = schema;
 const MAX_QTY = 100_000;
@@ -69,7 +70,10 @@ export async function adjust(
   if (updated.length === 0) {
     throw new StockError("INSUFICIENTE", productId, "Não há estoque livre suficiente para este ajuste.");
   }
-  await tx.insert(stockMovements).values({ productId, type: "ADJUSTMENT", quantity: delta, reason: motivo, userId });
+  // custo pela receita: um bolo descartado entra como perda no CMV real do mês
+  const unitCost = (await unitCostsFor([productId], tx)).get(productId) ?? null;
+  const costCents = unitCost === null ? null : unitCost * Math.abs(delta);
+  await tx.insert(stockMovements).values({ productId, type: "ADJUSTMENT", quantity: delta, reason: motivo, userId, costCents });
 }
 
 /**

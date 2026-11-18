@@ -119,8 +119,9 @@ function MonthView({ r, label }: { r: Awaited<ReturnType<typeof monthlyReport>>;
           ({formatBRL(r.cmv.theoreticalCostCents)} sobre {formatBRL(r.cmv.theoreticalRevenueCents)}).
         </p>
         <p style={{ margin: 0 }}>
-          <strong>Real: {pct(r.cmv.realPct)}.</strong> É o previsto somado ao que saiu da despensa fora da receita: perdas, consumo avulso e correções de contagem
-          ({formatBRL(r.cmv.realCostCents)} sobre {formatBRL(r.cmv.theoreticalRevenueCents)}). O que foi produzido e ainda está na vitrine não entra.
+          <strong>Real: {pct(r.cmv.realPct)}.</strong> É o previsto somado ao que se perdeu: insumo estragado ou usado fora da receita, correções de contagem
+          e produto pronto descartado ({formatBRL(r.cmv.productLossCents)} em bolos e fatias jogados fora). Ao todo, {formatBRL(r.cmv.realCostCents)} sobre {formatBRL(r.cmv.theoreticalRevenueCents)}.
+          O que está na vitrine dentro da validade não entra: só vira custo quando é vendido ou descartado.
         </p>
         {r.cmv.diffPts !== null && (
           <p className={`pn-msg ${r.cmv.diffPts > 2 ? "err" : "ok"}`} style={{ margin: 0 }}>

@@ -4,6 +4,9 @@ import { db, schema } from "@/lib/db";
 import { monthlyReport, productReport, yearReport } from "@/lib/reports/monthly";
 import { buildMonthWorkbook } from "@/lib/reports/excel";
 import { ForbiddenError } from "@/lib/auth/types";
+import { adjust } from "@/lib/stock/stock";
+import { saveRecipe } from "@/lib/ingredients/recipes";
+import { eq } from "drizzle-orm";
 import { resetDb } from "../setup";
 import { makeIngredient, makeProduct, makeUser } from "../helpers";
 
@@ -93,6 +96,30 @@ describe("relatório do mês", () => {
     expect(cmv).toMatchObject({ realCostCents: 1100, lossCents: 200, productRevenueCents: 4600, realPct: 30.6 });
     expect(cmv.diffPts).toBeCloseTo(5.6, 1);
     expect(cmv.itemsWithoutCost).toBe(1);
+  });
+});
+
+describe("produto pronto descartado", () => {
+  it("bolo descartado entra nas perdas e no CMV real pelo custo da receita @spec:AC-055", async () => {
+    await cenario();
+    const a = await admin();
+    const torta = await makeProduct({ name: "Torta", priceCents: 2000, stockOnHand: 5 });
+    const ing = await makeIngredient({ name: "Base da torta", avgCostCentsPerBase: 1 }); // 1 centavo por grama
+    await saveRecipe(torta.id, { yieldQty: 1, items: [{ ingredientId: ing.id, qtyMilli: 250_000 }] }, a); // R$ 2,50 por torta
+    await adjust(torta.id, -2, "Passou da validade", a.id);
+    const [m] = await db.select().from(schema.stockMovements).where(eq(schema.stockMovements.productId, torta.id));
+    expect(m).toMatchObject({ type: "ADJUSTMENT", quantity: -2, costCents: 500 });
+    const { cmv } = await monthlyReport(2026, 11, a);
+    // real: 900 previsto + 200 perda de insumo + 500 das tortas = 1600 sobre 3600 → 44,4%
+    expect(cmv).toMatchObject({ realCostCents: 1600, lossCents: 700, productLossCents: 500, realPct: 44.4 });
+  });
+
+  it("produto sem receita descartado fica sem custo", async () => {
+    const a = await admin();
+    const p = await makeProduct({ stockOnHand: 3 });
+    await adjust(p.id, -1, "Caiu", a.id);
+    const [m] = await db.select().from(schema.stockMovements).where(eq(schema.stockMovements.productId, p.id));
+    expect(m.costCents).toBeNull();
   });
 });
 

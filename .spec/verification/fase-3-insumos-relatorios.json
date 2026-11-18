@@ -1,11 +1,11 @@
 {
   "feature": "fase-3-insumos-relatorios",
-  "timestamp": "2026-11-17T21:17:42.848Z",
-  "gitRev": "89ee504",
+  "timestamp": "2026-11-18T20:07:14.332Z",
+  "gitRev": "7bf472f",
   "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
   "reporter": "vitest-json",
   "exitCode": 0,
-  "testsParsed": 170,
+  "testsParsed": 172,
   "results": {
     "AC-029": {
       "status": "pass",
@@ -125,6 +125,11 @@
     "AC-052": {
       "status": "pass",
       "testName": "relatório do mês CMV previsto pela receita e real pelas saídas de insumo @spec:AC-052 CMV previsto pela receita e real pelas saídas de insumo @spec:AC-052",
+      "method": "vitest-json"
+    },
+    "AC-055": {
+      "status": "pass",
+      "testName": "produto pronto descartado bolo descartado entra nas perdas e no CMV real pelo custo da receita @spec:AC-055 bolo descartado entra nas perdas e no CMV real pelo custo da receita @spec:AC-055",
       "method": "vitest-json"
     },
     "AC-053": {

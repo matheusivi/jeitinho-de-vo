@@ -130,6 +130,8 @@ export const stockMovements = pgTable(
     type: stockMovementTypeEnum("type").notNull(),
     quantity: integer("quantity").notNull(),
     reason: text("reason"),
+    /** Nos ajustes, custo pela receita das unidades ajustadas (sempre positivo; o sinal está em quantity). */
+    costCents: integer("cost_cents"),
     orderId: text("order_id").references(() => orders.id),
     userId: text("user_id").references(() => users.id),
     createdAt: createdAt(),

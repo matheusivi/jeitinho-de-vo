@@ -5,7 +5,7 @@
   "domains": [],
   "clientRequest": "insumos: entrada por compra (quantidade e valor pago), saída automática pela receita, ajuste manual para perda e consumo avulso, alerta de estoque mínimo; relatórios: tabela de vendas por dia e por mês com fluxo de caixa, exportável para Excel; custo e margem: pode seguir o mais detalhado possivel, desta forma ela terá uma ajuda melhor para ter o custo",
   "review": {
-    "summary": "Li a spec e as tarefas da fase 1 e a constituição. A fase 3 interfere em dois domínios da fase 1 sem violar regra: (1) produce passa a baixar insumos na mesma transação e a devolver avisos; AC-019 continua valendo. (2) createOrder passa a gravar o custo unitário no item do pedido; preço, total e reserva (AC-003, AC-005, AC-006) não mudam. Regra AC-017 (funcionária sem dinheiro) é estendida para custos. Revisão refeita após redefinir AC-052 (CMV real = previsto + perdas, consumo e contagem) e concluir as tarefas; conflitos com a fase 1 continuam os mesmos dois.",
+    "summary": "Li a spec e as tarefas da fase 1 e a constituição. A fase 3 interfere em dois domínios da fase 1 sem violar regra: (1) produce passa a baixar insumos na mesma transação e a devolver avisos; AC-019 continua valendo. (2) createOrder passa a gravar o custo unitário no item do pedido; preço, total e reserva (AC-003, AC-005, AC-006) não mudam. Regra AC-017 (funcionária sem dinheiro) é estendida para custos. Revisão refeita após redefinir AC-052 (CMV real = previsto + perdas, consumo e contagem) e concluir as tarefas; conflitos com a fase 1 continuam os mesmos dois. Nova revisão em 2026-11-18: AC-055 faz o ajuste de estoque de produto (fase 1, AC-020) guardar o custo da receita; motivo e validação do ajuste não mudam.",
     "reviewer": "Claude Opus 5.5, sessão Claude Code session_016mjpWfzHvywrksDHpr585X",
     "conflicts": [
       {
@@ -36,11 +36,16 @@
         "id": "pedido-guarda-custo",
         "summary": "Criar pedido passa a gravar o custo unitário do produto no item, sem mudar preço nem total.",
         "rule": ".spec/features/fase-1-loja-painel/spec.md#ac-003--retirada-calcula-o-total-e-baixa-o-estoque"
+      },
+      {
+        "id": "ajuste-guarda-custo",
+        "summary": "Ajuste de estoque de produto pronto passa a guardar o custo da receita das unidades, para o descarte entrar nas perdas.",
+        "rule": ".spec/features/fase-1-loja-painel/spec.md#ac-020--ajuste-de-estoque-exige-motivo"
       }
     ],
-    "fingerprint": "12ae49d41803cd6fe093ce433d832ba8815efba956105806bc3ed11076d59649",
-    "ownFingerprint": "4c022f80cd56f6b81356032e4ba84045e05423a2ead44540e58865e0dcac13fb",
-    "reviewedAt": "2026-11-17T21:17:11.546Z",
+    "fingerprint": "f784343648fe36606f30618acf29ea8b95a7e629a2d8a350e2ff0bd57a0450dd",
+    "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
+    "reviewedAt": "2026-11-18T20:06:57.966Z",
     "documents": [
       ".spec/features/fase-1-loja-painel/spec.md",
       ".spec/features/fase-1-loja-painel/tasks.md",
@@ -134,6 +139,46 @@
       "ownFingerprint": "4c022f80cd56f6b81356032e4ba84045e05423a2ead44540e58865e0dcac13fb",
       "conflictFingerprint": "dfd8975c4ee5883dd2f624289158a93f7956f3cb148bd6f3fc7ce9af1b6b9acc",
       "answeredAt": "2026-11-17T21:17:11.922Z"
+    },
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17",
+      "fingerprint": "f784343648fe36606f30618acf29ea8b95a7e629a2d8a350e2ff0bd57a0450dd",
+      "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
+      "conflictFingerprint": "c5e0d2926724fbf834f3d4acfa26e50945d7eb3e00acdd298994337c11fea137",
+      "answeredAt": "2026-11-18T20:06:58.148Z"
+    },
+    {
+      "conflictId": "producao-baixa-insumos",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17",
+      "fingerprint": "f784343648fe36606f30618acf29ea8b95a7e629a2d8a350e2ff0bd57a0450dd",
+      "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
+      "conflictFingerprint": "c93cbaebb9f1f9b7d6419eda73b9d332e365744f539dbe052f13f1e06cda640b",
+      "answeredAt": "2026-11-18T20:06:58.281Z"
+    },
+    {
+      "conflictId": "pedido-guarda-custo",
+      "choice": "prosseguir",
+      "answer": "Sim, continuam valendo",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-17",
+      "fingerprint": "f784343648fe36606f30618acf29ea8b95a7e629a2d8a350e2ff0bd57a0450dd",
+      "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
+      "conflictFingerprint": "dfd8975c4ee5883dd2f624289158a93f7956f3cb148bd6f3fc7ce9af1b6b9acc",
+      "answeredAt": "2026-11-18T20:06:58.424Z"
+    },
+    {
+      "conflictId": "ajuste-guarda-custo",
+      "choice": "prosseguir",
+      "answer": "sim, o bolo descartado entra na contagem",
+      "source": "mensagem do Matheus no chat, 2026-11-18 16:04",
+      "fingerprint": "f784343648fe36606f30618acf29ea8b95a7e629a2d8a350e2ff0bd57a0450dd",
+      "ownFingerprint": "187a96feba21c0187a343a48f8804959ce07fdb780ece37456d111a88ed46f68",
+      "conflictFingerprint": "ea28d5fd07c5307df18107cdcf2c5772f03406d33b753e4edfc2323b6c28ae2b",
+      "answeredAt": "2026-11-18T20:06:58.561Z"
     }
   ]
 }

@@ -61,3 +61,9 @@
 
 - Refs: US-011, US-012
 - Arquivos: scripts/demo.ts, README.md, docs/deploy.md
+
+## T-017 — Produto pronto descartado no CMV real [concluida]
+
+- Refs: US-012, AC-055
+- Arquivos: src/db/schema.ts, drizzle/0002_custo_ajuste_produto.sql, src/lib/stock/stock.ts, src/lib/reports/monthly.ts, src/lib/reports/excel.ts, src/app/painel/(app)/relatorios/page.tsx, src/app/painel/(app)/producao/StockForms.tsx, tests/reports/reports.test.ts
+- Notas: decisão do Matheus em 2026-11-18: "sim, o bolo descartado entra na contagem".

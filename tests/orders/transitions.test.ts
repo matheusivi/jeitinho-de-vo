@@ -25,7 +25,8 @@ async function novoPedido(fulfillment: "DELIVERY" | "PICKUP" = "PICKUP", qty = 2
     { now: NOW, ip: `ip-${++ip}` },
   );
   if (!r.ok) throw new Error(r.message);
-  const [o] = await db.select().from(schema.orders).where(eq(schema.orders.code, r.code));
+  // o pedido nasce com a hora real do relógio; fixa no dia NOW para o teste não depender da data em que roda
+  const [o] = await db.update(schema.orders).set({ createdAt: NOW }).where(eq(schema.orders.code, r.code)).returning();
   return { order: o, product: p };
 }
 const statusOf = async (id: string) => (await db.select().from(schema.orders).where(eq(schema.orders.id, id)))[0];

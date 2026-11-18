@@ -185,6 +185,12 @@ Como dona, quero uma tabela do mês com uma linha por dia, o resultado por produ
 - **Quando** a dona vê o resumo do mês
 - **Então** vê o CMV previsto pela receita, o CMV real (previsto mais perdas, consumo e contagem) e a diferença entre eles; produção que ainda está na vitrine não conta como custo
 
+#### AC-055 — Produto pronto descartado entra nas perdas
+
+- **Dado** um produto com receita na vitrine
+- **Quando** a equipe ajusta o estoque para baixo (passou da validade, quebrou)
+- **Então** o ajuste guarda o custo da receita das unidades e esse valor entra nas perdas e no CMV real do mês; produto sem receita fica sem custo
+
 #### AC-053 — Exportação para Excel
 
 - **Dado** o relatório de um mês
@@ -213,11 +219,11 @@ Como dona, quero uma tabela do mês com uma linha por dia, o resultado por produ
 | ASM-005 | Só a dona lança compras; funcionária lança perda e consumo | confirmada | Matheus em 2026-11-17: "sim, pode seguir" |
 | ASM-006 | Custo e margem por produto entram na fase 3, o mais detalhado possível | confirmada | Matheus em 2026-11-17: "sim, pode seguir o mais detalhado possivel" |
 | ASM-007 | Meta de CMV começa em 35% e a dona pode mudar | confirmada | Matheus em 2026-11-17: "Meta de CMV começa em 35%" |
-| ASM-008 | Sugestão de mínimo = consumo médio diário dos últimos 30 dias × 7 dias | aberta | — |
-| ASM-009 | Custo médio ponderado pelas compras (sem PEPS) | aberta | — |
+| ASM-008 | Sugestão de mínimo = consumo médio diário dos últimos 30 dias × 7 dias | confirmada | Matheus em 2026-11-18: "Sugestão de mínimo igual a 7 dias de consumo isso seria interessante também" |
+| ASM-009 | Custo médio ponderado pelas compras (sem PEPS) | aberta | Matheus em 2026-11-18: "o custo médio ponderado não no momento, depois quero entender melhor"; segue o custo médio já implementado até a decisão |
 
 ## Perguntas em aberto
 
 | ID | Pergunta | Status | Resposta |
 |---|---|---|---|
-| Q-004 | Quais mínimos a dona quer para os insumos principais? (o sistema sugere, ela confirma) | aberta | — |
+| Q-004 | Quais mínimos a dona quer para os insumos principais? (o sistema sugere, ela confirma) | respondida | Matheus em 2026-11-17: "A média dos produtos a respeito do que a média limite, né, para depois mostrar que está acabando, é a dona que vai fazer." A dona define na tela de cada insumo |

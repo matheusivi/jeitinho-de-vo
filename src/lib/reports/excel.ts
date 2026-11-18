@@ -67,7 +67,8 @@ export async function buildMonthWorkbook(year: number, month: number, user: Sess
   dias.addRow(["CMV previsto pela receita (%)", c.theoreticalPct]).getCell(2).numFmt = PCT;
   dias.addRow(["CMV real com perdas e ajustes (%)", c.realPct]).getCell(2).numFmt = PCT;
   dias.addRow(["Diferença (pontos)", c.diffPts]);
-  dias.addRow(["Perdas de insumo (R$)", reais(c.lossCents)]).getCell(2).numFmt = BRL;
+  dias.addRow(["Perdas no mês (R$)", reais(c.lossCents)]).getCell(2).numFmt = BRL;
+  dias.addRow(["  das quais produto pronto descartado (R$)", reais(c.productLossCents)]).getCell(2).numFmt = BRL;
   dias.addRow(["Unidades vendidas sem custo cadastrado", c.itemsWithoutCost]);
   setMoney(dias, [4, 5, 6, 7, 8, 9, 10]);
   dias.getColumn(1).width = 36;

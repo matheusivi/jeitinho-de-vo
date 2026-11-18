@@ -65,11 +65,15 @@ export type CmvSummary = {
   theoreticalRevenueCents: number;
   theoreticalPct: number | null;
   /**
-   * Custo real: o previsto mais o que saiu fora da receita (perda, consumo avulso, correções de contagem).
+   * Custo real: o previsto mais o que saiu fora da receita (perda e consumo de insumo, correções de contagem)
+   * e o produto pronto descartado, pelo custo da receita.
    * A produção que ainda está na vitrine não entra, senão um mês de estoque alto pareceria desperdício.
    */
   realCostCents: number;
+  /** Perdas do mês: insumo perdido, contagem a menos e produto pronto descartado. */
   lossCents: number;
+  /** Parte das perdas que é produto pronto descartado (bolo vencido, quebrado). */
+  productLossCents: number;
   /** Vendas de produtos do mês, sem taxa de entrega. */
   productRevenueCents: number;
   realPct: number | null;
@@ -164,15 +168,22 @@ export async function monthlyReport(year: number, month: number, user: SessionUs
       coalesce(sum(CASE WHEN type = 'LOSS' OR (type = 'COUNT' AND qty_milli < 0) THEN cost_cents ELSE 0 END), 0) AS loss
     FROM ingredient_movements
     WHERE type IN ('LOSS', 'CONSUMPTION', 'COUNT') AND cost_cents IS NOT NULL AND ${inMonth(sql`created_at`)}`);
+  // produto pronto descartado ou corrigido (ajuste de estoque), pelo custo da receita
+  const [prodWaste] = await rows<{ cost: string; loss: string }>(sql`
+    SELECT coalesce(sum(CASE WHEN quantity < 0 THEN cost_cents ELSE -cost_cents END), 0) AS cost,
+      coalesce(sum(CASE WHEN quantity < 0 THEN cost_cents ELSE 0 END), 0) AS loss
+    FROM stock_movements
+    WHERE type = 'ADJUSTMENT' AND cost_cents IS NOT NULL AND ${inMonth(sql`created_at`)}`);
   const theoreticalPct = pct(toInt(theo.cost), toInt(theo.revenue));
-  const realCost = toInt(theo.cost) + toInt(waste.cost);
+  const realCost = toInt(theo.cost) + toInt(waste.cost) + toInt(prodWaste.cost);
   const realPct = pct(realCost, toInt(theo.revenue));
   const cmv: CmvSummary = {
     theoreticalCostCents: toInt(theo.cost),
     theoreticalRevenueCents: toInt(theo.revenue),
     theoreticalPct,
     realCostCents: realCost,
-    lossCents: toInt(waste.loss),
+    lossCents: toInt(waste.loss) + toInt(prodWaste.loss),
+    productLossCents: toInt(prodWaste.loss),
     productRevenueCents: totals.productCents,
     realPct,
     diffPts: theoreticalPct !== null && realPct !== null ? Math.round((realPct - theoreticalPct) * 10) / 10 : null,
