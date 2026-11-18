@@ -4,7 +4,7 @@ Coisas que o Matheus pediu para anotar e que ainda não têm especificação nem
 
 ## Para conversar com a dona
 
-1. **Mesas no salão (pedido da dona, 18/11/2026).** São 8 mesas por enquanto. Cada mesa precisa de uma comanda aberta, mostrando separadamente o que ela consumiu, como num restaurante. Falta definir quem lança os itens (balcão, garçom, celular), conta dividida, taxa de serviço, fechamento por forma de pagamento, impressão na Elgin i9 e se o consumo da mesa baixa o mesmo estoque da vitrine.
+1. **Mesas no salão (pedido da dona, 18/11/2026).** São 8 mesas por enquanto. Cada mesa tem uma comanda aberta com o que consumiu, como num restaurante. Respostas do Matheus em 18/11/2026: quem lança é o garçom (por enquanto); a conta pode ser dividida; não tem taxa de serviço; a comanda da mesa sai na Elgin i9 para a cozinha; o consumo baixa o mesmo estoque da vitrine. Depois: QR code na mesa para o cliente pedir pelo cardápio digital, com a comanda saindo na hora. Depende da integração com a impressora, que ainda não foi feita.
 2. **Nota fiscal (18/11/2026).** Ligar cada venda, já com desconto, à nota fiscal, com o imposto de cada produto (fatia, bolo etc.). Falta saber o regime tributário da empresa (provavelmente Simples Nacional), o modelo da nota (NFC-e para consumidor no balcão), a classificação fiscal de cada produto (NCM, CFOP, CSOSN) com o contador dela e qual emissor usar (serviço de API de NFC-e ou o da Stone, se houver).
 3. Kit festa: como dá baixa nos insumos.
 4. Domínio próprio (nome "jeitinho de vó"), número de WhatsApp e link do Facebook.
