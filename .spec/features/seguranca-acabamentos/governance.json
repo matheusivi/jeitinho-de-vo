@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "large": true,
+  "documentationContract": "onp-docs-v1",
+  "domains": [],
+  "clientRequest": "Segurança e acabamentos: código no celular (Google Authenticator) obrigatório para a dona e opcional para funcionárias; recuperação por códigos impressos; tirar o ano 'desde 2017'; passar a administração para o e-mail dela; arrumar o menu",
+  "review": {
+    "summary": "Li a spec da fase 1 (AC-013 a AC-016) e a constituição. A feature acrescenta uma etapa de código depois da senha para contas com código ativo e obriga administradoras a configurar o código; as regras de senha, limites e mensagem única continuam. Equipe passa a criar administradoras e impede desativar a última ativa.",
+    "reviewer": "Claude Opus 5.5, sessão Claude Code session_016mjpWfzHvywrksDHpr585X",
+    "conflicts": [
+      {
+        "id": "impacto:fase-1-loja-painel",
+        "automatic": true,
+        "feature": "fase-1-loja-painel",
+        "summary": "A mudança interfere no domínio da feature fase-1-loja-painel.",
+        "files": [
+          ".env.example",
+          "docker-compose.yml",
+          "docs/deploy.md",
+          "next.config.ts",
+          "src/app/(loja)/page.tsx",
+          "src/app/layout.tsx",
+          "src/app/painel/(app)/equipe/StaffForm.tsx",
+          "src/app/painel/(app)/equipe/actions.ts",
+          "src/app/painel/(app)/equipe/page.tsx",
+          "src/app/painel/(app)/layout.tsx",
+          "src/app/painel/(auth)/login/LoginForm.tsx",
+          "src/app/painel/(auth)/login/actions.ts",
+          "src/app/painel/painel.css",
+          "src/components/loja/Footer.tsx",
+          "src/db/schema.ts",
+          "src/lib/auth/guard.ts",
+          "src/lib/auth/session.ts",
+          "src/lib/auth/types.ts",
+          "src/lib/auth/users.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/fase-1-loja-painel/spec.md"
+      },
+      {
+        "id": "impacto:fase-3-insumos-relatorios",
+        "automatic": true,
+        "feature": "fase-3-insumos-relatorios",
+        "summary": "A mudança interfere no domínio da feature fase-3-insumos-relatorios.",
+        "files": [
+          "docs/deploy.md",
+          "package-lock.json",
+          "package.json",
+          "src/app/painel/(app)/layout.tsx",
+          "src/app/painel/painel.css",
+          "src/db/schema.ts",
+          "tests/setup.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/fase-3-insumos-relatorios/prd.md"
+      },
+      {
+        "id": "login-com-codigo",
+        "summary": "Contas com código ativo precisam do código do celular depois da senha; administradora sem código é levada a configurar antes de usar o painel.",
+        "rule": ".spec/features/fase-1-loja-painel/spec.md#ac-013--erro-de-login-não-revela-se-o-e-mail-existe"
+      }
+    ],
+    "fingerprint": "93341f11f8226495519f771c1a1ce14809de6e876deeb76f49901e4344ef689f",
+    "ownFingerprint": "416d0373817c8dad7192a32bc82ca8683707f1973fc71c82a39f085d35381b78",
+    "reviewedAt": "2026-11-24T22:05:21.769Z",
+    "documents": [
+      ".spec/features/fase-1-loja-painel/spec.md",
+      ".spec/features/fase-1-loja-painel/tasks.md",
+      ".spec/features/fase-3-insumos-relatorios/prd.md",
+      ".spec/features/fase-3-insumos-relatorios/adr.md",
+      ".spec/features/fase-3-insumos-relatorios/design.md",
+      ".spec/features/fase-3-insumos-relatorios/spec.md",
+      ".spec/features/fase-3-insumos-relatorios/tasks.md",
+      ".spec/features/fase-3-insumos-relatorios/research.md",
+      ".spec/features/seguranca-acabamentos/prd.md",
+      ".spec/features/seguranca-acabamentos/adr.md",
+      ".spec/features/seguranca-acabamentos/design.md",
+      ".spec/features/seguranca-acabamentos/spec.md",
+      ".spec/features/seguranca-acabamentos/tasks.md",
+      ".spec/features/seguranca-acabamentos/research.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  },
+  "decisions": [
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Pode seguir",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-24",
+      "fingerprint": "93341f11f8226495519f771c1a1ce14809de6e876deeb76f49901e4344ef689f",
+      "ownFingerprint": "416d0373817c8dad7192a32bc82ca8683707f1973fc71c82a39f085d35381b78",
+      "conflictFingerprint": "18ea3cf34e5de7de1f1e89524a708d378305a3e1111c935dbd16755e99fd51d2",
+      "answeredAt": "2026-11-24T22:05:21.951Z"
+    },
+    {
+      "conflictId": "login-com-codigo",
+      "choice": "prosseguir",
+      "answer": "Pode seguir",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-24",
+      "fingerprint": "93341f11f8226495519f771c1a1ce14809de6e876deeb76f49901e4344ef689f",
+      "ownFingerprint": "416d0373817c8dad7192a32bc82ca8683707f1973fc71c82a39f085d35381b78",
+      "conflictFingerprint": "edb1cdb53f961e6e0c93d955b9890c93361b5af61a86dc6bde2b8e99609db82d",
+      "answeredAt": "2026-11-24T22:05:22.109Z"
+    }
+  ]
+}
