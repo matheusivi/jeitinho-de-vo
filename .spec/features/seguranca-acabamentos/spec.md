@@ -3,7 +3,7 @@
 # Spec: Segurança e acabamentos
 
 > feature: seguranca-acabamentos
-> status: pronta
+> status: implementada
 
 [PRD](prd.md) · [ADR](adr.md) · [TDD](design.md) · [Tarefas](tasks.md) · [Pesquisa](research.md)
 

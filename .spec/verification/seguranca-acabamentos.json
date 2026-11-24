@@ -1,0 +1,72 @@
+{
+  "feature": "seguranca-acabamentos",
+  "timestamp": "2026-11-24T22:19:44.227Z",
+  "gitRev": "77a2b5d",
+  "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
+  "reporter": "vitest-json",
+  "exitCode": 0,
+  "testsParsed": 197,
+  "results": {
+    "AC-056": {
+      "status": "pass",
+      "testName": "código do aplicativo (TOTP) bate com os vetores da RFC 6238 e aceita o passo vizinho @spec:AC-056 bate com os vetores da RFC 6238 e aceita o passo vizinho @spec:AC-056",
+      "method": "vitest-json"
+    },
+    "AC-057": {
+      "status": "pass",
+      "testName": "guarda das telas administradora sem código só acessa a configuração @spec:AC-057 administradora sem código só acessa a configuração @spec:AC-057",
+      "method": "vitest-json"
+    },
+    "AC-058": {
+      "status": "pass",
+      "testName": "ativação do código no celular só ativa com código válido e entrega 8 códigos de recuperação uma vez @spec:AC-058 só ativa com código válido e entrega 8 códigos de recuperação uma vez @spec:AC-058",
+      "method": "vitest-json"
+    },
+    "AC-059": {
+      "status": "pass",
+      "testName": "login em duas etapas senha certa não cria sessão até o código ser confirmado @spec:AC-059 senha certa não cria sessão até o código ser confirmado @spec:AC-059",
+      "method": "vitest-json"
+    },
+    "AC-060": {
+      "status": "pass",
+      "testName": "login em duas etapas 5 erros encerram o desafio e código repetido é recusado @spec:AC-060 5 erros encerram o desafio e código repetido é recusado @spec:AC-060",
+      "method": "vitest-json"
+    },
+    "AC-061": {
+      "status": "pass",
+      "testName": "login em duas etapas código de recuperação entra uma vez só @spec:AC-061 código de recuperação entra uma vez só @spec:AC-061",
+      "method": "vitest-json"
+    },
+    "AC-062": {
+      "status": "pass",
+      "testName": "ativação do código no celular segredo cifrado e códigos de recuperação só em hash @spec:AC-062 segredo cifrado e códigos de recuperação só em hash @spec:AC-062",
+      "method": "vitest-json"
+    },
+    "AC-063": {
+      "status": "pass",
+      "testName": "funcionária e dona funcionária desativa o próprio código; administradora não @spec:AC-063 funcionária desativa o próprio código; administradora não @spec:AC-063",
+      "method": "vitest-json"
+    },
+    "AC-064": {
+      "status": "pass",
+      "testName": "funcionária e dona dona zera o código da funcionária e derruba as sessões dela @spec:AC-064 dona zera o código da funcionária e derruba as sessões dela @spec:AC-064",
+      "method": "vitest-json"
+    },
+    "AC-065": {
+      "status": "pass",
+      "testName": "administração pela Equipe dona cria administradora, que precisará ativar o código; funcionária não cria contas @spec:AC-065 dona cria administradora, que precisará ativar o código; funcionária não cria contas @spec:AC-065",
+      "method": "vitest-json"
+    },
+    "AC-066": {
+      "status": "pass",
+      "testName": "administração pela Equipe sempre sobra uma administradora ativa e ninguém desativa a si mesma @spec:AC-066 sempre sobra uma administradora ativa e ninguém desativa a si mesma @spec:AC-066",
+      "method": "vitest-json"
+    },
+    "AC-067": {
+      "status": "pass",
+      "testName": "fontes e CSP CSP não libera Google Fonts e o layout não carrega fontes de fora @spec:AC-067 CSP não libera Google Fonts e o layout não carrega fontes de fora @spec:AC-067",
+      "method": "vitest-json"
+    }
+  },
+  "principles": {}
+}
