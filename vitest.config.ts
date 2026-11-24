@@ -7,7 +7,7 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     globalSetup: ["tests/global-setup.ts"],
     fileParallelism: false,
-    env: { NODE_ENV: "test" },
+    env: { NODE_ENV: "test", AUTH_SECRET: "segredo-de-teste-com-mais-de-32-caracteres!!" },
     setupFiles: ["dotenv/config"],
   },
 });
