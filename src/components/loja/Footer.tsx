@@ -15,7 +15,7 @@ export function Footer() {
       <div className="wrap cols">
         <div style={{ flex: "1 1 260px", maxWidth: 340 }}>
           <p className="marca">Jeitinho de Vó</p>
-          <p style={{ marginTop: 10 }}>Doceria artesanal desde 2017. Bolo de receita de família, feito no dia.</p>
+          <p style={{ marginTop: 10 }}>Doceria artesanal. Bolo de receita de família, feito no dia.</p>
         </div>
         <div style={{ flex: "0 1 220px" }}>
           <h3>Horário</h3>
@@ -35,7 +35,7 @@ export function Footer() {
           <Link href="/painel" style={{ color: "var(--cyan)", fontWeight: 600 }}>Área da loja</Link>
         </div>
       </div>
-      <div className="wrap base">© {new Date().getFullYear()} Jeitinho de Vó · doceria artesanal desde 2017</div>
+      <div className="wrap base">© {new Date().getFullYear()} Jeitinho de Vó · doceria artesanal</div>
     </footer>
   );
 }

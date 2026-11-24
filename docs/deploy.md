@@ -87,11 +87,11 @@ Deixe um proxy só na frente do site. Com dois proxies em cadeia (por exemplo Cl
 
 ## 5. Primeiro acesso
 
-1. Abra `https://jeitinho.seudominio.com.br/painel` e entre com o e-mail e a senha do `.env`.
+1. Abra `https://jeitinho.seudominio.com.br/painel` e entre com o e-mail e a senha do `.env`. Toda administradora configura o código no celular (Google Authenticator, Microsoft Authenticator ou Authy) no primeiro acesso e recebe 8 códigos de recuperação para imprimir.
 2. Em Bairros, troque os exemplos pelos bairros e taxas reais.
 3. Em Produtos, cadastre os produtos com foto.
 4. Em Produzi hoje, lance o que está pronto. O cardápio da loja só mostra o que tem estoque.
-5. Em Equipe, crie as contas dos funcionários.
+5. Em Equipe, crie as contas das funcionárias. Para passar a administração para outra pessoa, crie a conta dela com acesso "Administradora" e depois desative a sua.
 
 Depois do primeiro acesso, apague `ADMIN_PASSWORD` do `.env`. Ela só é usada para criar a primeira conta.
 
@@ -117,3 +117,15 @@ docker compose up -d --build
 As migrations novas são aplicadas sozinhas quando o site sobe.
 
 Antes de atualizar, rode o backup (seção 6). A atualização da fase 3 só cria tabelas novas e uma coluna vazia nos itens de pedido; pedidos antigos aparecem como "sem custo" no relatório por produto.
+
+### Atualização "segurança" (código no celular)
+
+Antes do `git pull`, acrescente ao `.env` a chave que cifra o código no celular. Gere uma vez e guarde junto com o backup: se ela for perdida ou trocada, todos precisam configurar o código de novo (vendas e cadastros não são afetados).
+
+```sh
+cd /opt/jeitinho-de-vo
+grep -q '^AUTH_SECRET=.\+' .env || echo "AUTH_SECRET=$(openssl rand -base64 48 | tr -d '\n/+=')" >> .env
+git pull && docker compose up -d --build
+```
+
+Sem `AUTH_SECRET`, o `docker compose` recusa subir e avisa. No próximo acesso, cada administradora é levada a ativar o código no celular.
