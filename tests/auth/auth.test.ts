@@ -37,7 +37,7 @@ describe("sessão", () => {
     expect(rows).toHaveLength(1);
     expect(rows[0].tokenHash).not.toBe(token);
     expect(expiresAt.getTime()).toBeGreaterThan(Date.now() + 6 * 24 * 3600 * 1000);
-    expect(await getSessionUser(token)).toEqual({ id: u.id, name: "Dona", role: "ADMIN" });
+    expect(await getSessionUser(token)).toEqual({ id: u.id, name: "Dona", role: "ADMIN", mfaEnabled: false });
   });
 
   it("devolve null para token inexistente ou ausente", async () => {

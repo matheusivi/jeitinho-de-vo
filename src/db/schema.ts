@@ -27,6 +27,36 @@ export const users = pgTable("users", {
   passwordHash: text("password_hash").notNull(),
   role: roleEnum("role").notNull(),
   active: boolean("active").notNull().default(true),
+  /** Segredo do código no celular, cifrado (AES-256-GCM com AUTH_SECRET). Nulo enquanto não ativado. */
+  totpSecretEnc: text("totp_secret_enc"),
+  /** Segredo gerado na tela de configuração, aguardando a confirmação com um código do aplicativo. */
+  totpPendingEnc: text("totp_pending_enc"),
+  totpEnabledAt: timestamp("totp_enabled_at", { withTimezone: true }),
+  /** Último passo de 30 s aceito: o mesmo código não vale duas vezes. */
+  totpLastStep: bigint("totp_last_step", { mode: "number" }),
+  createdAt: createdAt(),
+});
+
+/** Códigos de recuperação de uso único, guardados só como SHA-256. */
+export const recoveryCodes = pgTable(
+  "recovery_codes",
+  {
+    id: id(),
+    userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    codeHash: text("code_hash").notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("recovery_codes_user_hash_idx").on(t.userId, t.codeHash)],
+);
+
+/** Etapa entre a senha e o código: nenhuma sessão existe antes de o código ser confirmado. */
+export const loginChallenges = pgTable("login_challenges", {
+  id: id(),
+  tokenHash: text("token_hash").notNull().unique(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  attempts: integer("attempts").notNull().default(0),
   createdAt: createdAt(),
 });
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireUser } from "@/lib/auth/guard";
+import { needsMfaSetup, requireUserForSetup } from "@/lib/auth/guard";
 import { lowStockAlerts } from "@/lib/ingredients/ingredients";
 import { formatQty } from "@/lib/ingredients/units";
 import { NavLink } from "@/components/painel/NavLink";
@@ -10,18 +10,20 @@ export const metadata = { title: "Painel · Jeitinho de Vó", robots: { index: f
 export const dynamic = "force-dynamic";
 
 export default async function PainelLayout({ children }: { children: React.ReactNode }) {
-  const user = await requireUser();
-  const admin = user.role === "ADMIN";
-  const alerts = await lowStockAlerts();
+  // a própria página exige o código; o layout só não pode redirecionar, senão a tela de configuração entra em loop
+  const user = await requireUserForSetup();
+  const setup = needsMfaSetup(user);
+  const admin = user.role === "ADMIN" && !setup;
+  const alerts = setup ? [] : await lowStockAlerts();
   return (
     <div className="pn">
       <header className="pn-top">
         <div className="wrap pn-top-in">
           <span className="pn-brand">Jeitinho de Vó</span>
           <nav className="pn-nav" aria-label="Painel">
-            <NavLink href="/painel/pedidos">Pedidos</NavLink>
-            <NavLink href="/painel/producao">Produzi hoje</NavLink>
-            <NavLink href="/painel/insumos">Insumos</NavLink>
+            {!setup && <NavLink href="/painel/pedidos">Pedidos</NavLink>}
+            {!setup && <NavLink href="/painel/producao">Produzi hoje</NavLink>}
+            {!setup && <NavLink href="/painel/insumos">Insumos</NavLink>}
             {admin && <NavLink href="/painel/receitas">Receitas e custos</NavLink>}
             {admin && <NavLink href="/painel/relatorios">Relatórios</NavLink>}
             {admin && <NavLink href="/painel/produtos">Produtos</NavLink>}
@@ -31,6 +33,7 @@ export default async function PainelLayout({ children }: { children: React.React
           </nav>
           <div className="pn-user">
             <span>{user.name}</span>
+            <Link href="/painel/seguranca" className="pn-link">Segurança</Link>
             <form action={logoutAction}>
               <button className="pn-link" type="submit">Sair</button>
             </form>

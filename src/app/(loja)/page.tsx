@@ -21,7 +21,7 @@ export default async function Home() {
           <div className="lj-hero-txt">
             <h1 className="lj-h1">Bolo de vó, saído do forno hoje cedo.</h1>
             <p className="lj-lead">
-              Doceria artesanal desde 2017. Receita de caderno de família, feita em fornada pequena. Escolha aqui e
+              Doceria artesanal. Receita de caderno de família, feita em fornada pequena. Escolha aqui e
               receba em casa em Nova Andradina, ou retire na loja.
             </p>
             <div className="lj-ctas">
@@ -87,7 +87,7 @@ export default async function Home() {
           <img src="/loja/selo-v2.webp" alt="Selo Jeitinho de Vó" width={220} height={220} loading="lazy" />
           <div style={{ flex: "1 1 420px", minWidth: 0 }}>
             <p className="lj-vo-frase">Manteiga de verdade, ovo caipira e nada de massa pronta. Se a vó não colocaria, a gente também não coloca.</p>
-            <p style={{ margin: "20px 0 0", fontWeight: 600 }}>Doceria artesanal desde 2017 · Nova Andradina, MS</p>
+            <p style={{ margin: "20px 0 0", fontWeight: 600 }}>Doceria artesanal · Nova Andradina, MS</p>
           </div>
         </div>
       </section>

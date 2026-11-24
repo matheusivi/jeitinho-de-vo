@@ -2,7 +2,8 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { destroySession, login, SESSION_COOKIE } from "@/lib/auth/session";
+import { createSession, destroySession, login, MFA_COOKIE, SESSION_COOKIE } from "@/lib/auth/session";
+import { verifyChallenge } from "@/lib/auth/mfa";
 import { clientIp } from "@/lib/http";
 
 export type LoginState = { error?: string };
@@ -20,13 +21,52 @@ export async function loginAction(_prev: LoginState, form: FormData): Promise<Lo
     };
   }
   const store = await cookies();
-  store.set(SESSION_COOKIE, result.token, {
+  if (result.ok === "MFA") {
+    // senha certa; a sessão só nasce depois do código do celular
+    store.set(MFA_COOKIE, result.challengeToken, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/painel/login",
+      expires: result.expiresAt,
+    });
+    redirect("/painel/login/codigo");
+  }
+  setSessionCookie(store, result.token, result.expiresAt);
+  redirect("/painel/pedidos");
+}
+
+type CookieStore = Awaited<ReturnType<typeof cookies>>;
+function setSessionCookie(store: CookieStore, token: string, expiresAt: Date): void {
+  store.set(SESSION_COOKIE, token, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    expires: result.expiresAt,
+    expires: expiresAt,
   });
+}
+
+export type CodeState = { error?: string; expired?: boolean };
+
+export async function codeAction(_prev: CodeState, form: FormData): Promise<CodeState> {
+  const store = await cookies();
+  const result = await verifyChallenge(store.get(MFA_COOKIE)?.value, String(form.get("code") ?? ""));
+  if (!result.ok) {
+    if (result.error === "EXPIRED" || result.error === "BLOCKED") {
+      store.delete({ name: MFA_COOKIE, path: "/painel/login" });
+      return {
+        error: result.error === "BLOCKED"
+          ? "Muitos códigos errados nesta conta. Espere 15 minutos e entre de novo com a senha."
+          : "A tentativa expirou ou teve erros demais. Entre de novo com a senha.",
+        expired: true,
+      };
+    }
+    return { error: "Código incorreto. Use o código que aparece agora no aplicativo, ou um código de recuperação." };
+  }
+  store.delete({ name: MFA_COOKIE, path: "/painel/login" });
+  const session = await createSession(result.userId);
+  setSessionCookie(store, session.token, session.expiresAt);
   redirect("/painel/pedidos");
 }
 
