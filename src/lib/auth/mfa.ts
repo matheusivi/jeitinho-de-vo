@@ -49,8 +49,12 @@ export async function mfaStatus(userId: string): Promise<{ enabled: boolean; rec
 export async function startEnrollment(user: SessionUser): Promise<{ secret: string; uri: string; qrSvg: string }> {
   const u = await getUserRow(user.id);
   if (u.totpEnabledAt) throw new MfaError("O código no celular já está ativo nesta conta.");
-  const secret = base32Encode(newTotpSecret());
-  await db.update(users).set({ totpPendingEnc: encryptSecret(secret) }).where(eq(users.id, user.id));
+  // reaproveita o segredo pendente: recarregar a tela não invalida um QR que a pessoa já leu
+  let secret = u.totpPendingEnc ? decryptSecret(u.totpPendingEnc) : null;
+  if (!secret) {
+    secret = base32Encode(newTotpSecret());
+    await db.update(users).set({ totpPendingEnc: encryptSecret(secret) }).where(eq(users.id, user.id));
+  }
   const uri = otpauthUri(base32Decode(secret), u.email);
   const qrSvg = await QRCode.toString(uri, { type: "svg", margin: 1, errorCorrectionLevel: "M" });
   return { secret, uri, qrSvg };

@@ -1,4 +1,4 @@
-import { currentUser } from "@/lib/auth/guard";
+import { currentUser, needsMfaSetup } from "@/lib/auth/guard";
 import { buildMonthWorkbook } from "@/lib/reports/excel";
 
 export const dynamic = "force-dynamic";
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(req: Request): Promise<Response> {
   const user = await currentUser();
   if (!user) return new Response("Faça login.", { status: 401 });
-  if (user.role !== "ADMIN") return new Response("Sem acesso.", { status: 403 });
+  if (user.role !== "ADMIN" || needsMfaSetup(user)) return new Response("Sem acesso.", { status: 403 });
   const m = /^(\d{4})-(\d{2})$/.exec(new URL(req.url).searchParams.get("mes") ?? "");
   if (!m) return new Response("Mês inválido.", { status: 400 });
   const year = Number(m[1]);

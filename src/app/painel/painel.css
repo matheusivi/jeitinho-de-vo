@@ -56,3 +56,12 @@ textarea.pn-input { height: auto; padding: 10px 12px; min-height: 88px; }
 .pn-stat { padding: 12px 18px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; min-width: 150px; }
 .pn-stat strong { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
 .pn-inline-bar { height: 8px; border-radius: 4px; background: #008a9c; }
+.pn-qr { width: 200px; height: 200px; background: #fff; padding: 8px; border-radius: 12px; border: 1.5px solid var(--line); flex: none; }
+.pn-qr svg { width: 100%; height: 100%; display: block; }
+.pn-steps { margin: 0; padding-left: 20px; display: grid; gap: 14px; }
+.pn-codes { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 24px; margin: 0; padding-left: 24px; font-size: 18px; }
+.pn-codes code { font-size: 18px; letter-spacing: 1px; }
+@media print {
+  .pn-top, .pn-alert, .pn-recovery .pn-row, .pn-recovery ~ * { display: none !important; }
+  .pn-recovery { border: 0; }
+}

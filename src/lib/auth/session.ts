@@ -2,10 +2,13 @@ import { createHash, randomBytes } from "node:crypto";
 import { and, eq, gt, sql } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { hashPassword, verifyPassword } from "./password";
+import { createChallenge } from "./mfa";
 import { checkRateLimit, lockKeys, recordAttempt } from "./rate-limit";
 import type { SessionUser } from "./types";
 
 export const SESSION_COOKIE = "jdv_session";
+/** Cookie da etapa do código no celular (só existe entre a senha e o código). */
+export const MFA_COOKIE = "jdv_mfa";
 const SESSION_DAYS = 7;
 const MAX_FAILS = 5;
 /** Limite por conta, independente do IP: segura quem troca de IP a cada tentativa. */
@@ -51,7 +54,11 @@ export async function login(
   email: string,
   password: string,
   ip: string,
-): Promise<{ ok: true; token: string; expiresAt: Date } | { ok: false; error: "INVALID" | "BLOCKED" }> {
+): Promise<
+  | { ok: true; token: string; expiresAt: Date }
+  | { ok: "MFA"; challengeToken: string; expiresAt: Date }
+  | { ok: false; error: "INVALID" | "BLOCKED" }
+> {
   const normalized = email.trim().toLowerCase();
   const ipKey = `login:${normalized}:${ip}`;
   const emailKey = `login-email:${normalized}`;
@@ -73,10 +80,15 @@ export async function login(
       await recordAttempt(emailKey, tx);
       return { ok: false as const, error: "INVALID" as const };
     }
-    return { ok: true as const, userId: user.id };
+    return { ok: true as const, userId: user.id, mfa: !!user.totpEnabledAt };
   });
 
   if (!outcome.ok) return outcome;
+  if (outcome.mfa) {
+    // senha certa, mas a conta tem código no celular: nenhuma sessão até o código ser confirmado
+    const ch = await createChallenge(outcome.userId);
+    return { ok: "MFA", challengeToken: ch.token, expiresAt: ch.expiresAt };
+  }
   const session = await createSession(outcome.userId);
   return { ok: true, ...session };
 }
