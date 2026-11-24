@@ -30,10 +30,10 @@ export default async function PainelLayout({ children }: { children: React.React
             {admin && <NavLink href="/painel/categorias">Categorias</NavLink>}
             {admin && <NavLink href="/painel/bairros">Bairros</NavLink>}
             {admin && <NavLink href="/painel/equipe">Equipe</NavLink>}
-            <NavLink href="/painel/seguranca">Segurança</NavLink>
           </nav>
           <div className="pn-user">
             <span>{user.name}</span>
+            <Link href="/painel/seguranca" className="pn-link">Segurança</Link>
             <form action={logoutAction}>
               <button className="pn-link" type="submit">Sair</button>
             </form>

@@ -107,6 +107,25 @@ describe("login em duas etapas", () => {
     expect(await verifyChallenge(r3.challengeToken, code, now)).toEqual({ ok: false, error: "INVALID" });
   });
 
+  it("erros de código somam por conta: refazer o login não dá chutes infinitos @spec:AC-060", async () => {
+    const now = Date.now();
+    const dona = await comCodigo("ADMIN", now - 120_000);
+    let erros = 0;
+    for (let rodada = 0; rodada < 3; rodada++) {
+      const r = await login(dona.email, dona.password, "10.0.0.7");
+      if (r.ok !== "MFA") throw new Error("esperava MFA");
+      for (let i = 0; i < 4; i++) {
+        const v = await verifyChallenge(r.challengeToken, "000000", now);
+        if (!v.ok) erros++;
+      }
+    }
+    expect(erros).toBe(12);
+    // passou de 10 erros na janela: nem o código certo entra até a janela acabar
+    const r = await login(dona.email, dona.password, "10.0.0.7");
+    if (r.ok !== "MFA") throw new Error("esperava MFA");
+    expect(await verifyChallenge(r.challengeToken, generateTotp(dona.secret, now), now)).toEqual({ ok: false, error: "BLOCKED" });
+  });
+
   it("desafio vence em 5 minutos", async () => {
     const now = Date.now();
     const dona = await comCodigo("ADMIN", now - 60_000);

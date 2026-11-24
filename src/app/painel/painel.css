@@ -1,12 +1,12 @@
 .pn { min-height: 100dvh; background: var(--surface-raised); }
 .pn-top { background: var(--ink); color: var(--surface); }
 .pn-top-in { display: flex; align-items: center; gap: 8px 20px; min-height: 60px; padding-block: 8px; }
-.pn-brand { font-family: var(--font-display); font-size: 20px; color: var(--cyan); text-decoration: none; margin-right: 8px; }
+.pn-brand { font-family: var(--font-display); font-size: 20px; color: var(--cyan); text-decoration: none; margin-right: 8px; white-space: nowrap; flex: none; }
 /* menu em uma linha só: se não couber, rola para o lado em vez de quebrar em duas linhas */
 .pn-nav { display: flex; gap: 2px; flex-wrap: nowrap; flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #2c5b64 transparent; padding-block: 2px; }
 .pn-nav a { color: var(--surface); text-decoration: none; font-weight: 600; font-size: 15px; padding: 8px 12px; border-radius: 999px; white-space: nowrap; flex: none; }
 @media (max-width: 1360px) { .pn-nav a { font-size: 14px; padding: 7px 10px; } }
-@media (max-width: 720px) { .pn-top-in { flex-wrap: wrap; } .pn-nav { order: 3; flex-basis: 100%; } }
+@media (max-width: 1180px) { .pn-top-in { flex-wrap: wrap; justify-content: space-between; } .pn-nav { order: 3; flex-basis: 100%; } }
 .pn-nav a:hover { background: #1c4a53; }
 .pn-nav a[aria-current="page"] { background: var(--cyan); color: var(--ink); }
 .pn-user { display: flex; align-items: center; gap: 12px; font-size: 14px; color: #c9d3d2; flex: none; white-space: nowrap; }

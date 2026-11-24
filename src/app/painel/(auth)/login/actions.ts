@@ -53,9 +53,14 @@ export async function codeAction(_prev: CodeState, form: FormData): Promise<Code
   const store = await cookies();
   const result = await verifyChallenge(store.get(MFA_COOKIE)?.value, String(form.get("code") ?? ""));
   if (!result.ok) {
-    if (result.error === "EXPIRED") {
+    if (result.error === "EXPIRED" || result.error === "BLOCKED") {
       store.delete({ name: MFA_COOKIE, path: "/painel/login" });
-      return { error: "A tentativa expirou ou teve erros demais. Entre de novo com a senha.", expired: true };
+      return {
+        error: result.error === "BLOCKED"
+          ? "Muitos códigos errados nesta conta. Espere 15 minutos e entre de novo com a senha."
+          : "A tentativa expirou ou teve erros demais. Entre de novo com a senha.",
+        expired: true,
+      };
     }
     return { error: "Código incorreto. Use o código que aparece agora no aplicativo, ou um código de recuperação." };
   }

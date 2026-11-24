@@ -3,6 +3,7 @@ import { and, eq, gt, isNull, or, lt, sql } from "drizzle-orm";
 import QRCode from "qrcode";
 import { db, schema, type DbOrTx } from "@/lib/db";
 import { assertRole, type SessionUser } from "./types";
+import { checkRateLimit, lockKeys, recordAttempt } from "./rate-limit";
 import { decryptSecret, encryptSecret } from "./crypto";
 import { base32Decode, base32Encode, newTotpSecret, otpauthUri, verifyTotp } from "./totp";
 
@@ -20,6 +21,9 @@ const RECOVERY_COUNT = 8;
 const RECOVERY_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 export const CHALLENGE_MINUTES = 5;
 export const CHALLENGE_MAX_ATTEMPTS = 5;
+/** Erros de código por conta numa janela: impede que refazer o login renove os chutes sem limite. */
+export const MFA_MAX_FAILS_PER_USER = 10;
+export const MFA_WINDOW_MINUTES = 15;
 
 const sha256 = (s: string) => createHash("sha256").update(s).digest("hex");
 const normalizeRecovery = (s: string) => s.replace(/[\s-]/g, "").toUpperCase();
@@ -157,7 +161,7 @@ export async function createChallenge(userId: string, tx: DbOrTx = db): Promise<
   return { token, expiresAt };
 }
 
-export type ChallengeResult = { ok: true; userId: string } | { ok: false; error: "INVALID" | "EXPIRED" };
+export type ChallengeResult = { ok: true; userId: string } | { ok: false; error: "INVALID" | "EXPIRED" | "BLOCKED" };
 
 /**
  * Confere o código (do aplicativo ou de recuperação) para um desafio. Cada erro conta;
@@ -172,11 +176,18 @@ export async function verifyChallenge(token: string | undefined, code: string, n
       .where(and(eq(loginChallenges.tokenHash, sha256(token)), gt(loginChallenges.expiresAt, new Date(now))))
       .for("update");
     if (!ch) return { ok: false as const, error: "EXPIRED" as const };
+    const userKey = `mfa:${ch.userId}`;
+    await lockKeys(tx, [userKey]);
+    if (!(await checkRateLimit(userKey, MFA_MAX_FAILS_PER_USER, MFA_WINDOW_MINUTES, tx))) {
+      await tx.delete(loginChallenges).where(eq(loginChallenges.id, ch.id));
+      return { ok: false as const, error: "BLOCKED" as const };
+    }
     const ok = (await consumeTotp(ch.userId, code, now, tx)) || (await consumeRecovery(ch.userId, code, tx));
     if (ok) {
       await tx.delete(loginChallenges).where(eq(loginChallenges.id, ch.id));
       return { ok: true as const, userId: ch.userId };
     }
+    await recordAttempt(userKey, tx);
     if (ch.attempts + 1 >= CHALLENGE_MAX_ATTEMPTS) {
       await tx.delete(loginChallenges).where(eq(loginChallenges.id, ch.id));
       return { ok: false as const, error: "EXPIRED" as const };
