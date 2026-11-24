@@ -24,7 +24,10 @@ export async function createSession(userId: string): Promise<{ token: string; ex
 export async function getSessionUser(token: string | undefined): Promise<SessionUser | null> {
   if (!token) return null;
   const [row] = await db
-    .select({ id: schema.users.id, name: schema.users.name, role: schema.users.role })
+    .select({
+      id: schema.users.id, name: schema.users.name, role: schema.users.role,
+      mfaEnabled: sql<boolean>`${schema.users.totpEnabledAt} IS NOT NULL`,
+    })
     .from(schema.sessions)
     .innerJoin(schema.users, eq(schema.users.id, schema.sessions.userId))
     .where(
