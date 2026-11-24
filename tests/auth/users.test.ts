@@ -37,3 +37,40 @@ describe("equipe", () => {
     expect((await login("ana@loja.com", "12345678", "ip")).ok).toBe(false);
   });
 });
+
+describe("administração pela Equipe", () => {
+  const as = (u: { id: string; name: string; role: "ADMIN" | "STAFF" }) => ({ id: u.id, name: u.name, role: u.role });
+
+  it("dona cria administradora, que precisará ativar o código; funcionária não cria contas @spec:AC-065", async () => {
+    const { createTeamMember } = await import("@/lib/auth/users");
+    const { needsMfaSetup } = await import("@/lib/auth/guard");
+    const { createSession, getSessionUser } = await import("@/lib/auth/session");
+    const { ForbiddenError } = await import("@/lib/auth/types");
+    const [dona] = await db.insert(schema.users).values({ name: "Dona", email: "dona@loja.com", passwordHash: "x", role: "ADMIN" }).returning();
+    const [ana] = await db.insert(schema.users).values({ name: "Ana", email: "ana@loja.com", passwordHash: "x", role: "STAFF" }).returning();
+    const r = await createTeamMember({ name: "Maria", email: "maria@loja.com", password: "SenhaForte1", role: "ADMIN" }, as(dona));
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    const { token } = await createSession(r.id);
+    const maria = await getSessionUser(token);
+    expect(maria).toMatchObject({ role: "ADMIN", mfaEnabled: false });
+    expect(needsMfaSetup(maria!)).toBe(true);
+    await expect(createTeamMember({ name: "X", email: "x@loja.com", password: "SenhaForte1", role: "STAFF" }, as(ana))).rejects.toBeInstanceOf(ForbiddenError);
+  });
+
+  it("sempre sobra uma administradora ativa e ninguém desativa a si mesma @spec:AC-066", async () => {
+    const { changeUserActive, TeamError } = await import("@/lib/auth/users");
+    const [d1] = await db.insert(schema.users).values({ name: "D1", email: "d1@loja.com", passwordHash: "x", role: "ADMIN" }).returning();
+    const [d2] = await db.insert(schema.users).values({ name: "D2", email: "d2@loja.com", passwordHash: "x", role: "ADMIN" }).returning();
+    await changeUserActive(d2.id, false, as(d1));
+    await expect(changeUserActive(d1.id, false, as(d1))).rejects.toThrow(/própria/i);
+    // reativa d2 e tenta as duas se desativarem ao mesmo tempo: só uma consegue
+    await changeUserActive(d2.id, true, as(d1));
+    const results = await Promise.allSettled([changeUserActive(d2.id, false, as(d1)), changeUserActive(d1.id, false, as(d2))]);
+    expect(results.filter((r) => r.status === "fulfilled")).toHaveLength(1);
+    const rejected = results.find((r) => r.status === "rejected") as PromiseRejectedResult;
+    expect(rejected.reason).toBeInstanceOf(TeamError);
+    const ativos = (await db.select().from(schema.users)).filter((u) => u.active && u.role === "ADMIN");
+    expect(ativos).toHaveLength(1);
+  });
+});
