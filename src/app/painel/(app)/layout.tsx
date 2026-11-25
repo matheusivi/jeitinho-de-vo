@@ -21,9 +21,11 @@ export default async function PainelLayout({ children }: { children: React.React
         <div className="wrap pn-top-in">
           <span className="pn-brand">Jeitinho de Vó</span>
           <nav className="pn-nav" aria-label="Painel">
+            {!setup && <NavLink href="/painel/mesas">Mesas</NavLink>}
             {!setup && <NavLink href="/painel/pedidos">Pedidos</NavLink>}
             {!setup && <NavLink href="/painel/producao">Produzi hoje</NavLink>}
             {!setup && <NavLink href="/painel/insumos">Insumos</NavLink>}
+            {!setup && <NavLink href="/painel/comandas">Comandas</NavLink>}
             {admin && <NavLink href="/painel/receitas">Receitas e custos</NavLink>}
             {admin && <NavLink href="/painel/relatorios">Relatórios</NavLink>}
             {admin && <NavLink href="/painel/produtos">Produtos</NavLink>}

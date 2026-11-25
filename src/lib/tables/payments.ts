@@ -4,14 +4,7 @@ import { db, schema } from "@/lib/db";
 import type { SessionUser } from "@/lib/auth/types";
 import { lockOpenTable, TableError } from "./tables";
 
-/** Divide o total em partes iguais; os centavos que sobram vão para as primeiras partes. */
-export function splitEqual(totalCents: number, parts: number): number[] {
-  if (!Number.isInteger(parts) || parts < 1 || parts > 50) throw new TableError("Divida entre 1 e 50 pessoas.");
-  if (!Number.isInteger(totalCents) || totalCents < 0) throw new TableError("Total inválido.");
-  const base = Math.floor(totalCents / parts);
-  const extra = totalCents - base * parts;
-  return Array.from({ length: parts }, (_, i) => base + (i < extra ? 1 : 0));
-}
+export { splitEqual } from "./split";
 
 const input = z.union([
   z.object({ tender: z.enum(["CASH", "PIX", "CARD"]), amountCents: z.number().int(), itemIds: z.undefined().optional() }),
