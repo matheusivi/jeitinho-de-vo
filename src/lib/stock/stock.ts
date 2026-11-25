@@ -144,3 +144,47 @@ export async function releaseForCancel(orderId: string, userId: string | null, t
     }
   }
 }
+
+/**
+ * Venda imediata (mesas): sai direto do estoque livre, sem passar pela reserva.
+ * Rodar dentro de transação; o UPDATE condicional não deixa vender o que está reservado para o site.
+ */
+export async function sellNow(items: { productId: string; quantity: number }[], orderId: string, userId: string, tx: DbOrTx): Promise<void> {
+  const totals = new Map<string, number>();
+  for (const it of items) {
+    assertQuantity(it.quantity);
+    totals.set(it.productId, (totals.get(it.productId) ?? 0) + it.quantity);
+  }
+  for (const [productId, quantity] of [...totals].sort(([a], [b]) => a.localeCompare(b))) {
+    const updated = await tx
+      .update(products)
+      .set({ stockOnHand: sql`${products.stockOnHand} - ${quantity}` })
+      .where(
+        and(
+          eq(products.id, productId),
+          eq(products.active, true),
+          gte(sql`${products.stockOnHand} - ${products.stockReserved}`, quantity),
+        ),
+      )
+      .returning({ id: products.id });
+    if (updated.length === 0) throw new StockError("ESGOTADO", productId, "Este produto acabou de esgotar.");
+    await tx.insert(stockMovements).values({ productId, type: "SALE", quantity: -quantity, orderId, userId });
+  }
+}
+
+/** Devolve ao estoque um item tirado de uma mesa, guardando quem tirou e por quê. */
+export async function returnItem(
+  item: { productId: string; quantity: number },
+  orderId: string,
+  userId: string,
+  reason: string,
+  tx: DbOrTx,
+): Promise<void> {
+  await tx
+    .update(products)
+    .set({ stockOnHand: sql`${products.stockOnHand} + ${item.quantity}` })
+    .where(eq(products.id, item.productId));
+  await tx.insert(stockMovements).values({
+    productId: item.productId, type: "CANCEL_RETURN", quantity: item.quantity, orderId, userId, reason,
+  });
+}
