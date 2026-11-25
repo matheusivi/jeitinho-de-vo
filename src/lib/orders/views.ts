@@ -1,4 +1,4 @@
-import { and, desc, eq, gte, inArray, lt, notInArray, or } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, lt, ne, notInArray, or } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import type { SessionUser } from "@/lib/auth/types";
 import { localDayRange } from "@/lib/store/hours";
@@ -39,12 +39,16 @@ export async function listOrdersForPanel(user: SessionUser, filter: { day: Date 
     .from(schema.orders)
     .leftJoin(schema.neighborhoods, eq(schema.neighborhoods.id, schema.orders.neighborhoodId))
     .where(
+      and(
+      // mesas do salão têm tela própria
+      ne(schema.orders.fulfillment, "TABLE"),
       or(
         and(gte(schema.orders.createdAt, start), lt(schema.orders.createdAt, end)),
         and(lt(schema.orders.createdAt, start), notInArray(schema.orders.status, ["DONE", "CANCELED"])),
         user.role === "ADMIN"
           ? and(lt(schema.orders.createdAt, start), eq(schema.orders.status, "DONE"), eq(schema.orders.paymentStatus, "PENDING"))
           : undefined,
+      ),
       ),
     )
     .orderBy(desc(schema.orders.createdAt));
@@ -60,7 +64,7 @@ export async function listOrdersForPanel(user: SessionUser, filter: { day: Date 
       id: o.id,
       code: o.code,
       status: o.status,
-      fulfillment: o.fulfillment,
+      fulfillment: o.fulfillment as "DELIVERY" | "PICKUP",
       customerName: o.customerName,
       customerPhone: o.customerPhone,
       addressLine: o.addressLine,
