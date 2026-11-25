@@ -18,6 +18,7 @@
           "src/app/painel/painel.css",
           "src/db/schema.ts",
           "src/lib/orders/create.ts",
+          "src/lib/orders/public.ts",
           "src/lib/orders/transitions.ts",
           "src/lib/orders/views.ts",
           "src/lib/stock/stock.ts"
@@ -69,9 +70,9 @@
         "rule": ".spec/features/fase-3-insumos-relatorios/prd.md"
       }
     ],
-    "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
-    "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
-    "reviewedAt": "2026-11-25T19:46:42.915Z",
+    "fingerprint": "6159549325d9786ef351a85d78a20cf8cbf04d423fa858636ffeeb2e7e580457",
+    "ownFingerprint": "718288a5609036a91b7e911306742d38419a1911a984d98ec7cfde02391a627c",
+    "reviewedAt": "2026-11-25T20:00:23.304Z",
     "documents": [
       ".spec/features/fase-1-loja-painel/spec.md",
       ".spec/features/fase-1-loja-painel/tasks.md",
@@ -147,6 +148,56 @@
       "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
       "conflictFingerprint": "34a4d2ecd6206b8f566edd3094826e6228648dd602026bc70b8d089b81e21a5e",
       "answeredAt": "2026-11-25T19:46:43.706Z"
+    },
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Vê só nas mesas (Recomendado)",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "6159549325d9786ef351a85d78a20cf8cbf04d423fa858636ffeeb2e7e580457",
+      "ownFingerprint": "718288a5609036a91b7e911306742d38419a1911a984d98ec7cfde02391a627c",
+      "conflictFingerprint": "30f202fa33f19a78e995821da40bc8c241b07fe1b41c3772830cb4ff20c7705d",
+      "answeredAt": "2026-11-25T20:00:23.522Z"
+    },
+    {
+      "conflictId": "equipe-ve-precos-nas-mesas",
+      "choice": "prosseguir",
+      "answer": "Vê só nas mesas (Recomendado)",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "6159549325d9786ef351a85d78a20cf8cbf04d423fa858636ffeeb2e7e580457",
+      "ownFingerprint": "718288a5609036a91b7e911306742d38419a1911a984d98ec7cfde02391a627c",
+      "conflictFingerprint": "2e5f1ccb5503ef3249916b57b0966c520a9fc3ebaa7d7d9a6f3e363ddef2ccf9",
+      "answeredAt": "2026-11-25T20:00:23.724Z"
+    },
+    {
+      "conflictId": "impacto:fase-3-insumos-relatorios",
+      "choice": "prosseguir",
+      "answer": "Então eu te dou a liberdade de fazer. Faça aí certinho para você me explicar o que for. E depois me fala o que está faltando.",
+      "source": "Mensagem do Matheus no chat, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25 (liberdade para a parte técnica das mesas)",
+      "fingerprint": "6159549325d9786ef351a85d78a20cf8cbf04d423fa858636ffeeb2e7e580457",
+      "ownFingerprint": "718288a5609036a91b7e911306742d38419a1911a984d98ec7cfde02391a627c",
+      "conflictFingerprint": "7b04891eac68081769777b096bbec8af861bf40eab03a6897fe04ed06fa6ea8a",
+      "answeredAt": "2026-11-25T20:00:23.892Z"
+    },
+    {
+      "conflictId": "impacto:seguranca-acabamentos",
+      "choice": "prosseguir",
+      "answer": "Então eu te dou a liberdade de fazer. Faça aí certinho para você me explicar o que for. E depois me fala o que está faltando.",
+      "source": "Mensagem do Matheus no chat, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25 (liberdade para a parte técnica das mesas)",
+      "fingerprint": "6159549325d9786ef351a85d78a20cf8cbf04d423fa858636ffeeb2e7e580457",
+      "ownFingerprint": "718288a5609036a91b7e911306742d38419a1911a984d98ec7cfde02391a627c",
+      "conflictFingerprint": "23d219069b795ea8f93ee2636d44dd34a80a5b7c347dfa25e89d68f2988b3562",
+      "answeredAt": "2026-11-25T20:00:24.061Z"
+    },
+    {
+      "conflictId": "pedidos-de-mesa-fora-da-tela-de-pedidos",
+      "choice": "prosseguir",
+      "answer": "Então eu te dou a liberdade de fazer. Faça aí certinho para você me explicar o que for. E depois me fala o que está faltando.",
+      "source": "Mensagem do Matheus no chat, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25 (liberdade para a parte técnica das mesas)",
+      "fingerprint": "6159549325d9786ef351a85d78a20cf8cbf04d423fa858636ffeeb2e7e580457",
+      "ownFingerprint": "718288a5609036a91b7e911306742d38419a1911a984d98ec7cfde02391a627c",
+      "conflictFingerprint": "34a4d2ecd6206b8f566edd3094826e6228648dd602026bc70b8d089b81e21a5e",
+      "answeredAt": "2026-11-25T20:00:24.232Z"
     }
   ]
 }
