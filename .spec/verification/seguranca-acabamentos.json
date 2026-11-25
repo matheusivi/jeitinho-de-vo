@@ -1,7 +1,7 @@
 {
   "feature": "seguranca-acabamentos",
-  "timestamp": "2026-11-25T20:01:25.120Z",
-  "gitRev": "f84b944",
+  "timestamp": "2026-11-25T20:17:48.314Z",
+  "gitRev": "d59e475",
   "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
   "reporter": "vitest-json",
   "exitCode": 0,

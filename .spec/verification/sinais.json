@@ -410,28 +410,37 @@
       "codigo": "VERIFY_OBSOLETO",
       "feature": "fase-1-loja-painel",
       "ref": "—",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-11-25T20:00:14.523Z",
-      "ultimaVez": "2026-11-25T20:00:14.523Z",
-      "gitRev": "f84b944"
+      "ultimaVez": "2026-11-25T20:15:53.687Z",
+      "gitRev": "d59e475"
     },
     "VERIFY_OBSOLETO::fase-3-insumos-relatorios::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "fase-3-insumos-relatorios",
       "ref": "—",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-11-25T20:00:14.523Z",
-      "ultimaVez": "2026-11-25T20:00:14.523Z",
-      "gitRev": "f84b944"
+      "ultimaVez": "2026-11-25T20:15:53.687Z",
+      "gitRev": "d59e475"
     },
     "VERIFY_OBSOLETO::seguranca-acabamentos::—": {
       "codigo": "VERIFY_OBSOLETO",
       "feature": "seguranca-acabamentos",
       "ref": "—",
-      "ocorrencias": 1,
+      "ocorrencias": 2,
       "primeiraVez": "2026-11-25T20:00:14.523Z",
-      "ultimaVez": "2026-11-25T20:00:14.523Z",
-      "gitRev": "f84b944"
+      "ultimaVez": "2026-11-25T20:15:53.687Z",
+      "gitRev": "d59e475"
+    },
+    "VERIFY_OBSOLETO::mesas-comandas::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "mesas-comandas",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-25T20:15:53.687Z",
+      "ultimaVez": "2026-11-25T20:15:53.687Z",
+      "gitRev": "d59e475"
     }
   }
 }
