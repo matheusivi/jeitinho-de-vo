@@ -6,6 +6,7 @@ import { unitCostsFor } from "@/lib/ingredients/costing";
 import { checkRateLimit, lockKeys, recordAttempt } from "@/lib/auth/rate-limit";
 import { isOpen, openingLabel } from "@/lib/store/hours";
 import { commitSale, reserve, StockError } from "@/lib/stock/stock";
+import { enqueue } from "@/lib/printing/jobs";
 import { activeNeighborhood } from "./fees";
 import { normalizePhone } from "./phone";
 
@@ -86,11 +87,13 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
 
       let deliveryFeeCents = 0;
       let neighborhoodId: string | null = null;
+      let neighborhoodName = "";
       if (data.fulfillment === "DELIVERY") {
         const nb = data.neighborhoodId ? await activeNeighborhood(data.neighborhoodId, tx) : null;
         if (!nb) throw new OrderInputError("Escolha o bairro de entrega.");
         deliveryFeeCents = nb.feeCents;
         neighborhoodId = nb.id;
+        neighborhoodName = nb.name;
       }
 
       await reserve([...qty].map(([productId, quantity]) => ({ productId, quantity })), tx);
@@ -132,6 +135,15 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
         })),
       );
       await commitSale(order.id, tx);
+      // comanda para a cozinha: sem telefone nem endereço
+      const firstName = data.customerName.trim().split(/\s+/)[0];
+      await enqueue("ORDER", order.id, {
+        title: `SITE · ${order.code}`,
+        subtitle: `${data.fulfillment === "DELIVERY" ? `Entrega · ${neighborhoodName}` : "Retirada na loja"} · ${firstName}`,
+        lines: products.map((p) => ({ quantity: qty.get(p.id)!, name: p.name })),
+        footer: data.notes ? `Obs.: ${data.notes}` : undefined,
+        createdAt: new Date().toISOString(),
+      }, tx);
       await recordAttempt(rateKey, tx);
       return order.code;
     });
