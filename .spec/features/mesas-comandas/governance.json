@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "large": true,
+  "documentationContract": "onp-docs-v1",
+  "domains": [],
+  "clientRequest": "Mesas: a cliente quer mesas; terá 8 mesas por enquanto no salão; uma comanda por mesa, o que gastou cada mesa separadamente, como restaurante. Garçom lança pelo celular e no balcão; conta pode ser dividida; sem taxa de serviço; comanda sai na impressora Elgin (no balcão) para a cozinha; pedidos do site também imprimem; estoque da vitrine; cada garçom tem conta própria; impressão por página do painel aberta no Chrome do notebook.",
+  "review": {
+    "summary": "Li a spec da fase 1 (pedidos, estoque reservado, AC-017 equipe sem valores), PRD/ADR/spec da fase 3 (relatórios e caixa por pedido) e a feature de segurança (menu e guard). Mesas reaproveitam pedidos e estoque: venda imediata com baixa direta, devolução por item, sem mudar a regra de reserva do site. Tela de Pedidos e transições ignoram pedidos de mesa. Equipe vê preços só nas mesas. Menu ganha Mesas e Comandas; guard de MFA vale para as novas telas. Migração aditiva.",
+    "reviewer": "Claude Opus 5.5, sessão Claude Code session_016mjpWfzHvywrksDHpr585X",
+    "conflicts": [
+      {
+        "id": "impacto:fase-1-loja-painel",
+        "automatic": true,
+        "feature": "fase-1-loja-painel",
+        "summary": "A mudança interfere no domínio da feature fase-1-loja-painel.",
+        "files": [
+          "src/app/painel/(app)/layout.tsx",
+          "src/app/painel/painel.css",
+          "src/db/schema.ts",
+          "src/lib/orders/create.ts",
+          "src/lib/orders/transitions.ts",
+          "src/lib/orders/views.ts",
+          "src/lib/stock/stock.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/fase-1-loja-painel/spec.md"
+      },
+      {
+        "id": "impacto:fase-3-insumos-relatorios",
+        "automatic": true,
+        "feature": "fase-3-insumos-relatorios",
+        "summary": "A mudança interfere no domínio da feature fase-3-insumos-relatorios.",
+        "files": [
+          "README.md",
+          "src/app/painel/(app)/layout.tsx",
+          "src/app/painel/painel.css",
+          "src/db/schema.ts",
+          "src/lib/orders/create.ts",
+          "src/lib/reports/monthly.ts",
+          "src/lib/stock/stock.ts",
+          "tests/helpers.ts",
+          "tests/setup.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/fase-3-insumos-relatorios/prd.md"
+      },
+      {
+        "id": "impacto:seguranca-acabamentos",
+        "automatic": true,
+        "feature": "seguranca-acabamentos",
+        "summary": "A mudança interfere no domínio da feature seguranca-acabamentos.",
+        "files": [
+          "src/app/painel/(app)/layout.tsx",
+          "src/app/painel/painel.css",
+          "src/db/schema.ts",
+          "tests/setup.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/seguranca-acabamentos/prd.md"
+      },
+      {
+        "id": "equipe-ve-precos-nas-mesas",
+        "summary": "Funcionária passa a ver preço e total dos itens nas telas de mesa (e só nelas); custos, relatórios e valores de outras telas continuam escondidos.",
+        "rule": ".spec/features/fase-1-loja-painel/spec.md"
+      },
+      {
+        "id": "pedidos-de-mesa-fora-da-tela-de-pedidos",
+        "summary": "Pedidos do tipo MESA não aparecem na tela Pedidos nem seguem as transições do site; entram em vendas, caixa, CMV e Excel como os demais pedidos.",
+        "rule": ".spec/features/fase-3-insumos-relatorios/prd.md"
+      }
+    ],
+    "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
+    "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
+    "reviewedAt": "2026-11-25T19:46:42.915Z",
+    "documents": [
+      ".spec/features/fase-1-loja-painel/spec.md",
+      ".spec/features/fase-1-loja-painel/tasks.md",
+      ".spec/features/fase-3-insumos-relatorios/prd.md",
+      ".spec/features/fase-3-insumos-relatorios/adr.md",
+      ".spec/features/fase-3-insumos-relatorios/design.md",
+      ".spec/features/fase-3-insumos-relatorios/spec.md",
+      ".spec/features/fase-3-insumos-relatorios/tasks.md",
+      ".spec/features/fase-3-insumos-relatorios/research.md",
+      ".spec/features/mesas-comandas/prd.md",
+      ".spec/features/mesas-comandas/adr.md",
+      ".spec/features/mesas-comandas/design.md",
+      ".spec/features/mesas-comandas/spec.md",
+      ".spec/features/mesas-comandas/tasks.md",
+      ".spec/features/mesas-comandas/research.md",
+      ".spec/features/seguranca-acabamentos/prd.md",
+      ".spec/features/seguranca-acabamentos/adr.md",
+      ".spec/features/seguranca-acabamentos/design.md",
+      ".spec/features/seguranca-acabamentos/spec.md",
+      ".spec/features/seguranca-acabamentos/tasks.md",
+      ".spec/features/seguranca-acabamentos/research.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  },
+  "decisions": [
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Vê só nas mesas (Recomendado)",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
+      "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
+      "conflictFingerprint": "c59407501256c167f846b7f614866f4a0c2bec0e3fb001eee9ca35e6c50605bf",
+      "answeredAt": "2026-11-25T19:46:43.092Z"
+    },
+    {
+      "conflictId": "equipe-ve-precos-nas-mesas",
+      "choice": "prosseguir",
+      "answer": "Vê só nas mesas (Recomendado)",
+      "source": "AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
+      "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
+      "conflictFingerprint": "2e5f1ccb5503ef3249916b57b0966c520a9fc3ebaa7d7d9a6f3e363ddef2ccf9",
+      "answeredAt": "2026-11-25T19:46:43.246Z"
+    },
+    {
+      "conflictId": "impacto:fase-3-insumos-relatorios",
+      "choice": "prosseguir",
+      "answer": "Então eu te dou a liberdade de fazer. Faça aí certinho para você me explicar o que for. E depois me fala o que está faltando.",
+      "source": "Mensagem do Matheus no chat, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25 (liberdade para a parte técnica das mesas)",
+      "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
+      "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
+      "conflictFingerprint": "7b04891eac68081769777b096bbec8af861bf40eab03a6897fe04ed06fa6ea8a",
+      "answeredAt": "2026-11-25T19:46:43.397Z"
+    },
+    {
+      "conflictId": "impacto:seguranca-acabamentos",
+      "choice": "prosseguir",
+      "answer": "Então eu te dou a liberdade de fazer. Faça aí certinho para você me explicar o que for. E depois me fala o que está faltando.",
+      "source": "Mensagem do Matheus no chat, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25 (liberdade para a parte técnica das mesas)",
+      "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
+      "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
+      "conflictFingerprint": "23d219069b795ea8f93ee2636d44dd34a80a5b7c347dfa25e89d68f2988b3562",
+      "answeredAt": "2026-11-25T19:46:43.550Z"
+    },
+    {
+      "conflictId": "pedidos-de-mesa-fora-da-tela-de-pedidos",
+      "choice": "prosseguir",
+      "answer": "Então eu te dou a liberdade de fazer. Faça aí certinho para você me explicar o que for. E depois me fala o que está faltando.",
+      "source": "Mensagem do Matheus no chat, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25 (liberdade para a parte técnica das mesas)",
+      "fingerprint": "c4ac919f514427e6fa7735ef5f5949c73bc0d9bfcb90a020862dafffd62007da",
+      "ownFingerprint": "491b604f9a5a04f7ed995cc4ba4d1e4cad4a0210dec326f7b2d51e5ded8be445",
+      "conflictFingerprint": "34a4d2ecd6206b8f566edd3094826e6228648dd602026bc70b8d089b81e21a5e",
+      "answeredAt": "2026-11-25T19:46:43.706Z"
+    }
+  ]
+}

@@ -16,8 +16,11 @@ export const stockMovementTypeEnum = pgEnum("stock_movement_type", [
 export const orderStatusEnum = pgEnum("order_status", [
   "CONFIRMED", "PREPARING", "OUT_FOR_DELIVERY", "READY_FOR_PICKUP", "DONE", "CANCELED",
 ]);
-export const fulfillmentEnum = pgEnum("fulfillment", ["DELIVERY", "PICKUP"]);
-export const paymentMethodEnum = pgEnum("payment_method", ["ON_DELIVERY"]);
+export const fulfillmentEnum = pgEnum("fulfillment", ["DELIVERY", "PICKUP", "TABLE"]);
+/** ON_DELIVERY: pedido do site pago na entrega ou retirada. IN_STORE: mesa do salão, paga no balcão. */
+export const paymentMethodEnum = pgEnum("payment_method", ["ON_DELIVERY", "IN_STORE"]);
+export const tenderEnum = pgEnum("tender", ["CASH", "PIX", "CARD"]);
+export const printKindEnum = pgEnum("print_kind", ["TABLE", "TABLE_REMOVAL", "ORDER"]);
 export const paymentStatusEnum = pgEnum("payment_status", ["PENDING", "RECEIVED"]);
 
 export const users = pgTable("users", {
@@ -135,10 +138,20 @@ export const orders = pgTable(
     receivedCents: integer("received_cents"),
     receivedAt: timestamp("received_at", { withTimezone: true }),
     createdIp: text("created_ip"),
+    /** Só nas mesas: número da mesa, quem abriu e quem fechou. */
+    tableNumber: integer("table_number"),
+    openedBy: text("opened_by").references(() => users.id),
+    closedBy: text("closed_by").references(() => users.id),
+    closedAt: timestamp("closed_at", { withTimezone: true }),
     createdAt: createdAt(),
     updatedAt: updatedAt(),
   },
-  (t) => [uniqueIndex("orders_code_idx").on(t.code), index("orders_created_idx").on(t.createdAt)],
+  (t) => [
+    uniqueIndex("orders_code_idx").on(t.code),
+    index("orders_created_idx").on(t.createdAt),
+    // uma comanda aberta por mesa: dois garçons abrindo ao mesmo tempo não criam duas
+    uniqueIndex("orders_open_table_idx").on(t.tableNumber).where(sql`table_number IS NOT NULL AND status = 'CONFIRMED'`),
+  ],
 );
 
 export const orderItems = pgTable("order_items", {
@@ -150,6 +163,11 @@ export const orderItems = pgTable("order_items", {
   /** Custo do produto pela receita na hora da venda; nulo quando não havia custo completo. */
   unitCostCents: integer("unit_cost_cents"),
   quantity: integer("quantity").notNull(),
+  /** Observação para a cozinha (mesas). */
+  note: text("note"),
+  /** Mesas: quem lançou e quando. */
+  addedBy: text("added_by").references(() => users.id),
+  addedAt: timestamp("added_at", { withTimezone: true }).defaultNow(),
 });
 
 export const stockMovements = pgTable(
@@ -255,3 +273,50 @@ export const settings = pgTable("settings", {
   value: text("value").notNull(),
   updatedAt: updatedAt(),
 });
+
+/** Mesas do salão. Desativar esconde a mesa sem apagar o histórico. */
+export const diningTables = pgTable("dining_tables", {
+  number: integer("number").primaryKey(),
+  active: boolean("active").notNull().default(true),
+});
+
+/** Pagamentos de uma mesa: inteira, partes iguais ou cada um os seus itens. */
+export const orderPayments = pgTable(
+  "order_payments",
+  {
+    id: id(),
+    orderId: text("order_id").notNull().references(() => orders.id, { onDelete: "cascade" }),
+    tender: tenderEnum("tender").notNull(),
+    amountCents: integer("amount_cents").notNull(),
+    receivedBy: text("received_by").notNull().references(() => users.id),
+    createdAt: createdAt(),
+  },
+  (t) => [index("order_payments_order_idx").on(t.orderId), check("order_payments_amount_pos", sql`${t.amountCents} > 0`)],
+);
+
+/** Itens pagos por um pagamento "cada um paga o seu". O índice único impede pagar o mesmo item duas vezes. */
+export const orderPaymentItems = pgTable(
+  "order_payment_items",
+  {
+    paymentId: text("payment_id").notNull().references(() => orderPayments.id, { onDelete: "cascade" }),
+    orderItemId: text("order_item_id").notNull().references(() => orderItems.id),
+  },
+  (t) => [uniqueIndex("order_payment_items_item_idx").on(t.orderItemId)],
+);
+
+/** Fila de comandas para a impressora do balcão. Sem telefone nem endereço de cliente. */
+export const printJobs = pgTable(
+  "print_jobs",
+  {
+    id: id(),
+    kind: printKindEnum("kind").notNull(),
+    orderId: text("order_id").references(() => orders.id, { onDelete: "set null" }),
+    /** Conteúdo pronto para imprimir (JSON de PrintTicket). */
+    content: text("content").notNull(),
+    claimedAt: timestamp("claimed_at", { withTimezone: true }),
+    claimedBy: text("claimed_by"),
+    printedAt: timestamp("printed_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [index("print_jobs_pending_idx").on(t.printedAt, t.createdAt)],
+);
