@@ -97,5 +97,6 @@ textarea.pn-input { height: auto; padding: 10px 12px; min-height: 88px; }
   .pn-ticket-title { font-size: 20pt; font-weight: 700; }
   .pn-ticket-line { margin: 2mm 0; }
   .pn-ticket-note { font-size: 11pt; margin-left: 5mm; }
+  .pn-ticket-detail { font-size: 14pt; font-weight: 700; }
   .pn-ticket hr { border: 0; border-top: 1px dashed #000; margin: 2mm 0; }
 }

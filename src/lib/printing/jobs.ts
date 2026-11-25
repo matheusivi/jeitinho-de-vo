@@ -1,10 +1,15 @@
 import { and, desc, eq, isNull, lt, or, sql } from "drizzle-orm";
 import { db, schema, type DbOrTx } from "@/lib/db";
 
-/** O que vai no papel. Nunca leva telefone, endereço nem valores: é para a cozinha. */
+/**
+ * O que vai no papel. A comanda da cozinha nunca leva telefone, endereço nem valores;
+ * só a via do entregador (DELIVERY) traz os dados da cliente e o valor a cobrar.
+ */
 export type PrintTicket = {
   title: string;
   subtitle?: string;
+  /** Linhas antes dos itens (via de entrega: nome, telefone, endereço, bairro). */
+  details?: string[];
   lines: { quantity: number; name: string; note?: string }[];
   footer?: string;
   createdAt: string;

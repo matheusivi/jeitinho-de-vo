@@ -20,7 +20,7 @@ export const fulfillmentEnum = pgEnum("fulfillment", ["DELIVERY", "PICKUP", "TAB
 /** ON_DELIVERY: pedido do site pago na entrega ou retirada. IN_STORE: mesa do salão, paga no balcão. */
 export const paymentMethodEnum = pgEnum("payment_method", ["ON_DELIVERY", "IN_STORE"]);
 export const tenderEnum = pgEnum("tender", ["CASH", "PIX", "CARD"]);
-export const printKindEnum = pgEnum("print_kind", ["TABLE", "TABLE_REMOVAL", "ORDER"]);
+export const printKindEnum = pgEnum("print_kind", ["TABLE", "TABLE_REMOVAL", "ORDER", "DELIVERY"]);
 export const paymentStatusEnum = pgEnum("payment_status", ["PENDING", "RECEIVED"]);
 
 export const users = pgTable("users", {
@@ -304,7 +304,7 @@ export const orderPaymentItems = pgTable(
   (t) => [uniqueIndex("order_payment_items_item_idx").on(t.orderItemId)],
 );
 
-/** Fila de comandas para a impressora do balcão. Sem telefone nem endereço de cliente. */
+/** Fila de comandas para a impressora do balcão. Só a via de entrega (DELIVERY) leva telefone e endereço. */
 export const printJobs = pgTable(
   "print_jobs",
   {

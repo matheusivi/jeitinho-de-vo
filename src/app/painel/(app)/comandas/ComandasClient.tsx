@@ -135,6 +135,7 @@ export function ComandasClient({ initial }: { initial: Job[] }) {
             <div className="pn-ticket-title">{j.ticket.title}</div>
             {j.ticket.subtitle && <div>{j.ticket.subtitle}</div>}
             <div>{hora.format(new Date(j.createdAt))}</div>
+            {j.ticket.details && (<><hr />{j.ticket.details.map((d, i) => <div key={i} className="pn-ticket-detail">{d}</div>)}</>)}
             <hr />
             {j.ticket.lines.map((l, i) => (
               <div key={i} className="pn-ticket-line">
@@ -142,7 +143,7 @@ export function ComandasClient({ initial }: { initial: Job[] }) {
                 {l.note && <div className="pn-ticket-note">→ {l.note}</div>}
               </div>
             ))}
-            {j.ticket.footer && (<><hr /><div>{j.ticket.footer}</div></>)}
+            {j.ticket.footer && (<><hr />{j.ticket.footer.split(" · ").map((f, i) => <div key={i}>{f}</div>)}</>)}
           </div>
         ))}
       </div>

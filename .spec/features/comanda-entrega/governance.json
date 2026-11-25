@@ -1,0 +1,250 @@
+{
+  "version": 1,
+  "large": false,
+  "domains": [],
+  "decisions": [
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "888a6ef459474e6bb62c2331f561bd9d353e7c41566e1f3884abb394b61b94da",
+      "ownFingerprint": "20134647d44d2b92da7a8cf06921b75266a580a127aa0db3dbee0dd8c827c151",
+      "conflictFingerprint": "c1bfe2d60ade991099ac2aec3adc2873c9dbe511a48618b3d82a80342e0b28eb",
+      "answeredAt": "2026-11-25T20:33:28.231Z"
+    },
+    {
+      "conflictId": "impacto:fase-3-insumos-relatorios",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "888a6ef459474e6bb62c2331f561bd9d353e7c41566e1f3884abb394b61b94da",
+      "ownFingerprint": "20134647d44d2b92da7a8cf06921b75266a580a127aa0db3dbee0dd8c827c151",
+      "conflictFingerprint": "d86163de133e46376380529aa46273182c5feeddf63f2bbea0dea3ed186b06ef",
+      "answeredAt": "2026-11-25T20:33:28.357Z"
+    },
+    {
+      "conflictId": "impacto:mesas-comandas",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "888a6ef459474e6bb62c2331f561bd9d353e7c41566e1f3884abb394b61b94da",
+      "ownFingerprint": "20134647d44d2b92da7a8cf06921b75266a580a127aa0db3dbee0dd8c827c151",
+      "conflictFingerprint": "ab7f553175e347c5a2ad165c755152a8da3a45aa36d3aaec489249cf5cdcd036",
+      "answeredAt": "2026-11-25T20:33:28.494Z"
+    },
+    {
+      "conflictId": "impacto:seguranca-acabamentos",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "888a6ef459474e6bb62c2331f561bd9d353e7c41566e1f3884abb394b61b94da",
+      "ownFingerprint": "20134647d44d2b92da7a8cf06921b75266a580a127aa0db3dbee0dd8c827c151",
+      "conflictFingerprint": "8a536f3c4f22c6e502a6c5707e55a56cca923a9bc7039cb3934760502562b0f0",
+      "answeredAt": "2026-11-25T20:33:28.595Z"
+    },
+    {
+      "conflictId": "via-entrega-com-dados",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "888a6ef459474e6bb62c2331f561bd9d353e7c41566e1f3884abb394b61b94da",
+      "ownFingerprint": "20134647d44d2b92da7a8cf06921b75266a580a127aa0db3dbee0dd8c827c151",
+      "conflictFingerprint": "82b0215eb81eb412ba7753bb3ecd7163035f8e49d9421ef525d9b95b55721756",
+      "answeredAt": "2026-11-25T20:33:28.703Z"
+    },
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9b1d070c3a5e1a887abd79796c89b585664b07701bf1e5634056f8c178199800",
+      "ownFingerprint": "2434cb8cbc0918e2f91d3c8995b9980ddd8e8a3cc524dd63fb534b69b19557ab",
+      "conflictFingerprint": "c1bfe2d60ade991099ac2aec3adc2873c9dbe511a48618b3d82a80342e0b28eb",
+      "answeredAt": "2026-11-25T20:35:22.117Z"
+    },
+    {
+      "conflictId": "impacto:fase-3-insumos-relatorios",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9b1d070c3a5e1a887abd79796c89b585664b07701bf1e5634056f8c178199800",
+      "ownFingerprint": "2434cb8cbc0918e2f91d3c8995b9980ddd8e8a3cc524dd63fb534b69b19557ab",
+      "conflictFingerprint": "d86163de133e46376380529aa46273182c5feeddf63f2bbea0dea3ed186b06ef",
+      "answeredAt": "2026-11-25T20:35:22.220Z"
+    },
+    {
+      "conflictId": "impacto:mesas-comandas",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9b1d070c3a5e1a887abd79796c89b585664b07701bf1e5634056f8c178199800",
+      "ownFingerprint": "2434cb8cbc0918e2f91d3c8995b9980ddd8e8a3cc524dd63fb534b69b19557ab",
+      "conflictFingerprint": "ab7f553175e347c5a2ad165c755152a8da3a45aa36d3aaec489249cf5cdcd036",
+      "answeredAt": "2026-11-25T20:35:22.323Z"
+    },
+    {
+      "conflictId": "impacto:seguranca-acabamentos",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9b1d070c3a5e1a887abd79796c89b585664b07701bf1e5634056f8c178199800",
+      "ownFingerprint": "2434cb8cbc0918e2f91d3c8995b9980ddd8e8a3cc524dd63fb534b69b19557ab",
+      "conflictFingerprint": "8a536f3c4f22c6e502a6c5707e55a56cca923a9bc7039cb3934760502562b0f0",
+      "answeredAt": "2026-11-25T20:35:22.425Z"
+    },
+    {
+      "conflictId": "via-entrega-com-dados",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9b1d070c3a5e1a887abd79796c89b585664b07701bf1e5634056f8c178199800",
+      "ownFingerprint": "2434cb8cbc0918e2f91d3c8995b9980ddd8e8a3cc524dd63fb534b69b19557ab",
+      "conflictFingerprint": "82b0215eb81eb412ba7753bb3ecd7163035f8e49d9421ef525d9b95b55721756",
+      "answeredAt": "2026-11-25T20:35:22.568Z"
+    },
+    {
+      "conflictId": "impacto:fase-1-loja-painel",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9e2905afb613fac8eef9dc7d8883be0dea1992457d8ae365e3eaeadc1ad137d3",
+      "ownFingerprint": "300bd218278986c4761d5e95a53a8ea25b82f157bb88832f5550ce68d8db21c8",
+      "conflictFingerprint": "c1bfe2d60ade991099ac2aec3adc2873c9dbe511a48618b3d82a80342e0b28eb",
+      "answeredAt": "2026-11-25T20:38:25.261Z"
+    },
+    {
+      "conflictId": "impacto:fase-3-insumos-relatorios",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9e2905afb613fac8eef9dc7d8883be0dea1992457d8ae365e3eaeadc1ad137d3",
+      "ownFingerprint": "300bd218278986c4761d5e95a53a8ea25b82f157bb88832f5550ce68d8db21c8",
+      "conflictFingerprint": "d86163de133e46376380529aa46273182c5feeddf63f2bbea0dea3ed186b06ef",
+      "answeredAt": "2026-11-25T20:38:25.373Z"
+    },
+    {
+      "conflictId": "impacto:mesas-comandas",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9e2905afb613fac8eef9dc7d8883be0dea1992457d8ae365e3eaeadc1ad137d3",
+      "ownFingerprint": "300bd218278986c4761d5e95a53a8ea25b82f157bb88832f5550ce68d8db21c8",
+      "conflictFingerprint": "ab7f553175e347c5a2ad165c755152a8da3a45aa36d3aaec489249cf5cdcd036",
+      "answeredAt": "2026-11-25T20:38:25.482Z"
+    },
+    {
+      "conflictId": "impacto:seguranca-acabamentos",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9e2905afb613fac8eef9dc7d8883be0dea1992457d8ae365e3eaeadc1ad137d3",
+      "ownFingerprint": "300bd218278986c4761d5e95a53a8ea25b82f157bb88832f5550ce68d8db21c8",
+      "conflictFingerprint": "8a536f3c4f22c6e502a6c5707e55a56cca923a9bc7039cb3934760502562b0f0",
+      "answeredAt": "2026-11-25T20:38:25.592Z"
+    },
+    {
+      "conflictId": "via-entrega-com-dados",
+      "choice": "prosseguir",
+      "answer": "Mensagem do Matheus 2026-11-25: \"quando uma pessoa vai encomendar um doce para entrega, aí precisa dessa comanda com endereço, o número da pessoa, porque aí passa por entregador\"; AskUserQuestion: \"Sim, total e forma de pagar (Recomendado)\" e \"Duas vias (Recomendado)\"",
+      "source": "Chat e AskUserQuestion, sessão session_016mjpWfzHvywrksDHpr585X, 2026-11-25",
+      "fingerprint": "9e2905afb613fac8eef9dc7d8883be0dea1992457d8ae365e3eaeadc1ad137d3",
+      "ownFingerprint": "300bd218278986c4761d5e95a53a8ea25b82f157bb88832f5550ce68d8db21c8",
+      "conflictFingerprint": "82b0215eb81eb412ba7753bb3ecd7163035f8e49d9421ef525d9b95b55721756",
+      "answeredAt": "2026-11-25T20:38:25.699Z"
+    }
+  ],
+  "clientRequest": "",
+  "review": {
+    "summary": "Li a spec de mesas-comandas (AC-078: comanda do site sem telefone nem endereço), a fase 1 (pedido de entrega, telefone e endereço só no painel) e a fase 3/segurança (só arquivos compartilhados: schema e CSS). A comanda da cozinha continua sem dados da cliente; a mudança acrescenta uma segunda via só para entregas, com nome, telefone, endereço e valor a cobrar, a pedido do Matheus. Migração aditiva (novo tipo de via).",
+    "reviewer": "Claude Opus 5.5, sessão Claude Code session_016mjpWfzHvywrksDHpr585X",
+    "conflicts": [
+      {
+        "id": "impacto:fase-1-loja-painel",
+        "automatic": true,
+        "feature": "fase-1-loja-painel",
+        "summary": "A mudança interfere no domínio da feature fase-1-loja-painel.",
+        "files": [
+          "src/db/schema.ts",
+          "src/lib/orders/create.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/fase-1-loja-painel/spec.md"
+      },
+      {
+        "id": "impacto:fase-3-insumos-relatorios",
+        "automatic": true,
+        "feature": "fase-3-insumos-relatorios",
+        "summary": "A mudança interfere no domínio da feature fase-3-insumos-relatorios.",
+        "files": [
+          "src/db/schema.ts",
+          "src/lib/orders/create.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/fase-3-insumos-relatorios/prd.md"
+      },
+      {
+        "id": "impacto:mesas-comandas",
+        "automatic": true,
+        "feature": "mesas-comandas",
+        "summary": "A mudança interfere no domínio da feature mesas-comandas.",
+        "files": [
+          "docs/impressora.md",
+          "docs/pendencias.md",
+          "src/app/painel/(app)/comandas/ComandasClient.tsx",
+          "src/db/schema.ts",
+          "src/lib/orders/create.ts",
+          "src/lib/printing/jobs.ts",
+          "tests/printing/jobs.test.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/mesas-comandas/prd.md"
+      },
+      {
+        "id": "impacto:seguranca-acabamentos",
+        "automatic": true,
+        "feature": "seguranca-acabamentos",
+        "summary": "A mudança interfere no domínio da feature seguranca-acabamentos.",
+        "files": [
+          "src/db/schema.ts"
+        ],
+        "domains": [],
+        "rule": ".spec/features/seguranca-acabamentos/prd.md"
+      },
+      {
+        "id": "via-entrega-com-dados",
+        "summary": "Pedido de entrega passa a imprimir uma via do entregador com nome, telefone, endereço e valor; a comanda da cozinha (AC-078) continua sem esses dados.",
+        "rule": ".spec/features/mesas-comandas/spec.md"
+      }
+    ],
+    "fingerprint": "9e2905afb613fac8eef9dc7d8883be0dea1992457d8ae365e3eaeadc1ad137d3",
+    "ownFingerprint": "300bd218278986c4761d5e95a53a8ea25b82f157bb88832f5550ce68d8db21c8",
+    "reviewedAt": "2026-11-25T20:38:25.073Z",
+    "documents": [
+      ".spec/features/comanda-entrega/spec.md",
+      ".spec/features/comanda-entrega/tasks.md",
+      ".spec/features/fase-1-loja-painel/spec.md",
+      ".spec/features/fase-1-loja-painel/tasks.md",
+      ".spec/features/fase-3-insumos-relatorios/prd.md",
+      ".spec/features/fase-3-insumos-relatorios/adr.md",
+      ".spec/features/fase-3-insumos-relatorios/design.md",
+      ".spec/features/fase-3-insumos-relatorios/spec.md",
+      ".spec/features/fase-3-insumos-relatorios/tasks.md",
+      ".spec/features/fase-3-insumos-relatorios/research.md",
+      ".spec/features/mesas-comandas/prd.md",
+      ".spec/features/mesas-comandas/adr.md",
+      ".spec/features/mesas-comandas/design.md",
+      ".spec/features/mesas-comandas/spec.md",
+      ".spec/features/mesas-comandas/tasks.md",
+      ".spec/features/mesas-comandas/research.md",
+      ".spec/features/seguranca-acabamentos/prd.md",
+      ".spec/features/seguranca-acabamentos/adr.md",
+      ".spec/features/seguranca-acabamentos/design.md",
+      ".spec/features/seguranca-acabamentos/spec.md",
+      ".spec/features/seguranca-acabamentos/tasks.md",
+      ".spec/features/seguranca-acabamentos/research.md",
+      ".spec/constituicao.md",
+      "onpspec.config.json"
+    ]
+  }
+}

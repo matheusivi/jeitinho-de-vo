@@ -29,9 +29,10 @@ As comandas das mesas e dos pedidos do site saem pela página **Comandas** do pa
 
 1. Mesa: número da mesa, nome do garçom, hora e só os itens daquele lançamento, com a observação de cada um.
 2. Item tirado da mesa: "MESA X · CANCELADO", o item e o motivo, para a cozinha não preparar.
-3. Pedido do site: código, retirada ou entrega com o bairro, primeiro nome e os itens. Sem telefone, endereço nem valores.
+3. Pedido do site, via da cozinha: código, retirada ou entrega com o bairro, primeiro nome e os itens. Sem telefone, endereço nem valores.
+4. Pedido do site para entrega, via do entregador (sai logo depois da via da cozinha): "ENTREGA · código", nome, telefone, endereço, bairro, observação, itens, taxa, total e "Cobrar na entrega". Destaque e entregue junto com o pedido. Retirada e mesa não têm essa via.
 
 ## Limites conhecidos
 
-1. Corte automático do papel e abertura da gaveta dependem do driver; pela página do Chrome não dá para mandar o comando direto.
-2. Se precisar desses comandos no futuro, a alternativa é um pequeno programa no Windows que lê a mesma fila.
+1. O papel é destacado à mão na serrilha da impressora; a gaveta de dinheiro é aberta à mão pela funcionária. Decidido com o Matheus em 25/11/2026.
+2. Se um dia quiser corte e gaveta automáticos, a alternativa é um pequeno programa no Windows que lê a mesma fila.

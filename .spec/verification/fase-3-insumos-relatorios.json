@@ -1,11 +1,11 @@
 {
   "feature": "fase-3-insumos-relatorios",
-  "timestamp": "2026-11-25T20:17:26.596Z",
-  "gitRev": "d59e475",
+  "timestamp": "2026-11-25T20:39:11.184Z",
+  "gitRev": "1c0c47c",
   "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
   "reporter": "vitest-json",
   "exitCode": 0,
-  "testsParsed": 222,
+  "testsParsed": 224,
   "results": {
     "AC-029": {
       "status": "pass",

@@ -1,0 +1,22 @@
+{
+  "feature": "comanda-entrega",
+  "timestamp": "2026-11-25T20:40:17.014Z",
+  "gitRev": "1c0c47c",
+  "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
+  "reporter": "vitest-json",
+  "exitCode": 0,
+  "testsParsed": 224,
+  "results": {
+    "AC-083": {
+      "status": "pass",
+      "testName": "via do entregador pedido de entrega imprime a via com endereço, telefone e valor a cobrar @spec:AC-083 pedido de entrega imprime a via com endereço, telefone e valor a cobrar @spec:AC-083",
+      "method": "vitest-json"
+    },
+    "AC-084": {
+      "status": "pass",
+      "testName": "via do entregador retirada e mesa não imprimem via de entrega @spec:AC-084 retirada e mesa não imprimem via de entrega @spec:AC-084",
+      "method": "vitest-json"
+    }
+  },
+  "principles": {}
+}

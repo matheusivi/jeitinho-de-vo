@@ -7,6 +7,7 @@ import { checkRateLimit, lockKeys, recordAttempt } from "@/lib/auth/rate-limit";
 import { isOpen, openingLabel } from "@/lib/store/hours";
 import { commitSale, reserve, StockError } from "@/lib/stock/stock";
 import { enqueue } from "@/lib/printing/jobs";
+import { formatBRL } from "@/lib/money";
 import { activeNeighborhood } from "./fees";
 import { normalizePhone } from "./phone";
 
@@ -144,6 +145,16 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
         footer: data.notes ? `Obs.: ${data.notes}` : undefined,
         createdAt: new Date().toISOString(),
       }, tx);
+      // via do entregador: aqui sim vão os dados da cliente e quanto cobrar
+      if (data.fulfillment === "DELIVERY") {
+        await enqueue("DELIVERY", order.id, {
+          title: `ENTREGA · ${order.code}`,
+          details: [data.customerName, formatPhone(phone), data.addressLine!, `Bairro: ${neighborhoodName}`, ...(data.notes ? [`Obs.: ${data.notes}`] : [])],
+          lines: products.map((p) => ({ quantity: qty.get(p.id)!, name: p.name })),
+          footer: `Taxa de entrega ${formatBRL(deliveryFeeCents)} · Total ${formatBRL(subtotalCents + deliveryFeeCents)} · Cobrar na entrega (Pix, cartão ou dinheiro)`,
+          createdAt: new Date().toISOString(),
+        }, tx);
+      }
       await recordAttempt(rateKey, tx);
       return order.code;
     });
@@ -167,3 +178,7 @@ export async function createOrder(input: CreateOrderInput, ctx: { now: Date; ip:
 class OrderInputError extends Error {}
 class OrderLimitError extends Error {}
 class PriceChangedError extends Error {}
+
+function formatPhone(digits: string): string {
+  return digits.replace(/^(\d{2})(\d{4,5})(\d{4})$/, "($1) $2-$3");
+}

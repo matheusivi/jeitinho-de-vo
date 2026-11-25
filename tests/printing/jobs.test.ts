@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { eq } from "drizzle-orm";
 import { db, schema } from "@/lib/db";
 import { createOrder } from "@/lib/orders/create";
 import { claimJobs, enqueue, getJob, markPrinted, stalePending } from "@/lib/printing/jobs";
@@ -22,7 +23,8 @@ describe("fila de comandas", () => {
       { now: NOW, ip: "1.1.1.1" },
     );
     expect(r.ok).toBe(true);
-    const [job] = await db.select().from(schema.printJobs);
+    // a via da cozinha; a do entregador é outro critério (AC-083)
+    const [job] = await db.select().from(schema.printJobs).where(eq(schema.printJobs.kind, "ORDER"));
     expect(job.kind).toBe("ORDER");
     const t = JSON.parse(job.content);
     expect(t.title).toContain(r.ok ? r.code : "");
@@ -58,5 +60,41 @@ describe("fila de comandas", () => {
     expect(await claimJobs("pc-b", 5, new Date(+t0 + 60_000))).toHaveLength(0);
     expect(await stalePending(new Date(+t0 + 3 * 60_000))).toBe(1);
     expect(await claimJobs("pc-b", 5, new Date(+t0 + 3 * 60_000))).toHaveLength(1);
+  });
+});
+
+describe("via do entregador", () => {
+  it("pedido de entrega imprime a via com endereço, telefone e valor a cobrar @spec:AC-083", async () => {
+    const p = await makeProduct({ name: "Bolo de cenoura", priceCents: 2100, stockOnHand: 3 });
+    const [nb] = await db.insert(schema.neighborhoods).values({ name: "Centro", feeCents: 500 }).returning();
+    const r = await createOrder(
+      {
+        customerName: "Maria Souza", customerPhone: "(67) 99999-0000", fulfillment: "DELIVERY",
+        addressLine: "Rua das Flores, 123", neighborhoodId: nb.id, notes: "tocar a campainha", items: [{ productId: p.id, quantity: 2 }],
+      },
+      { now: NOW, ip: "2.2.2.2" },
+    );
+    expect(r.ok).toBe(true);
+    const jobs = await db.select().from(schema.printJobs);
+    expect(jobs.map((j) => j.kind).sort()).toEqual(["DELIVERY", "ORDER"]);
+    const cozinha = jobs.find((j) => j.kind === "ORDER")!;
+    expect(cozinha.content).not.toMatch(/99999|Flores/);
+    const via = JSON.parse(jobs.find((j) => j.kind === "DELIVERY")!.content);
+    expect(via.title).toBe(`ENTREGA · ${r.ok ? r.code : ""}`);
+    expect(via.details).toEqual(["Maria Souza", "(67) 99999-0000", "Rua das Flores, 123", "Bairro: Centro", "Obs.: tocar a campainha"]);
+    expect(via.lines).toEqual([{ quantity: 2, name: "Bolo de cenoura" }]);
+    expect(via.footer).toBe("Taxa de entrega R$ 5,00 · Total R$ 47,00 · Cobrar na entrega (Pix, cartão ou dinheiro)");
+  });
+
+  it("retirada e mesa não imprimem via de entrega @spec:AC-084", async () => {
+    const p = await makeProduct({ stockOnHand: 3 });
+    const r = await createOrder(
+      { customerName: "Maria Souza", customerPhone: "(67) 99999-0000", fulfillment: "PICKUP", items: [{ productId: p.id, quantity: 1 }] },
+      { now: NOW, ip: "3.3.3.3" },
+    );
+    expect(r.ok).toBe(true);
+    const jobs = await db.select().from(schema.printJobs);
+    expect(jobs.map((j) => j.kind)).toEqual(["ORDER"]);
+    expect(jobs[0].content).not.toMatch(/99999/);
   });
 });

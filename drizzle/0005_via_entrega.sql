@@ -1,0 +1,1 @@
+ALTER TYPE "public"."print_kind" ADD VALUE 'DELIVERY';

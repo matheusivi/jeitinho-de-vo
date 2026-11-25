@@ -441,6 +441,33 @@
       "primeiraVez": "2026-11-25T20:15:53.687Z",
       "ultimaVez": "2026-11-25T20:15:53.687Z",
       "gitRev": "d59e475"
+    },
+    "REVISAO_IMPACTO_PENDENTE::comanda-entrega::.spec/features/comanda-entrega/governance.json": {
+      "codigo": "REVISAO_IMPACTO_PENDENTE",
+      "feature": "comanda-entrega",
+      "ref": ".spec/features/comanda-entrega/governance.json",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-11-25T20:35:14.487Z",
+      "ultimaVez": "2026-11-25T20:35:16.142Z",
+      "gitRev": "1c0c47c"
+    },
+    "DECISAO_CLIENTE_PENDENTE::comanda-entrega::.spec/features/comanda-entrega/governance.json": {
+      "codigo": "DECISAO_CLIENTE_PENDENTE",
+      "feature": "comanda-entrega",
+      "ref": ".spec/features/comanda-entrega/governance.json",
+      "ocorrencias": 8,
+      "primeiraVez": "2026-11-25T20:35:14.487Z",
+      "ultimaVez": "2026-11-25T20:35:16.142Z",
+      "gitRev": "1c0c47c"
+    },
+    "DECISAO_CLIENTE_PENDENTE::comanda-entrega::AC-078": {
+      "codigo": "DECISAO_CLIENTE_PENDENTE",
+      "feature": "comanda-entrega",
+      "ref": "AC-078",
+      "ocorrencias": 2,
+      "primeiraVez": "2026-11-25T20:35:14.487Z",
+      "ultimaVez": "2026-11-25T20:35:16.142Z",
+      "gitRev": "1c0c47c"
     }
   }
 }
