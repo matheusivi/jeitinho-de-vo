@@ -28,7 +28,7 @@ Precisa de Node 22 e Docker.
 
 Veja `docs/deploy.md`.
 
-## O que tem nesta versão (fases 1 e 3)
+## O que tem nesta versão (fases 1 e 3, segurança, mesas)
 
 - Loja: cardápio que mostra só o que tem estoque, sacola, pedido sem cadastro, entrega por bairro ou retirada, pagamento na entrega, página de acompanhamento do pedido.
 - Painel da dona: pedidos do dia, produção, ajuste de estoque, produtos com foto, categorias, bairros e taxas, equipe.
@@ -45,3 +45,11 @@ Veja `docs/deploy.md`.
 - Cada venda guarda o custo do dia, para os relatórios antigos não mudarem quando um insumo encarece.
 - Relatórios (só a dona): mês com uma linha por dia (vendido, taxas, a receber, recebido, compras, saldo do caixa), por produto, ano por mês, CMV previsto e real com perdas, gráficos e exportação para Excel com as abas Dias, Produtos, Compras e Insumos.
 - Funcionária vê estoque de insumos sem nenhum valor e não acessa receitas, custos nem relatórios.
+
+### Mesas e comandas
+
+- Grade com as mesas do salão (8 no começo; a dona muda em Mesas). Garçom abre a mesa pelo celular ou pelo balcão, cada um com a própria conta.
+- Lançar itens baixa o estoque da vitrine na hora e manda uma comanda só com os itens novos, com observação para a cozinha. Tirar item exige motivo, devolve o estoque e avisa a cozinha.
+- Fechar conta inteira, dividida em partes iguais (sem sobrar centavo) ou cada um pagando os seus itens; dinheiro, Pix ou cartão; troco calculado na tela.
+- Mesa fechada entra nos relatórios (vendido, recebido, custo) e não aparece na tela de Pedidos. Funcionária vê preços e total só nas telas de mesa.
+- Página Comandas imprime as comandas das mesas e dos pedidos do site na Elgin do balcão. Como configurar: `docs/impressora.md`.

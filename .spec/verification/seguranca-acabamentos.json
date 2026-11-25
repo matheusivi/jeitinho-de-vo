@@ -1,11 +1,11 @@
 {
   "feature": "seguranca-acabamentos",
-  "timestamp": "2026-11-24T22:43:32.820Z",
-  "gitRev": "c7a09dd",
+  "timestamp": "2026-11-25T20:01:25.120Z",
+  "gitRev": "f84b944",
   "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
   "reporter": "vitest-json",
   "exitCode": 0,
-  "testsParsed": 197,
+  "testsParsed": 222,
   "results": {
     "AC-056": {
       "status": "pass",

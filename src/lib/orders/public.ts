@@ -25,7 +25,7 @@ export async function getPublicOrder(rawCode: string): Promise<PublicOrder | nul
     .from(schema.orders)
     .leftJoin(schema.neighborhoods, eq(schema.neighborhoods.id, schema.orders.neighborhoodId))
     .where(eq(schema.orders.code, code));
-  if (!o) return null;
+  if (!o || o.order.fulfillment === "TABLE") return null;
   const items = await db
     .select({ name: schema.orderItems.productName, quantity: schema.orderItems.quantity, unitPriceCents: schema.orderItems.unitPriceCents })
     .from(schema.orderItems)
@@ -33,7 +33,7 @@ export async function getPublicOrder(rawCode: string): Promise<PublicOrder | nul
   return {
     code: o.order.code,
     status: o.order.status,
-    fulfillment: o.order.fulfillment,
+    fulfillment: o.order.fulfillment as "DELIVERY" | "PICKUP",
     firstName: o.order.customerName.split(/\s+/)[0],
     neighborhoodName: o.neighborhoodName,
     subtotalCents: o.order.subtotalCents,

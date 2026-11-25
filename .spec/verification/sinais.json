@@ -387,6 +387,51 @@
       "primeiraVez": "2026-11-17T20:45:22.079Z",
       "ultimaVez": "2026-11-17T20:45:22.079Z",
       "gitRev": "50ce467"
+    },
+    "REVISAO_IMPACTO_PENDENTE::mesas-comandas::.spec/features/mesas-comandas/governance.json": {
+      "codigo": "REVISAO_IMPACTO_PENDENTE",
+      "feature": "mesas-comandas",
+      "ref": ".spec/features/mesas-comandas/governance.json",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-25T20:00:14.522Z",
+      "ultimaVez": "2026-11-25T20:00:14.523Z",
+      "gitRev": "f84b944"
+    },
+    "DECISAO_CLIENTE_PENDENTE::mesas-comandas::.spec/features/mesas-comandas/governance.json": {
+      "codigo": "DECISAO_CLIENTE_PENDENTE",
+      "feature": "mesas-comandas",
+      "ref": ".spec/features/mesas-comandas/governance.json",
+      "ocorrencias": 5,
+      "primeiraVez": "2026-11-25T20:00:14.523Z",
+      "ultimaVez": "2026-11-25T20:00:14.523Z",
+      "gitRev": "f84b944"
+    },
+    "VERIFY_OBSOLETO::fase-1-loja-painel::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "fase-1-loja-painel",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-25T20:00:14.523Z",
+      "ultimaVez": "2026-11-25T20:00:14.523Z",
+      "gitRev": "f84b944"
+    },
+    "VERIFY_OBSOLETO::fase-3-insumos-relatorios::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "fase-3-insumos-relatorios",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-25T20:00:14.523Z",
+      "ultimaVez": "2026-11-25T20:00:14.523Z",
+      "gitRev": "f84b944"
+    },
+    "VERIFY_OBSOLETO::seguranca-acabamentos::—": {
+      "codigo": "VERIFY_OBSOLETO",
+      "feature": "seguranca-acabamentos",
+      "ref": "—",
+      "ocorrencias": 1,
+      "primeiraVez": "2026-11-25T20:00:14.523Z",
+      "ultimaVez": "2026-11-25T20:00:14.523Z",
+      "gitRev": "f84b944"
     }
   }
 }

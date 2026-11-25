@@ -1,0 +1,87 @@
+{
+  "feature": "mesas-comandas",
+  "timestamp": "2026-11-25T20:01:45.287Z",
+  "gitRev": "f84b944",
+  "command": "npx vitest run --reporter=json --outputFile=.spec/verification/raw.json",
+  "reporter": "vitest-json",
+  "exitCode": 0,
+  "testsParsed": 222,
+  "results": {
+    "AC-068": {
+      "status": "pass",
+      "testName": "abrir mesa dois garçons abrindo a mesma mesa criam uma comanda só @spec:AC-068 dois garçons abrindo a mesma mesa criam uma comanda só @spec:AC-068",
+      "method": "vitest-json"
+    },
+    "AC-069": {
+      "status": "pass",
+      "testName": "lançar itens baixa o estoque, soma a conta com preço e custo do momento @spec:AC-069 baixa o estoque, soma a conta com preço e custo do momento @spec:AC-069",
+      "method": "vitest-json"
+    },
+    "AC-070": {
+      "status": "pass",
+      "testName": "lançar itens cada lançamento gera comanda com mesa, garçom e só os itens novos @spec:AC-070 cada lançamento gera comanda com mesa, garçom e só os itens novos @spec:AC-070",
+      "method": "vitest-json"
+    },
+    "AC-071": {
+      "status": "pass",
+      "testName": "tirar item devolve o estoque, diminui a conta e guarda quem tirou e o motivo @spec:AC-071 devolve o estoque, diminui a conta e guarda quem tirou e o motivo @spec:AC-071",
+      "method": "vitest-json"
+    },
+    "AC-072": {
+      "status": "pass",
+      "testName": "fechar a conta conta inteira fecha a mesa, libera e entra como recebido @spec:AC-072 conta inteira fecha a mesa, libera e entra como recebido @spec:AC-072",
+      "method": "vitest-json"
+    },
+    "AC-073": {
+      "status": "pass",
+      "testName": "fechar a conta divide R$ 100 em 3 sem sobrar centavo @spec:AC-073 divide R$ 100 em 3 sem sobrar centavo @spec:AC-073",
+      "method": "vitest-json"
+    },
+    "AC-074": {
+      "status": "pass",
+      "testName": "fechar a conta cada um paga os seus itens; item não é pago duas vezes @spec:AC-074 cada um paga os seus itens; item não é pago duas vezes @spec:AC-074",
+      "method": "vitest-json"
+    },
+    "AC-075": {
+      "status": "pass",
+      "testName": "fechar a conta recusa pagar mais do que falta @spec:AC-075 recusa pagar mais do que falta @spec:AC-075",
+      "method": "vitest-json"
+    },
+    "AC-076": {
+      "status": "pass",
+      "testName": "fechar a conta mesa fechada não aceita lançar, tirar nem pagar @spec:AC-076 mesa fechada não aceita lançar, tirar nem pagar @spec:AC-076",
+      "method": "vitest-json"
+    },
+    "AC-077": {
+      "status": "pass",
+      "testName": "cancelar mesa garçom cancela mesa sem itens; com itens só a dona, devolvendo o estoque @spec:AC-077 garçom cancela mesa sem itens; com itens só a dona, devolvendo o estoque @spec:AC-077",
+      "method": "vitest-json"
+    },
+    "AC-078": {
+      "status": "pass",
+      "testName": "fila de comandas pedido do site gera comanda sem telefone nem endereço @spec:AC-078 pedido do site gera comanda sem telefone nem endereço @spec:AC-078",
+      "method": "vitest-json"
+    },
+    "AC-079": {
+      "status": "pass",
+      "testName": "fila de comandas dois computadores buscando ao mesmo tempo não pegam a mesma comanda @spec:AC-079 dois computadores buscando ao mesmo tempo não pegam a mesma comanda @spec:AC-079",
+      "method": "vitest-json"
+    },
+    "AC-080": {
+      "status": "pass",
+      "testName": "número de mesas dona muda para 10 e para 6; mesa ocupada não sai; funcionária não muda @spec:AC-080 dona muda para 10 e para 6; mesa ocupada não sai; funcionária não muda @spec:AC-080",
+      "method": "vitest-json"
+    },
+    "AC-081": {
+      "status": "pass",
+      "testName": "mesas nos relatórios e fora de Pedidos mesa fechada entra no relatório; mesa aberta ainda não @spec:AC-081 mesa fechada entra no relatório; mesa aberta ainda não @spec:AC-081",
+      "method": "vitest-json"
+    },
+    "AC-082": {
+      "status": "pass",
+      "testName": "mesas nos relatórios e fora de Pedidos funcionária vê preços e total na mesa, mas não relatórios @spec:AC-082 funcionária vê preços e total na mesa, mas não relatórios @spec:AC-082",
+      "method": "vitest-json"
+    }
+  },
+  "principles": {}
+}

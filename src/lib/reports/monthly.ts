@@ -6,6 +6,7 @@ import { TIMEZONE } from "@/lib/store/hours";
 /**
  * Relatórios da dona. Regras:
  * - venda conta no dia em que o pedido foi feito; cancelados ficam fora;
+ * - mesa só conta depois de fechada (conta no dia em que foi aberta, recebido no dia em que fechou);
  * - dinheiro entra no caixa no dia em que foi recebido;
  * - compras de insumo saem do caixa no dia em que foram lançadas;
  * - dias seguem o fuso da loja (Campo Grande, UTC−4 sem horário de verão).
@@ -108,7 +109,7 @@ export async function monthlyReport(year: number, month: number, user: SessionUs
     SELECT ${localDate(sql`created_at`)} AS d, payment_method AS method, count(*) AS orders,
       sum(total_cents) AS sold, sum(subtotal_cents) AS product, sum(delivery_fee_cents) AS fees,
       sum(CASE WHEN payment_status = 'PENDING' THEN total_cents ELSE 0 END) AS pending
-    FROM orders WHERE status <> 'CANCELED' AND ${inMonth(sql`created_at`)}
+    FROM orders WHERE status <> 'CANCELED' AND NOT (fulfillment = 'TABLE' AND status <> 'DONE') AND ${inMonth(sql`created_at`)}
     GROUP BY 1, 2`);
   for (const r of sales) {
     const d = byDate.get(r.d);
@@ -124,7 +125,7 @@ export async function monthlyReport(year: number, month: number, user: SessionUs
   const items = await rows<{ d: string; qty: string }>(sql`
     SELECT ${localDate(sql`o.created_at`)} AS d, sum(i.quantity) AS qty
     FROM order_items i JOIN orders o ON o.id = i.order_id
-    WHERE o.status <> 'CANCELED' AND ${inMonth(sql`o.created_at`)} GROUP BY 1`);
+    WHERE o.status <> 'CANCELED' AND NOT (o.fulfillment = 'TABLE' AND o.status <> 'DONE') AND ${inMonth(sql`o.created_at`)} GROUP BY 1`);
   for (const r of items) {
     const d = byDate.get(r.d);
     if (d) d.items = toInt(r.qty);
@@ -132,7 +133,7 @@ export async function monthlyReport(year: number, month: number, user: SessionUs
 
   const received = await rows<{ d: string; cents: string }>(sql`
     SELECT ${localDate(sql`received_at`)} AS d, sum(received_cents) AS cents
-    FROM orders WHERE status <> 'CANCELED' AND payment_status = 'RECEIVED' AND ${inMonth(sql`received_at`)} GROUP BY 1`);
+    FROM orders WHERE status <> 'CANCELED' AND NOT (fulfillment = 'TABLE' AND status <> 'DONE') AND payment_status = 'RECEIVED' AND ${inMonth(sql`received_at`)} GROUP BY 1`);
   for (const r of received) {
     const d = byDate.get(r.d);
     if (d) d.receivedCents = toInt(r.cents);
@@ -161,7 +162,7 @@ export async function monthlyReport(year: number, month: number, user: SessionUs
       sum(CASE WHEN i.unit_cost_cents IS NOT NULL THEN i.unit_price_cents * i.quantity ELSE 0 END) AS revenue,
       sum(CASE WHEN i.unit_cost_cents IS NULL THEN i.quantity ELSE 0 END) AS without
     FROM order_items i JOIN orders o ON o.id = i.order_id
-    WHERE o.status <> 'CANCELED' AND ${inMonth(sql`o.created_at`)}`);
+    WHERE o.status <> 'CANCELED' AND NOT (o.fulfillment = 'TABLE' AND o.status <> 'DONE') AND ${inMonth(sql`o.created_at`)}`);
   // saídas fora da receita: perda, consumo avulso e correções de contagem (contagem a mais devolve custo)
   const [waste] = await rows<{ cost: string; loss: string }>(sql`
     SELECT coalesce(sum(CASE WHEN qty_milli < 0 THEN cost_cents ELSE -cost_cents END), 0) AS cost,
@@ -211,7 +212,7 @@ export async function productReport(year: number, month: number, user: SessionUs
       sum(coalesce(i.unit_cost_cents, 0) * i.quantity) AS known,
       sum(CASE WHEN i.unit_cost_cents IS NULL THEN i.quantity ELSE 0 END) AS without
     FROM order_items i JOIN orders o ON o.id = i.order_id
-    WHERE o.status <> 'CANCELED' AND o.created_at >= ${start} AND o.created_at < ${end}
+    WHERE o.status <> 'CANCELED' AND NOT (o.fulfillment = 'TABLE' AND o.status <> 'DONE') AND o.created_at >= ${start} AND o.created_at < ${end}
     GROUP BY i.product_id ORDER BY revenue DESC, name ASC`);
   return r.map((x) => {
     const revenue = toInt(x.revenue);
@@ -239,10 +240,10 @@ export async function yearReport(year: number, user: SessionUser) {
   const range = (col: SQL) => sql`${col} >= ${start} AND ${col} < ${end}`;
   const sold = await rows<{ m: number; cents: string; orders: string }>(sql`
     SELECT ${localMonth(sql`created_at`)} AS m, sum(total_cents) AS cents, count(*) AS orders
-    FROM orders WHERE status <> 'CANCELED' AND ${range(sql`created_at`)} GROUP BY 1`);
+    FROM orders WHERE status <> 'CANCELED' AND NOT (fulfillment = 'TABLE' AND status <> 'DONE') AND ${range(sql`created_at`)} GROUP BY 1`);
   const rec = await rows<{ m: number; cents: string }>(sql`
     SELECT ${localMonth(sql`received_at`)} AS m, sum(received_cents) AS cents
-    FROM orders WHERE status <> 'CANCELED' AND payment_status = 'RECEIVED' AND ${range(sql`received_at`)} GROUP BY 1`);
+    FROM orders WHERE status <> 'CANCELED' AND NOT (fulfillment = 'TABLE' AND status <> 'DONE') AND payment_status = 'RECEIVED' AND ${range(sql`received_at`)} GROUP BY 1`);
   const buy = await rows<{ m: number; cents: string }>(sql`
     SELECT ${localMonth(sql`created_at`)} AS m, sum(cost_cents) AS cents
     FROM ingredient_movements WHERE type = 'PURCHASE' AND ${range(sql`created_at`)} GROUP BY 1`);

@@ -26,6 +26,7 @@ export async function advanceOrder(orderId: string, to: OrderStatus, _user: Sess
   void _user; // dona e funcionário podem avançar; o login já foi exigido pela tela
   const [o] = await db.select().from(schema.orders).where(eq(schema.orders.id, orderId));
   if (!o) throw new TransitionError("Pedido não encontrado.");
+  if (o.fulfillment === "TABLE") throw new TransitionError("Pedido de mesa se fecha na tela Mesas.");
   if (nextStatus(o.fulfillment, o.status) !== to) throw new TransitionError("Este pedido não pode ir para esse passo agora.");
   const updated = await db
     .update(schema.orders)
@@ -40,6 +41,7 @@ export async function cancelOrder(orderId: string, user: SessionUser): Promise<v
   await db.transaction(async (tx) => {
     const [o] = await tx.select().from(schema.orders).where(eq(schema.orders.id, orderId)).for("update");
     if (!o) throw new TransitionError("Pedido não encontrado.");
+    if (o.fulfillment === "TABLE") throw new TransitionError("Pedido de mesa se cancela na tela Mesas.");
     if (o.status === "CANCELED") throw new TransitionError("Este pedido já foi cancelado.");
     if (o.status === "DONE") throw new TransitionError("Pedido concluído não pode ser cancelado.");
     await releaseForCancel(orderId, user.id, tx);
@@ -59,6 +61,7 @@ export async function markReceived(orderId: string, receivedCents: number, user:
     .where(
       and(
         eq(schema.orders.id, orderId),
+        ne(schema.orders.fulfillment, "TABLE"),
         ne(schema.orders.status, "CANCELED"),
         eq(schema.orders.paymentStatus, "PENDING"),
       ),
@@ -66,10 +69,11 @@ export async function markReceived(orderId: string, receivedCents: number, user:
     .returning({ id: schema.orders.id });
   if (updated.length > 0) return;
   const [current] = await db
-    .select({ status: schema.orders.status, paymentStatus: schema.orders.paymentStatus })
+    .select({ status: schema.orders.status, paymentStatus: schema.orders.paymentStatus, fulfillment: schema.orders.fulfillment })
     .from(schema.orders)
     .where(eq(schema.orders.id, orderId));
   if (!current) throw new TransitionError("Pedido não encontrado.");
+  if (current.fulfillment === "TABLE") throw new TransitionError("Pedido de mesa se recebe na tela Mesas.");
   if (current.status === "CANCELED") throw new TransitionError("Pedido cancelado não recebe pagamento.");
   throw new TransitionError("Este pedido já tem recebimento registrado.");
 }
